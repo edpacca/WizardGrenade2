@@ -5,7 +5,7 @@ using System;
 
 namespace WizardGrenade2
 {
-    class Sprite
+    public class Sprite
     {
         private Texture2D _spriteTexture;
         private Rectangle _spriteRectangle;
@@ -13,6 +13,13 @@ namespace WizardGrenade2
         private SpriteEffects _spriteEffect = SpriteEffects.None;
         private float _layerDepth = 0f;
         private float _spriteScale = 1f;
+
+        public Sprite(){}
+
+        public Sprite(ContentManager contentManager, string fileName)
+        {
+            LoadContent(contentManager, fileName);
+        }
 
         public void LoadContent(ContentManager contentManager, string fileName)
         {

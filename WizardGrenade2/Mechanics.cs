@@ -11,10 +11,19 @@ namespace WizardGrenade2
     {
         public const float GRAVITY = 9.8f;
 
+        public struct Space2D
+        {
+            public Vector2 position;
+            public Vector2 velocity;
+            public float rotation;
+        }
+
         public static Vector2 ApplyGravity(GameTime gameTime, Vector2 velocity, float mass)
         {
             Vector2 acceleration = new Vector2(0, GRAVITY * mass);
             return velocity + acceleration * (float)gameTime.ElapsedGameTime.TotalSeconds;
         }
+
+
     }
 }
