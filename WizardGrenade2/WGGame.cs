@@ -8,6 +8,7 @@ namespace WizardGrenade2
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+        private GameScreen _gameScreen = new GameScreen();
 
         private Matrix _scale;
         private float _mainScaleX;
@@ -18,7 +19,8 @@ namespace WizardGrenade2
         private const int SCREEN_RESOLUTION_WIDTH = 1920;
         private const int SCREEN_RESOLUTION_HEIGHT = 1080;
 
-        private Wizard _wizard;
+        public static int GetScreenWidth() => (int)TARGET_SCREEN_WIDTH;
+        public static int GetScreenHeight() => (int)TARGET_SCREEN_HEIGHT;
 
         public WGGame()
         {
@@ -35,44 +37,37 @@ namespace WizardGrenade2
             _mainScaleX = _graphics.PreferredBackBufferWidth / TARGET_SCREEN_WIDTH;
             _mainScaleY = _graphics.PreferredBackBufferHeight / TARGET_SCREEN_HEIGHT;
             _scale = Matrix.CreateScale(new Vector3(_mainScaleX, _mainScaleY, 1));
-
-            _wizard = new Wizard(0, new Vector2(400, 100));
-
+            _gameScreen.Initialise();
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            _wizard.LoadContent(Content);
+            _gameScreen.LoadContent(Content);
         }
 
         protected override void UnloadContent()
         {
-
         }
 
         protected override void Update(GameTime gameTime)
         {
-            InputManager.Update();
-
             if (InputManager.IsKeyDown(Keys.Escape))
                 Exit();
-            _wizard.Update(gameTime);
 
+            InputManager.Update();
+            _gameScreen.Update(gameTime);
             base.Update(gameTime);
         }
 
-        public static int GetScreenWidth() => (int)TARGET_SCREEN_WIDTH;
-        public static int GetScreenHeight() => (int)TARGET_SCREEN_HEIGHT;
 
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             _spriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.PointClamp, null, null, null, _scale);
-            _wizard.Draw(_spriteBatch);
-
+            _gameScreen.Draw(_spriteBatch);
             _spriteBatch.End();
 
             base.Draw(gameTime);
