@@ -14,12 +14,13 @@ namespace WizardGrenade2
         private const int FRAMES_V = 1;
         private const int FRAMES_H = 1;
         private const int WALK_SPEED = 500;
+        private const int COLLISION_POINTS = 10;
 
         private GameObject _wizard;
 
         public Wizard(int skinNumber, Vector2 position)
         {
-            _wizard = new GameObject(_baseFileName + skinNumber, FRAMES_H, FRAMES_V, position, MASS);
+            _wizard = new GameObject(_baseFileName + skinNumber, FRAMES_H, FRAMES_V, position, MASS, COLLISION_POINTS);
         }
 
         public void LoadContent(ContentManager contentManager)

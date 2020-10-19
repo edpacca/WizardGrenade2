@@ -2,10 +2,6 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WizardGrenade2
 {
@@ -15,8 +11,10 @@ namespace WizardGrenade2
         private int _framesH = 0;
         private int _framesV = 0;
         private float _mass = 0;
+        private int _numberOfCollisionPoints = 0;
 
         private Mechanics.Space2D Space;
+        private Polygon _collisionPoints;
 
         public GameObject(string fileName)
         {
@@ -29,11 +27,12 @@ namespace WizardGrenade2
             LoadContent(contentManager);
         }
 
-        public GameObject(string fileName, int framesH, int framesV, Vector2 position, float mass)
+        public GameObject(string fileName, int framesH, int framesV, Vector2 position, float mass, int collisionPoints)
         {
             _framesH = framesH;
             _framesV = framesV;
             _fileName = fileName;
+            _numberOfCollisionPoints = collisionPoints;
 
             Space.position = position;
             Space.velocity = Vector2.Zero;
@@ -47,6 +46,9 @@ namespace WizardGrenade2
                 LoadContent(contentManager, _fileName);
             else
                 LoadContent(contentManager, _fileName, _framesH, _framesV);
+
+            _collisionPoints = new Polygon(GetSpriteTexture(), _numberOfCollisionPoints);
+            _collisionPoints.LoadPolyContent(contentManager);
         }
 
         public void Update(GameTime gameTime)
@@ -54,6 +56,8 @@ namespace WizardGrenade2
             Space.velocity = Mechanics.ApplyGravity(gameTime, Space.velocity, _mass);
             Space.position += Space.velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
             Space.rotation = (float)Math.Atan2(Space.velocity.Y, Space.velocity.X);
+
+            _collisionPoints.UpdateTransformedPolyPoints(Space.position, Space.rotation);
         }
 
         public void AddVelocity(GameTime gameTime, Vector2 addedVecloity)
@@ -64,6 +68,7 @@ namespace WizardGrenade2
         public new void Draw(SpriteBatch spriteBatch)
         {
             Draw(spriteBatch, Space.position, Space.rotation);
+            _collisionPoints.DrawCollisionPoints(spriteBatch, Space.position);
         }
 
 

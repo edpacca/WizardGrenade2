@@ -1,9 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WizardGrenade2
 {
@@ -24,6 +20,10 @@ namespace WizardGrenade2
             return velocity + acceleration * (float)gameTime.ElapsedGameTime.TotalSeconds;
         }
 
+        public static Vector2 GetVectorComponents(float magnitude, float angle)
+        {
+            return new Vector2((float)Math.Sin(angle) * magnitude, (float)Math.Cos(angle) * magnitude);
+        }
 
     }
 }
