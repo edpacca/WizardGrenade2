@@ -55,7 +55,7 @@ namespace WizardGrenade2
             float deltaTheta = (float)(2 * Math.PI / numberOfPoints);
 
             for (float theta = 0; theta <= 2 * Math.PI - deltaTheta; theta += deltaTheta)
-                relativePoints.Add(Mechanics.GetVectorComponents(radius, theta));
+                relativePoints.Add(Mechanics.VectorComponents(radius, theta));
 
             return relativePoints;
         }

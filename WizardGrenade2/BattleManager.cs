@@ -9,18 +9,18 @@ namespace WizardGrenade2
     class BattleManager
     {
         private Map _map = Map.Instance;
-        private CollisionManager _collisionManager;
+        private CollisionManager _collisionManager = CollisionManager.Instance;
         private Wizard _testWizard;
 
         public void Initialise()
         {
             _testWizard = new Wizard(0, new Vector2(100, 100));
-            _collisionManager = new CollisionManager(Map.Instance.GetMapPixelCollisionData());
         }
 
         public void LoadContent(ContentManager contentManager)
         {
             _map.LoadContent(contentManager);
+            _collisionManager.InitialiseMapData();
             _testWizard.LoadContent(contentManager);
         }
 

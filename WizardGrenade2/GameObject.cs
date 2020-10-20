@@ -8,12 +8,15 @@ namespace WizardGrenade2
     public class GameObject : Sprite
     {
         private string _fileName;
-        private int _framesH = 0;
-        private int _framesV = 0;
-        private float _mass = 0;
-        private int _numberOfCollisionPoints = 0;
+        private int _framesH;
+        private int _framesV;
+        private float _mass;
+        private int _numberOfCollisionPoints;
+        private bool _canRotate;
+        private float _dampingFactor;
 
         private Mechanics.Space2D Space;
+        private Mechanics.Space2D PotentialSpace;
         private Polygon _collisionPoints;
 
         public GameObject(string fileName)
@@ -21,23 +24,27 @@ namespace WizardGrenade2
             _fileName = fileName;
         }
 
-        public GameObject(ContentManager contentManager, string fileName)
+        public GameObject(ContentManager contentManager, string fileName, int numberOfCollisionPoints)
+            : this (fileName)
         {
-            _fileName = fileName;
+            _numberOfCollisionPoints = numberOfCollisionPoints;
             LoadContent(contentManager);
         }
 
-        public GameObject(string fileName, int framesH, int framesV, Vector2 position, float mass, int collisionPoints)
+        public GameObject(string fileName, int framesH, int framesV, 
+            Vector2 position, float mass, float dampingFactor, int numberOfCollisionPoints, bool canRotate)
         {
             _framesH = framesH;
             _framesV = framesV;
             _fileName = fileName;
-            _numberOfCollisionPoints = collisionPoints;
+            _numberOfCollisionPoints = numberOfCollisionPoints;
+            _canRotate = canRotate;
 
             Space.position = position;
             Space.velocity = Vector2.Zero;
             Space.rotation = 0f;
             _mass = mass;
+            _dampingFactor = dampingFactor;
         }
 
         public void LoadContent(ContentManager contentManager)
@@ -53,16 +60,32 @@ namespace WizardGrenade2
 
         public void Update(GameTime gameTime)
         {
+            // Update gravity
             Space.velocity = Mechanics.ApplyGravity(gameTime, Space.velocity, _mass);
-            Space.position += Space.velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            Space.rotation = (float)Math.Atan2(Space.velocity.Y, Space.velocity.X);
 
-            _collisionPoints.UpdateTransformedPolyPoints(Space.position, Space.rotation);
+            // Update potential position in space
+            PotentialSpace.position = Space.position + Space.velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (_canRotate)
+                PotentialSpace.rotation = Mechanics.CalculateRotation(Space.velocity);
+
+            _collisionPoints.UpdateTransformedPolyPoints(PotentialSpace.position, PotentialSpace.rotation);
+
+            Vector2 reflectionVector = CollisionManager.Instance.ResolveCollision
+                (_collisionPoints.transformedPolyPoints, PotentialSpace.position, Space.velocity);
+
+            if (reflectionVector != Vector2.Zero)
+                Space.velocity = reflectionVector;
+
+            Space.position += Space.velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (_canRotate)
+                Space.rotation = Mechanics.CalculateRotation(Space.velocity);
         }
 
-        public void AddVelocity(GameTime gameTime, Vector2 addedVecloity)
+        public void AddVelocity(GameTime gameTime, Vector2 deltaVelocity)
         {
-            Space.velocity += addedVecloity * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            Space.velocity += deltaVelocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
         }
 
         public new void Draw(SpriteBatch spriteBatch)
@@ -70,7 +93,5 @@ namespace WizardGrenade2
             Draw(spriteBatch, Space.position, Space.rotation);
             _collisionPoints.DrawCollisionPoints(spriteBatch, Space.position);
         }
-
-
     }
 }
