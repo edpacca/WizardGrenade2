@@ -49,7 +49,7 @@ namespace WizardGrenade2
             List<Vector2> collidingPoints = CheckCollision(collisionPoints);
             if (collidingPoints.Count != 0)
             {
-                normalResponseVector = CalculateResponseVector(collidingPoints, position);
+                normalResponseVector = SumResponseVector(collidingPoints, position);
                 reflectionVector = Mechanics.ReflectionVector(velocity, normalResponseVector);
                 return reflectionVector;
             }
@@ -75,7 +75,7 @@ namespace WizardGrenade2
             return collidingPoints;
         }
 
-        public static Vector2 CalculateResponseVector(List<Vector2> collisionPoints, Vector2 centre)
+        public static Vector2 SumResponseVector(List<Vector2> collisionPoints, Vector2 centre)
         {
             Vector2 responseVector = Vector2.Zero;
             foreach (var point in collisionPoints)

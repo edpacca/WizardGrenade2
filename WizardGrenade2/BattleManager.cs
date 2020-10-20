@@ -8,8 +8,8 @@ namespace WizardGrenade2
 {
     class BattleManager
     {
+        private readonly string _mapFileName = "Map2";
         private Map _map = Map.Instance;
-        private CollisionManager _collisionManager = CollisionManager.Instance;
         private Wizard _testWizard;
 
         public void Initialise()
@@ -19,8 +19,7 @@ namespace WizardGrenade2
 
         public void LoadContent(ContentManager contentManager)
         {
-            _map.LoadContent(contentManager);
-            _collisionManager.InitialiseMapData();
+            _map.LoadContent(contentManager, _mapFileName, true);
             _testWizard.LoadContent(contentManager);
         }
 

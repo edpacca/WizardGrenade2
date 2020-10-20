@@ -12,29 +12,44 @@ namespace WizardGrenade2
         {
         }
 
-        private static readonly Lazy<Map> lazy = new Lazy<Map>(() => new Map());
+        private static readonly Lazy<Map> lazyMap = new Lazy<Map>(() => new Map());
 
         public static Map Instance
         {
             get
             {
-                return lazy.Value;
+                return lazyMap.Value;
             }
         }
 
-        private readonly string _fileName = "Map2";
+        private CollisionManager _collisionManager;
+        private readonly string _defaultFileName = "Map2";
 
         private Texture2D _mapTexture;
         private Vector2 _mapPosition = Vector2.Zero;
         private uint[] _mapPixelColourData;
         private bool[,] _mapPixelCollisionData;
 
-        public void LoadContent(ContentManager contentManager)
+        public void LoadContent(ContentManager contentManager, string fileName, bool isCollidable)
         {
-            _mapTexture = contentManager.Load<Texture2D>(_fileName);
+            try
+            {
+                _mapTexture = contentManager.Load<Texture2D>(fileName);
+            }
+            catch (Exception)
+            {
+                _mapTexture = contentManager.Load<Texture2D>(_defaultFileName);
+            }
+
             _mapPixelColourData = new uint[_mapTexture.Width * _mapTexture.Height];
             _mapTexture.GetData(_mapPixelColourData, 0, _mapPixelColourData.Length);
             _mapPixelCollisionData = LoadPixelCollisionData(_mapTexture, _mapPixelColourData);
+
+            if (isCollidable)
+            {
+                _collisionManager = CollisionManager.Instance;
+                _collisionManager.InitialiseMapData();
+            }
         }
 
         private bool[,] LoadPixelCollisionData(Texture2D texture, uint[] mapData)
