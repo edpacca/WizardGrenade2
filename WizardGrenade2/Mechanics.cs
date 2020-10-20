@@ -6,6 +6,8 @@ namespace WizardGrenade2
     public static class Mechanics
     {
         public const float GRAVITY = 9.8f;
+        public const float PI = (float)Math.PI;
+        public const float TAO = 2 * PI;
 
         public struct Space2D
         {

@@ -52,9 +52,9 @@ namespace WizardGrenade2
         public static List<Vector2> CalcCircleCollisionPoints(float radius, int numberOfPoints)
         {
             List<Vector2> relativePoints = new List<Vector2>();
-            float deltaTheta = (float)(2 * Math.PI / numberOfPoints);
+            float deltaTheta = (float)(Mechanics.TAO / numberOfPoints);
 
-            for (float theta = 0; theta <= 2 * Math.PI - deltaTheta; theta += deltaTheta)
+            for (float theta = 0; theta <= Mechanics.TAO - deltaTheta; theta += deltaTheta)
                 relativePoints.Add(Mechanics.VectorComponents(radius, theta));
 
             return relativePoints;
