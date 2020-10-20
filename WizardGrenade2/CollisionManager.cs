@@ -1,13 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WizardGrenade2
 {
-    class CollisionManager
+    public sealed class CollisionManager
     {
         private CollisionManager()
         {
@@ -47,6 +44,7 @@ namespace WizardGrenade2
             Vector2 normalResponseVector;
             Vector2 reflectionVector;
             List<Vector2> collidingPoints = CheckCollision(collisionPoints);
+
             if (collidingPoints.Count != 0)
             {
                 normalResponseVector = SumResponseVector(collidingPoints, position);
@@ -55,7 +53,6 @@ namespace WizardGrenade2
             }
 
             return Vector2.Zero;
-
         }
 
         public List<Vector2> CheckCollision(List<Vector2> transformedCollisionPoints)
@@ -64,9 +61,9 @@ namespace WizardGrenade2
 
             foreach (var point in transformedCollisionPoints)
             {
-                if ((point.X >= 0 && point.Y >= 0 &&
+                if (point.X >= 0 && point.Y >= 0 &&
                     point.X < _mapWidth - 1 &&
-                    point.Y < _mapHeight - 1))
+                    point.Y < _mapHeight - 1)
 
                 if (HasCollided(point))
                     collidingPoints.Add(point);
@@ -83,6 +80,5 @@ namespace WizardGrenade2
 
             return responseVector;
         }
-
     }
 }
