@@ -16,10 +16,9 @@ namespace WizardGrenade2
             public float rotation;
         }
 
-        public static Vector2 ApplyGravity(GameTime gameTime, Vector2 velocity, float mass)
+        public static Vector2 ApplyGravity(float mass)
         {
-            Vector2 acceleration = new Vector2(0, GRAVITY * mass);
-            return velocity + acceleration * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            return new Vector2(0, GRAVITY * mass);
         }
 
         public static Vector2 VectorComponents(float magnitude, float angle)

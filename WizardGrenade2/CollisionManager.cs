@@ -34,27 +34,6 @@ namespace WizardGrenade2
             _mapHeight = _mapCollisionData.GetLength(1);
         }
 
-        public bool HasCollided(Vector2 collisionPoint)
-        {
-            return _mapCollisionData[(int)collisionPoint.X, (int)collisionPoint.Y];
-        }
-
-        public Vector2 ResolveCollision(List<Vector2> collisionPoints, Vector2 position, Vector2 velocity)
-        {
-            Vector2 normalResponseVector;
-            Vector2 reflectionVector;
-            List<Vector2> collidingPoints = CheckCollision(collisionPoints);
-
-            if (collidingPoints.Count != 0)
-            {
-                normalResponseVector = SumResponseVector(collidingPoints, position);
-                reflectionVector = Mechanics.ReflectionVector(velocity, normalResponseVector);
-                return reflectionVector;
-            }
-
-            return Vector2.Zero;
-        }
-
         public List<Vector2> CheckCollision(List<Vector2> transformedCollisionPoints)
         {
             List<Vector2> collidingPoints = new List<Vector2>();
@@ -65,14 +44,26 @@ namespace WizardGrenade2
                     point.X < _mapWidth - 1 &&
                     point.Y < _mapHeight - 1)
 
-                if (HasCollided(point))
-                    collidingPoints.Add(point);
+                    if (HasCollided(point))
+                        collidingPoints.Add(point);
             }
 
             return collidingPoints;
         }
 
-        public static Vector2 SumResponseVector(List<Vector2> collisionPoints, Vector2 centre)
+        public bool HasCollided(Vector2 collisionPoint)
+        {
+            return _mapCollisionData[(int)collisionPoint.X, (int)collisionPoint.Y];
+        }
+
+        public Vector2 ResolveCollision(List<Vector2> collidingPoints, Vector2 position, Vector2 velocity)
+        {
+            Vector2 normalResponseVector = SumResponseVector(collidingPoints, position);
+            Vector2 reflectionVector = Mechanics.ReflectionVector(velocity, normalResponseVector);
+            return reflectionVector;
+        }
+
+        public Vector2 SumResponseVector(List<Vector2> collisionPoints, Vector2 centre)
         {
             Vector2 responseVector = Vector2.Zero;
             foreach (var point in collisionPoints)

@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections.Generic;
 
 namespace WizardGrenade2
 {
@@ -15,9 +16,10 @@ namespace WizardGrenade2
         private bool _canRotate;
         private float _dampingFactor;
 
-        private Mechanics.Space2D Space;
+        private Mechanics.Space2D RealSpace;
         private Mechanics.Space2D PotentialSpace;
         private Polygon _collisionPoints;
+        private CollisionManager Collider = CollisionManager.Instance;
 
         public GameObject(string fileName)
         {
@@ -40,9 +42,9 @@ namespace WizardGrenade2
             _numberOfCollisionPoints = numberOfCollisionPoints;
             _canRotate = canRotate;
 
-            Space.position = position;
-            Space.velocity = Vector2.Zero;
-            Space.rotation = 0f;
+            RealSpace.position = position;
+            RealSpace.velocity = Vector2.Zero;
+            RealSpace.rotation = 0f;
             _mass = mass;
             _dampingFactor = dampingFactor;
         }
@@ -60,38 +62,79 @@ namespace WizardGrenade2
 
         public void Update(GameTime gameTime)
         {
-            // Update gravity
-            Space.velocity = Mechanics.ApplyGravity(gameTime, Space.velocity, _mass);
+            RealSpace.velocity += Mechanics.ApplyGravity(_mass) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            UpdatePotentialSpace(gameTime);
+            ResolveCollisions(gameTime);
+        }
 
-            // Update potential position in space
-            PotentialSpace.position = Space.position + Space.velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
+        private void UpdatePotentialSpace(GameTime gameTime)
+        {
+            PotentialSpace.position = RealSpace.position + RealSpace.velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            PotentialSpace.rotation = ApplyRotation(RealSpace.velocity);
+            _collisionPoints.TransformPolyPoints(PotentialSpace.position, PotentialSpace.rotation);
+        }
 
+        private void UpdateRealSpace(GameTime gameTime)
+        {
+            RealSpace.position += RealSpace.velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            RealSpace.rotation = ApplyRotation(RealSpace.velocity);
+        }
+
+        private void ResolveCollisions(GameTime gameTime)
+        {
+            // Check for a collision in potential space by evaluating possible reflection vector
+            List<Vector2> collidingPoints = Collider.CheckCollision(_collisionPoints.transformedPolyPoints);
+
+            if (collidingPoints.Count > 0)
+            {
+                Vector2 reflectionVector = Collider.ResolveCollision
+                    (collidingPoints, RealSpace.position, RealSpace.velocity);
+
+                // If colliding in potential space then update position with damped reflection vector
+                RealSpace.velocity = ApplyDamping(reflectionVector, _dampingFactor);
+                UpdateRealSpace(gameTime);
+                // Update collision points from potential position to real position
+                _collisionPoints.TransformPolyPoints(RealSpace.position, RealSpace.rotation);
+
+                // Perform second check to see if still colliding in real space
+                if (Collider.CheckCollision(_collisionPoints.transformedPolyPoints).Count != 0)
+                {
+                    // If still colliding update position along reflection vector without damping
+                    RealSpace.velocity = reflectionVector;
+                    UpdateRealSpace(gameTime);
+                }
+            }
+            else
+            {
+                // If no collision, set real position to potential position
+                RealSpace.position = PotentialSpace.position;
+            }
+        }
+
+        private float ApplyRotation(Vector2 velocity)
+        {
             if (_canRotate)
-                PotentialSpace.rotation = Mechanics.CalculateRotation(Space.velocity);
+                return Mechanics.CalculateRotation(velocity);
+            
+            return 0f;
+        }
 
-            _collisionPoints.UpdateTransformedPolyPoints(PotentialSpace.position, PotentialSpace.rotation);
+        private Vector2 ApplyDamping(Vector2 velocity, float dampingFactor)
+        {
+            Vector2 dampedVelocity = velocity *= dampingFactor;
 
-            Vector2 reflectionVector = CollisionManager.Instance.ResolveCollision
-                (_collisionPoints.transformedPolyPoints, PotentialSpace.position, Space.velocity);
-
-            if (reflectionVector != Vector2.Zero)
-                Space.velocity = reflectionVector;
-
-            Space.position += Space.velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            if (_canRotate)
-                Space.rotation = Mechanics.CalculateRotation(Space.velocity);
+            return (Mechanics.VectorMagnitude(dampedVelocity) < 16f) ? Vector2.Zero : dampedVelocity;
         }
 
         public void AddVelocity(GameTime gameTime, Vector2 deltaVelocity)
         {
-            Space.velocity += deltaVelocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            RealSpace.velocity += deltaVelocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
         }
 
         public new void Draw(SpriteBatch spriteBatch)
         {
-            Draw(spriteBatch, Space.position, Space.rotation);
-            _collisionPoints.DrawCollisionPoints(spriteBatch, Space.position);
+            Draw(spriteBatch, RealSpace.position, RealSpace.rotation);
+            _collisionPoints.DrawCollisionPoints(spriteBatch, RealSpace.position);
         }
     }
 }
