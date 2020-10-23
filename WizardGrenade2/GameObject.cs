@@ -8,6 +8,11 @@ namespace WizardGrenade2
 {
     public class GameObject : Sprite
     {
+        // Implement info in structs
+        //private struct GameObjectInfo
+        //{ 
+        //}
+
         private string _fileName;
         private int _framesH;
         private int _framesV;
@@ -16,7 +21,7 @@ namespace WizardGrenade2
         private bool _canRotate;
         private float _dampingFactor;
 
-        private Mechanics.Space2D RealSpace;
+        public Mechanics.Space2D RealSpace;
         private Mechanics.Space2D PotentialSpace;
         private Polygon _collisionPoints;
         private CollisionManager Collider = CollisionManager.Instance;
@@ -71,7 +76,7 @@ namespace WizardGrenade2
         {
             PotentialSpace.position = RealSpace.position + RealSpace.velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
             PotentialSpace.rotation = ApplyRotation(RealSpace.velocity);
-            _collisionPoints.TransformPolyPoints(PotentialSpace.position, PotentialSpace.rotation);
+            _collisionPoints.UpdateCollisionPoints(PotentialSpace.position, PotentialSpace.rotation);
         }
 
         private void UpdateRealSpace(GameTime gameTime)
@@ -94,7 +99,7 @@ namespace WizardGrenade2
                 RealSpace.velocity = ApplyDamping(reflectionVector, _dampingFactor);
                 UpdateRealSpace(gameTime);
                 // Update collision points from potential position to real position
-                _collisionPoints.TransformPolyPoints(RealSpace.position, RealSpace.rotation);
+                _collisionPoints.UpdateCollisionPoints(RealSpace.position, RealSpace.rotation);
 
                 // Perform second check to see if still colliding in real space
                 if (Collider.CheckCollision(_collisionPoints.transformedPolyPoints).Count != 0)
@@ -123,12 +128,22 @@ namespace WizardGrenade2
         {
             Vector2 dampedVelocity = velocity *= dampingFactor;
 
-            return (Mechanics.VectorMagnitude(dampedVelocity) < 16f) ? Vector2.Zero : dampedVelocity;
+            return (Mechanics.VectorMagnitude(dampedVelocity) < 20f) ? Vector2.Zero : dampedVelocity;
         }
 
         public void AddVelocity(GameTime gameTime, Vector2 deltaVelocity)
         {
             RealSpace.velocity += deltaVelocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
+        }
+
+        public void ModifyVelocityX(float xVelocity)
+        {
+            RealSpace.velocity.X = xVelocity;
+        }
+
+        public void ModifyVelocityY(float yVelocity)
+        {
+            RealSpace.velocity.Y = yVelocity;
         }
 
         public new void Draw(SpriteBatch spriteBatch)
