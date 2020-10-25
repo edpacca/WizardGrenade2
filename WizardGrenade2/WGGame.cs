@@ -10,6 +10,7 @@ namespace WizardGrenade2
         private SpriteBatch _spriteBatch;
         private GameScreen _gameScreen = new GameScreen();
         private InterfaceManager _interfaceManager;
+        private UserInterface _userInterface;
 
         private const float TARGET_SCREEN_WIDTH = 1200;
         private const float TARGET_SCREEN_HEIGHT = TARGET_SCREEN_WIDTH * 0.5625f;
@@ -18,6 +19,8 @@ namespace WizardGrenade2
 
         public static int GetScreenWidth() => (int)TARGET_SCREEN_WIDTH;
         public static int GetScreenHeight() => (int)TARGET_SCREEN_HEIGHT;
+
+        private SpriteFont _debugFont;
 
         public WGGame()
         {
@@ -30,6 +33,7 @@ namespace WizardGrenade2
             _interfaceManager = new InterfaceManager
                 (SCREEN_RESOLUTION_WIDTH, SCREEN_RESOLUTION_HEIGHT, 
                 TARGET_SCREEN_WIDTH, TARGET_SCREEN_HEIGHT);
+            _userInterface = new UserInterface();
 
             Window.AllowUserResizing = true;
         }
@@ -44,6 +48,8 @@ namespace WizardGrenade2
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _gameScreen.LoadContent(Content);
+            _userInterface.LoadContent(Content);
+            _debugFont = Content.Load<SpriteFont>("StatFont");
         }
 
         protected override void UnloadContent()
@@ -56,8 +62,7 @@ namespace WizardGrenade2
                 Exit();
 
             InputManager.Update();
-            _interfaceManager.Update();
-
+            _interfaceManager.Update(gameTime);
             _gameScreen.Update(gameTime);
             base.Update(gameTime);
         }
@@ -70,7 +75,8 @@ namespace WizardGrenade2
             _spriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.PointClamp, null, null, null,  _interfaceManager.GetScaleMatrix());
 
             _gameScreen.Draw(_spriteBatch);
-
+            //_spriteBatch.DrawString(_debugFont, _interfaceManager.cross.ToString("0.00"), new Vector2(300, 300), Color.White);
+            _userInterface.Draw(_spriteBatch);
             _spriteBatch.End();
 
             base.Draw(gameTime);
