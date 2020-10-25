@@ -9,10 +9,7 @@ namespace WizardGrenade2
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private GameScreen _gameScreen = new GameScreen();
-
-        private Matrix _scale;
-        private float _mainScaleX;
-        private float _mainScaleY;
+        private InterfaceManager _interfaceManager;
 
         private const float TARGET_SCREEN_WIDTH = 1200;
         private const float TARGET_SCREEN_HEIGHT = TARGET_SCREEN_WIDTH * 0.5625f;
@@ -29,14 +26,16 @@ namespace WizardGrenade2
 
             _graphics.PreferredBackBufferWidth = SCREEN_RESOLUTION_WIDTH;
             _graphics.PreferredBackBufferHeight = SCREEN_RESOLUTION_HEIGHT;
+
+            _interfaceManager = new InterfaceManager
+                (SCREEN_RESOLUTION_WIDTH, SCREEN_RESOLUTION_HEIGHT, 
+                TARGET_SCREEN_WIDTH, TARGET_SCREEN_HEIGHT);
+
             Window.AllowUserResizing = true;
         }
 
         protected override void Initialize()
         {
-            _mainScaleX = _graphics.PreferredBackBufferWidth / TARGET_SCREEN_WIDTH;
-            _mainScaleY = _graphics.PreferredBackBufferHeight / TARGET_SCREEN_HEIGHT;
-            _scale = Matrix.CreateScale(new Vector3(_mainScaleX, _mainScaleY, 1));
             _gameScreen.Initialise();
             base.Initialize();
         }
@@ -57,6 +56,8 @@ namespace WizardGrenade2
                 Exit();
 
             InputManager.Update();
+            _interfaceManager.Update();
+
             _gameScreen.Update(gameTime);
             base.Update(gameTime);
         }
@@ -66,8 +67,10 @@ namespace WizardGrenade2
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            _spriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.PointClamp, null, null, null, _scale);
+            _spriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.PointClamp, null, null, null,  _interfaceManager.GetScaleMatrix());
+
             _gameScreen.Draw(_spriteBatch);
+
             _spriteBatch.End();
 
             base.Draw(gameTime);
