@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 
 namespace WizardGrenade2
 {
@@ -21,17 +22,17 @@ namespace WizardGrenade2
         public static bool IsKeyDown(Keys key) => _currentKeyboardState.IsKeyDown(key);
         public static bool IsKeyUp(Keys key) => _currentKeyboardState.IsKeyUp(key);
 
-        public static bool KeyPressed(Keys key)
+        public static bool WasKeyPressed(Keys key)
         {
             return _currentKeyboardState.IsKeyDown(key) && _previousKeyboardState.IsKeyUp(key);
         }
 
-        public static bool KeyReleased(Keys key)
+        public static bool WasKeyReleased(Keys key)
         {
             return _currentKeyboardState.IsKeyUp(key) && _previousKeyboardState.IsKeyDown(key);
         }
 
-        public static bool ScrollWheelMoved()
+        public static bool HasScrollWheelMoved()
         {
             if (_currentMouseState.ScrollWheelValue != _previousMouseState.ScrollWheelValue)
                 return true;
@@ -39,6 +40,20 @@ namespace WizardGrenade2
             return false;
         }
 
+        public static float GetScrollWheelValue()
+        {
+            return _currentMouseState.ScrollWheelValue;
+        }
 
+        public static MouseState GetMouseState()
+        {
+            return _currentMouseState;
+        }
+
+        public static Vector2 CursorPosition()
+        {
+            Vector2 cursor = new Vector2(_currentMouseState.X, _currentMouseState.Y);
+            return cursor;
+        }
     }
 }
