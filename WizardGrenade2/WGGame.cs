@@ -17,9 +17,6 @@ namespace WizardGrenade2
         private const int SCREEN_RESOLUTION_WIDTH = 1920;
         private const int SCREEN_RESOLUTION_HEIGHT = 1080;
 
-        public static int GetScreenWidth() => (int)TARGET_SCREEN_WIDTH;
-        public static int GetScreenHeight() => (int)TARGET_SCREEN_HEIGHT;
-
         private SpriteFont _debugFont;
 
         public WGGame()
@@ -63,6 +60,7 @@ namespace WizardGrenade2
 
             InputManager.Update();
             _interfaceManager.Update(gameTime);
+            _userInterface.Update(gameTime);
             _gameScreen.Update(gameTime);
             base.Update(gameTime);
         }
@@ -75,8 +73,13 @@ namespace WizardGrenade2
             _spriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.PointClamp, null, null, null,  _interfaceManager.GetScaleMatrix());
 
             _gameScreen.Draw(_spriteBatch);
-            //_spriteBatch.DrawString(_debugFont, _interfaceManager.cross.ToString("0.00"), new Vector2(300, 300), Color.White);
+
+
+            _spriteBatch.End();
+
+            _spriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.PointClamp, null, null, null, _interfaceManager.GetOriginMatrix());
             _userInterface.Draw(_spriteBatch);
+            //_spriteBatch.DrawString(_debugFont, _interfaceManager.cross.ToString("0.00"), new Vector2(300, 300), Color.White);
             _spriteBatch.End();
 
             base.Draw(gameTime);
