@@ -26,23 +26,10 @@ namespace WizardGrenade2
         private Polygon _collisionPoints;
         private CollisionManager Collider = CollisionManager.Instance;
 
-        public GameObject(string fileName)
+        // GameObject constructor for single frame sprite
+        public GameObject(string fileName, Vector2 position, 
+            float mass, float dampingFactor, int numberOfCollisionPoints, bool canRotate)
         {
-            _fileName = fileName;
-        }
-
-        public GameObject(ContentManager contentManager, string fileName, int numberOfCollisionPoints)
-            : this (fileName)
-        {
-            _numberOfCollisionPoints = numberOfCollisionPoints;
-            LoadContent(contentManager);
-        }
-
-        public GameObject(string fileName, int framesH, int framesV, 
-            Vector2 position, float mass, float dampingFactor, int numberOfCollisionPoints, bool canRotate)
-        {
-            _framesH = framesH;
-            _framesV = framesV;
             _fileName = fileName;
             _numberOfCollisionPoints = numberOfCollisionPoints;
             _canRotate = canRotate;
@@ -54,8 +41,18 @@ namespace WizardGrenade2
             _dampingFactor = dampingFactor;
         }
 
+        // GameObject constructor with animation frames
+        public GameObject(string fileName, Vector2 position, 
+            float mass, float dampingFactor, int numberOfCollisionPoints, bool canRotate, int framesH, int framesV)
+            : this (fileName, position, mass, dampingFactor, numberOfCollisionPoints, canRotate)
+        {
+            _framesH = framesH;
+            _framesV = framesV;
+        }
+
         public void LoadContent(ContentManager contentManager)
         {
+            // Check if animated object and call relevant method from Sprite class
             if (_framesH == 0 || _framesV == 0)
                 LoadContent(contentManager, _fileName);
             else
@@ -136,19 +133,14 @@ namespace WizardGrenade2
             RealSpace.velocity += deltaVelocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
         }
 
-        public void ModifyVelocityX(float xVelocity)
-        {
-            RealSpace.velocity.X = xVelocity;
-        }
+        public void SetVelocity(Vector2 velocity) => RealSpace.velocity = velocity;
+        public void SetPosition(Vector2 position) => RealSpace.position = position;
+        public void ModifyVelocityX(float xVelocity) => RealSpace.velocity.X = xVelocity;
+        public void ModifyVelocityY(float yVelocity) => RealSpace.velocity.Y = yVelocity;
 
-        public void ModifyVelocityY(float yVelocity)
+        public void Draw(SpriteBatch spriteBatch)
         {
-            RealSpace.velocity.Y = yVelocity;
-        }
-
-        public new void Draw(SpriteBatch spriteBatch)
-        {
-            Draw(spriteBatch, RealSpace.position, RealSpace.rotation);
+            DrawSprite(spriteBatch, RealSpace.position, RealSpace.rotation);
             _collisionPoints.DrawCollisionPoints(spriteBatch, RealSpace.position);
         }
     }
