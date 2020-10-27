@@ -9,12 +9,12 @@ namespace WizardGrenade2
         public const float PI = (float)Math.PI;
         public const float TAO = 2 * PI;
 
-        public struct Space2D
-        {
-            public Vector2 position;
-            public Vector2 velocity;
-            public float rotation;
-        }
+        //public struct Space2D
+        //{
+        //    public Vector2 position;
+        //    public Vector2 velocity;
+        //    public float rotation;
+        //}
 
         public static Vector2 ApplyGravity(float mass)
         {
@@ -47,7 +47,6 @@ namespace WizardGrenade2
             Vector3 vector2z = new Vector3(vector2.X, vector2.Y, 0);
 
             return Vector3.Cross(vector1z, vector2z).Z;
-
         }
 
         public static float VectorAngle(Vector2 vector1, Vector2 vector2)

@@ -41,8 +41,10 @@ namespace WizardGrenade2
 
         public Wizard(int skinNumber, Vector2 position)
         {
-            _wizard = new GameObject(_baseFileName + skinNumber, 
-                FRAMES_H, FRAMES_V, position, MASS, DAMPING_FACTOR, COLLISION_POINTS, CAN_ROTATE);
+            GameObjectParameters parameters = new GameObjectParameters(_baseFileName + skinNumber,
+                MASS, CAN_ROTATE, COLLISION_POINTS, DAMPING_FACTOR, FRAMES_H, FRAMES_V);
+
+            _wizard = new GameObject(parameters, position);
         }
 
         public void LoadContent(ContentManager contentManager)

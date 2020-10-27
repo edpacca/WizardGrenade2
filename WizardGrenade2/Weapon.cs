@@ -16,9 +16,9 @@ namespace WizardGrenade2
         private bool _isActiveWeapon;
         private bool _isFired;
 
-        public Weapon(string fileName, Vector2 initialPosition, float mass, float dampingFactor, int numberOfCollisionPoints, bool canRotate)
+        public Weapon(GameObjectParameters parameters)
         {
-            _weapon = new GameObject(fileName, initialPosition, mass, dampingFactor, numberOfCollisionPoints, canRotate);
+            _weapon = new GameObject(parameters);
         }
 
         public void LoadContent(ContentManager contentManager)
