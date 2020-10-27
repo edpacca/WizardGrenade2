@@ -1,12 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WizardGrenade2
 {
@@ -16,13 +10,9 @@ namespace WizardGrenade2
         private bool _isActiveWeapon;
         private bool _isFired;
 
-        public Weapon(GameObjectParameters parameters)
+        public void LoadContent(ContentManager contentManager, GameObjectParameters parameters)
         {
             _weapon = new GameObject(parameters);
-        }
-
-        public void LoadContent(ContentManager contentManager)
-        {
             _weapon.LoadContent(contentManager);
         }
 
@@ -40,6 +30,11 @@ namespace WizardGrenade2
             _isFired = true;
         }
 
+        public virtual void FireWeapon()
+        {
+
+        }
+
         public void KillProjectile()
         {
             _weapon.SetVelocity(Vector2.Zero);
@@ -51,8 +46,6 @@ namespace WizardGrenade2
             if (_isFired)
                 _weapon.Draw(spriteBatch);
         }
-
-
 
     }
 }
