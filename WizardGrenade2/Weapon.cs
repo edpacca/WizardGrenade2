@@ -9,6 +9,7 @@ namespace WizardGrenade2
         private GameObject _weapon;
         private bool _isActiveWeapon;
         private bool _isFired;
+        private int _weaponPower = 100;
 
         public void LoadContent(ContentManager contentManager, GameObjectParameters parameters)
         {
@@ -21,16 +22,28 @@ namespace WizardGrenade2
             _weapon.Update(gameTime);
         }
 
-        public void SetToPlayerPosition(Vector2 newPosition) => _weapon.SetPosition(newPosition);
-        public void SetWeapon(bool isActive) => _isActiveWeapon = isActive;
-
-        public void FireProjectile(float firingPower, float firingAngle)
+        public void SetToPlayerPosition(Vector2 newPosition)
         {
-            _weapon.SetVelocity(Mechanics.VectorComponents(firingPower, firingAngle));
+            _weapon.SetPosition(newPosition);
+        }
+
+        public void SetWeapon(bool isActive)
+        {
+            _isActiveWeapon = isActive;
+        }
+
+        public void SetWeaponPower(int power)
+        {
+            _weaponPower = power;
+        }
+
+        public virtual void FireProjectile(float chargeTime, float firingAngle)
+        {
+            _weapon.SetVelocity(Mechanics.VectorComponents(chargeTime * _weaponPower, firingAngle));
             _isFired = true;
         }
 
-        public virtual void FireWeapon()
+        public virtual void FireWeapon(GameTime gameTime)
         {
 
         }

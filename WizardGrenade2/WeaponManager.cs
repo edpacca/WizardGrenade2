@@ -12,26 +12,43 @@ namespace WizardGrenade2
 {
     class WeaponManager
     {
-        private Fireball _fireball;
-        private Arrow _arrow;
+        private Fireball _fireball = new Fireball(5f);
+        private Arrow _arrow = new Arrow();
+        private Crosshair _crosshair = new Crosshair();
 
         private List<Weapon> _weapons = new List<Weapon>();
-        private int _activeWeapon;
+        private int _activeWeapon = 0;
         private int _numberOfWeapons;
-        private Vector2 _activePlayerPosition;
-        
+
+        private float _chargeTime = 0f;
+
         public void LoadContent(ContentManager contentManager)
         {
             _weapons.Add(_fireball);
             _weapons.Add(_arrow);
+
+            _fireball.LoadContent(contentManager);
+            _arrow.LoadContent(contentManager);
+
             _numberOfWeapons = _weapons.Count;
+            _crosshair.LoadContent(contentManager);
         }
 
-        public void Update(GameTime gameTime)
+        public void Update(GameTime gameTime, Vector2 activePlayerPosition)
         {
+            _crosshair.UpdateCrosshair(gameTime, activePlayerPosition);
+
             CycleWeapons(Keys.Tab);
 
+            ChargeWeapon(gameTime, activePlayerPosition);
+
             _weapons[_activeWeapon].Update(gameTime);
+
+            //_fireball.Update(gameTime);
+
+
+            //_weapons[_activeWeapon].SetToPlayerPosition(activePlayerPosition);
+            //_weapons[_activeWeapon].Update(gameTime);
 
         }
 
@@ -45,16 +62,32 @@ namespace WizardGrenade2
             }
         }
 
-
-        public void SetActivePlayerPosition(Vector2 activePlayerPosition)
+        public void ChargeWeapon(GameTime gameTime, Vector2 activePlayerPosition)
         {
-            foreach (var weapon in _weapons)
-                weapon.SetToPlayerPosition(activePlayerPosition);
+            if (InputManager.IsKeyDown(Keys.Space))
+            {
+                _weapons[_activeWeapon].SetToPlayerPosition(activePlayerPosition);
+                _chargeTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            }
+
+
+            if (InputManager.WasKeyReleased(Keys.Space))
+            {
+                _weapons[_activeWeapon].FireProjectile(_chargeTime, _crosshair.GetAimAngle());
+                _chargeTime = 0f;
+            }
+
+        }
+
+        public float GetChargePower()
+        {
+            return _chargeTime;
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
             _weapons[_activeWeapon].Draw(spriteBatch);
+            _crosshair.Draw(spriteBatch);
         }
     }
 }
