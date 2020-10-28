@@ -15,6 +15,8 @@ namespace WizardGrenade2
         private float _timer;
         private SpriteFont _timerFont;
 
+        public bool IsRunning { get => isRunning; }
+
         public Timer(float startTime)
         {
             _timer = startTime;
@@ -27,11 +29,16 @@ namespace WizardGrenade2
 
         public void Update(GameTime gameTime)
         {
-            if (isRunning)
+            if (IsRunning)
                 _timer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             if (_timer <= 0)
                 isRunning = false;
+        }
+
+        public void ResetTimer(float resetTime)
+        {
+            _timer = resetTime;
         }
 
         public void Draw(SpriteBatch spriteBatch)

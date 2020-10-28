@@ -85,5 +85,10 @@ namespace WizardGrenade2
         {
             _wizard.Draw(spriteBatch);
         }
+
+        public Vector2 GetPosition()
+        {
+            return _wizard.GetPosition();
+        }
     }
 }

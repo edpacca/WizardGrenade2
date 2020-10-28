@@ -20,33 +20,11 @@ namespace WizardGrenade2
             _realSpace.velocity = Vector2.Zero;
         }
 
-        public GameObject(GameObjectParameters inputParameters, Vector2 position) : this (inputParameters)
+        public GameObject(GameObjectParameters inputParameters, Vector2 position)
+            : this (inputParameters)
         {
             _realSpace.position = position;
         }
-
-        //// GameObject constructor for single frame sprite
-        //public GameObject(string fileName, Vector2 position, 
-        //    float mass, float dampingFactor, int numberOfCollisionPoints, bool canRotate)
-        //{
-        //    _parameters.fileName = fileName;
-        //    _parameters.numberOfCollisionPoints = numberOfCollisionPoints;
-        //    _parameters.canRotate = canRotate;
-        //    _parameters.mass = mass;
-        //    _parameters.dampingFactor = dampingFactor;
-
-        //    _realSpace.position = position;
-        //    _realSpace.velocity = Vector2.Zero;
-        //}
-
-        //// GameObject constructor with animation frames
-        //public GameObject(string fileName, Vector2 position, 
-        //    float mass, float dampingFactor, int numberOfCollisionPoints, bool canRotate, int framesH, int framesV)
-        //    : this (fileName, position, mass, dampingFactor, numberOfCollisionPoints, canRotate)
-        //{
-        //    _parameters.framesH = framesH;
-        //    _parameters.framesV = framesV;
-        //}
 
         public void LoadContent(ContentManager contentManager)
         {
@@ -131,6 +109,7 @@ namespace WizardGrenade2
             _realSpace.velocity += deltaVelocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
         }
 
+        public Vector2 GetPosition() => _realSpace.position;
         public void SetVelocity(Vector2 velocity) => _realSpace.velocity = velocity;
         public void SetPosition(Vector2 position) => _realSpace.position = position;
         public void ModifyVelocityX(float xVelocity) => _realSpace.velocity.X = xVelocity;
@@ -141,5 +120,7 @@ namespace WizardGrenade2
             DrawSprite(spriteBatch, _realSpace.position, _realSpace.rotation);
             _collisionPoints.DrawCollisionPoints(spriteBatch, _realSpace.position);
         }
+
+
     }
 }
