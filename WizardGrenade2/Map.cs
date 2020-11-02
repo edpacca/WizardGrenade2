@@ -8,9 +8,7 @@ namespace WizardGrenade2
     public sealed class Map
     {
         // Singleton pattern ensures only one instance of Map is called.
-        private Map()
-        {
-        }
+        private Map(){}
 
         private static readonly Lazy<Map> lazyMap = new Lazy<Map>(() => new Map());
 
@@ -73,6 +71,26 @@ namespace WizardGrenade2
         public bool[,] GetMapPixelCollisionData()
         {
             return _mapPixelCollisionData;
+        }
+
+        public void DeformLevel(int blastRadius, Vector2 blastPosition)
+        {
+            for (int x = 0; x < 2 * blastRadius; x++)
+            {
+                for (int y = 0; y < 2 * blastRadius; y++)
+                {
+                    if (MathsExt.isWithinCircleInSquare(blastRadius, x, y) &&
+                        blastPosition.X + x - blastRadius < _mapPixelCollisionData.GetLength(0) - 1 &&
+                        blastPosition.Y + y - blastRadius < _mapPixelCollisionData.GetLength(1) - 1 &&
+                        blastPosition.X + x - blastRadius >= 0 &&
+                        blastPosition.Y + y - blastRadius >= 0)
+                    {
+                        _mapPixelColourData[((int)blastPosition.X + x - blastRadius) + ((int)blastPosition.Y + y - blastRadius) * _mapTexture.Width] = 0;
+                        _mapPixelCollisionData[(int)blastPosition.X + x - blastRadius, ((int)blastPosition.Y + y - blastRadius)] = false;
+                    }
+                }
+            }
+            _mapTexture.SetData(_mapPixelColourData);
         }
 
         public void Draw(SpriteBatch spriteBatch)
