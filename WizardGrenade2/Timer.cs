@@ -39,6 +39,7 @@ namespace WizardGrenade2
         public void ResetTimer(float resetTime)
         {
             _timer = resetTime;
+            isRunning = true;
         }
 
         public void Draw(SpriteBatch spriteBatch)

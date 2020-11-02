@@ -12,37 +12,48 @@ namespace WizardGrenade2
     class Fireball : Weapon
     {
         private readonly string _fileName = "Fireball";
-        private const int MASS = 30;
+        private const int MASS = 35;
         private const int NUMBER_OF_COLLISION_POINTS = 6;
-        private const float DAMPING_FACTOR = 0.5f;
-        private const int FIREBALL_POWER = 300;
+        private const float DAMPING_FACTOR = 0.6f;
+        private const int CHARGE_POWER = 400;
+        private const float MAX_CHARGE = 2f;
+        private int _blastRadius = 20;
 
         private Timer _timer;
         private float _detonationTime;
 
-        public Fireball(float detonationTime)
+        public Fireball(float detonationTime, int blastRadius)
         {
             _timer = new Timer(detonationTime);
             _detonationTime = detonationTime;
+            _blastRadius = blastRadius;
+            
         }
 
         public void LoadContent(ContentManager contentManager)
         {
             LoadContent(contentManager, new GameObjectParameters(_fileName, MASS, true, NUMBER_OF_COLLISION_POINTS, DAMPING_FACTOR));
-            SetWeaponPower(FIREBALL_POWER);
+            SetFiringBehaviour(CHARGE_POWER, MAX_CHARGE);
         }
 
-        public new void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             _timer.Update(gameTime);
 
             if (!_timer.IsRunning)
             {
+                Explode();
                 KillProjectile();
                 _timer.ResetTimer(_detonationTime);
             }
 
             base.Update(gameTime);
+        }
+
+        private void Explode()
+        {
+            Map.Instance.DeformLevel(_blastRadius, GetPosition());
+            SetMovementFlag(false);
         }
     }
 }

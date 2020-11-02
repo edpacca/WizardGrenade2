@@ -80,12 +80,14 @@ namespace WizardGrenade2
                     // If still colliding update position along reflection vector without damping
                     _realSpace.velocity = reflectionVector;
                     UpdateRealSpace(gameTime);
+
                 }
             }
             else
             {
                 // If no collision, set real position to potential position
-                _realSpace.position = _potentialSpace.position;
+                //_realSpace.position = _potentialSpace.position;
+                UpdateRealSpace(gameTime);
             }
         }
 

@@ -12,7 +12,7 @@ namespace WizardGrenade2
 {
     class WeaponManager
     {
-        private Fireball _fireball = new Fireball(5f);
+        private Fireball _fireball = new Fireball(4f, 30);
         private Arrow _arrow = new Arrow();
         private Crosshair _crosshair = new Crosshair();
 
@@ -21,6 +21,7 @@ namespace WizardGrenade2
         private int _numberOfWeapons;
 
         private float _chargeTime = 0f;
+        private bool _hasFired;
 
         public void LoadContent(ContentManager contentManager)
         {
@@ -37,19 +38,11 @@ namespace WizardGrenade2
         public void Update(GameTime gameTime, Vector2 activePlayerPosition)
         {
             _crosshair.UpdateCrosshair(gameTime, activePlayerPosition);
-
             CycleWeapons(Keys.Tab);
-
-            ChargeWeapon(gameTime, activePlayerPosition);
-
+            if (!_hasFired)
+                ChargeWeapon(gameTime, activePlayerPosition);
+            ResetCharge();
             _weapons[_activeWeapon].Update(gameTime);
-
-            //_fireball.Update(gameTime);
-
-
-            //_weapons[_activeWeapon].SetToPlayerPosition(activePlayerPosition);
-            //_weapons[_activeWeapon].Update(gameTime);
-
         }
 
         public void CycleWeapons(Keys key)
@@ -66,17 +59,24 @@ namespace WizardGrenade2
         {
             if (InputManager.IsKeyDown(Keys.Space))
             {
+                _weapons[_activeWeapon].KillProjectile();
                 _weapons[_activeWeapon].SetToPlayerPosition(activePlayerPosition);
                 _chargeTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
 
 
-            if (InputManager.WasKeyReleased(Keys.Space))
+            if (InputManager.WasKeyReleased(Keys.Space) || _chargeTime >= _weapons[_activeWeapon].GetMaxCharge())
             {
+                _hasFired = true;
                 _weapons[_activeWeapon].FireProjectile(_chargeTime, _crosshair.GetAimAngle());
                 _chargeTime = 0f;
             }
+        }
 
+        private void ResetCharge()
+        {
+            if (InputManager.WasKeyReleased(Keys.Space))
+                _hasFired = false;
         }
 
         public float GetChargePower()
