@@ -21,24 +21,24 @@ namespace WizardGrenade2
             LoadContent(contentManager, fileName);
         }
 
-        public void LoadContent(ContentManager contentManager, string fileName)
+        protected void LoadContent(ContentManager contentManager, string fileName)
         {
             _spriteTexture = contentManager.Load<Texture2D>(fileName);
             _spriteRectangle = new Rectangle(0, 0, _spriteTexture.Width, _spriteTexture.Height);
         }
 
-        public void LoadContent(ContentManager contentManager, string fileName, int framesH, int framesV)
+        protected void LoadContent(ContentManager contentManager, string fileName, int framesH, int framesV)
         {
             _spriteTexture = contentManager.Load<Texture2D>(fileName);
             _spriteRectangle = new Rectangle(0, 0, _spriteTexture.Width / framesH, _spriteTexture.Height / framesV);
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void DrawSprite(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(_spriteTexture, Vector2.Zero, _spriteRectangle, _spriteColour, 0f, Vector2.Zero, _spriteScale, _spriteEffect, _layerDepth);
         }
 
-        public void Draw(SpriteBatch spriteBatch, Vector2 position, float rotation)
+        public void DrawSprite(SpriteBatch spriteBatch, Vector2 position, float rotation)
         {
             Vector2 rotationOffset = CalcRotationOffset(rotation);
             spriteBatch.Draw(_spriteTexture, position + rotationOffset, _spriteRectangle, _spriteColour, rotation, Vector2.Zero, _spriteScale, _spriteEffect, _layerDepth);
@@ -61,6 +61,16 @@ namespace WizardGrenade2
         public void SetSpriteEffect(SpriteEffects spriteEffect)
         {
             _spriteEffect = spriteEffect;
+        }
+
+        public void SetSpriteScale(float spriteScale)
+        {
+            _spriteScale = spriteScale;
+        }
+
+        public Texture2D GetSpriteTexture()
+        {
+            return _spriteTexture;
         }
     }
 }

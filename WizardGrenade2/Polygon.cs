@@ -13,11 +13,6 @@ namespace WizardGrenade2
         private Texture2D _pixelTexture;
         private Rectangle _pixelRectangle = new Rectangle(0, 0, 1, 1);
 
-        public void LoadPolyContent(ContentManager contentManager)
-        {
-            _pixelTexture = contentManager.Load<Texture2D>("pixel");
-        }
-
         public Polygon(Texture2D texture, int numberOfCollisionPoints)
         {
             polyPoints = (numberOfCollisionPoints == 0) ?
@@ -28,7 +23,12 @@ namespace WizardGrenade2
                 transformedPolyPoints.Add(point);
         }
 
-        public void UpdateTransformedPolyPoints(Vector2 position, float rotation)
+        public void LoadPolyContent(ContentManager contentManager)
+        {
+            _pixelTexture = contentManager.Load<Texture2D>("Pixel");
+        }
+
+        public void UpdateCollisionPoints(Vector2 position, float rotation)
         {
             for (int i = 0; i < transformedPolyPoints.Count; i++)
             {
@@ -63,8 +63,8 @@ namespace WizardGrenade2
         public void DrawCollisionPoints(SpriteBatch spriteBatch, Vector2 position)
         {
             // Draw collision points as single pixel
-            foreach (var point in polyPoints)
-                spriteBatch.Draw(_pixelTexture, point + position, _pixelRectangle, Color.White);
+            //foreach (var point in polyPoints)
+            //    spriteBatch.Draw(_pixelTexture, point + position, _pixelRectangle, Color.White);
 
             foreach (var point in transformedPolyPoints)
                 spriteBatch.Draw(_pixelTexture, point, _pixelRectangle, Color.Aqua);

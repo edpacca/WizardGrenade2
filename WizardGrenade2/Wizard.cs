@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Xml.Schema;
 
 namespace WizardGrenade2
@@ -15,7 +16,7 @@ namespace WizardGrenade2
         private const int FRAMES_V = 1;
         private const int FRAMES_H = 1;
         private const int WALK_SPEED = 100;
-        private const int COLLISION_POINTS = 10;
+        private const int COLLISION_POINTS = 15;
         private const bool CAN_ROTATE = false;
         private const float DAMPING_FACTOR = 0.5f;
 
@@ -57,6 +58,8 @@ namespace WizardGrenade2
             UpdateMovement(gameTime);
 
             _wizard.Update(gameTime);
+            ResetMovement();
+            
         }
 
         private void UpdateControl(GameTime gameTime)
@@ -79,6 +82,11 @@ namespace WizardGrenade2
 
             Direction = direction;
             _wizard.SetSpriteEffect(effect);
+        }
+
+        private void ResetMovement()
+        {
+            _wizard.ModifyVelocityX(0);
         }
 
         public void Draw(SpriteBatch spriteBatch)

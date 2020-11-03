@@ -6,9 +6,7 @@ namespace WizardGrenade2
 {
     public sealed class CollisionManager
     {
-        private CollisionManager()
-        {
-        }
+        private CollisionManager(){}
 
         private static readonly Lazy<CollisionManager> lazyCollisionManager = new Lazy<CollisionManager>(() => new CollisionManager());
 
