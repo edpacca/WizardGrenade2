@@ -15,8 +15,8 @@ namespace WizardGrenade2
         private const int MASS = 15;
         private const int NUMBER_OF_COLLISION_POINTS = 0;
         private const float DAMPING_FACTOR = 0f;
-        private const int CHARGE_POWER = 1000;
-        private const float MAX_CHARGE = 0.5f;
+        private const int CHARGE_POWER = 1500;
+        private const float MAX_CHARGE = 0.6f;
 
         public void LoadContent(ContentManager contentManager)
         {
