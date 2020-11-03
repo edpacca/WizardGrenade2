@@ -12,10 +12,10 @@ namespace WizardGrenade2
         private const float DAMPING_FACTOR = 0.6f;
         private const int CHARGE_POWER = 400;
         private const float MAX_CHARGE = 2f;
-        private int _blastRadius = 40;
 
         private Timer _timer;
         private float _detonationTime;
+        private int _blastRadius;
         private Explosion _explosion;
 
         public Fireball(float detonationTime, int blastRadius)
@@ -36,7 +36,8 @@ namespace WizardGrenade2
 
         public override void Update(GameTime gameTime)
         {
-            _timer.Update(gameTime);
+            if (GetMovementFlag())
+                _timer.Update(gameTime);
 
             if (!_timer.IsRunning)
             {
@@ -44,6 +45,7 @@ namespace WizardGrenade2
                 KillProjectile();
                 _timer.ResetTimer(_detonationTime);
             }
+
             _explosion.UpdateExplosion(gameTime);
             base.Update(gameTime);
         }

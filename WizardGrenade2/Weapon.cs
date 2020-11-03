@@ -39,6 +39,11 @@ namespace WizardGrenade2
             _isMoving = isMoving;
         }
 
+        public bool GetMovementFlag()
+        {
+            return _isMoving;
+        }
+
         public void SetFiringBehaviour(int power)
         {
             _weaponPower = power;

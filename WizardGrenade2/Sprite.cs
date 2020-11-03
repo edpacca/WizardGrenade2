@@ -38,6 +38,11 @@ namespace WizardGrenade2
             spriteBatch.Draw(_spriteTexture, Vector2.Zero, _spriteRectangle, _spriteColour, 0f, Vector2.Zero, _spriteScale, _spriteEffect, _layerDepth);
         }
 
+        public void DrawSprite(SpriteBatch spriteBatch, Vector2 position)
+        {
+            spriteBatch.Draw(_spriteTexture, position, _spriteRectangle, _spriteColour, 0f, Vector2.Zero, _spriteScale, _spriteEffect, _layerDepth);
+        }
+
         public void DrawSprite(SpriteBatch spriteBatch, Vector2 position, float rotation)
         {
             Vector2 rotationOffset = CalcRotationOffset(rotation);
@@ -71,6 +76,11 @@ namespace WizardGrenade2
         public Texture2D GetSpriteTexture()
         {
             return _spriteTexture;
+        }
+
+        public Vector2 GetSpriteOrigin()
+        {
+            return new Vector2((float)_spriteTexture.Width / 2, (float)_spriteTexture.Height / 2) * _spriteScale;
         }
     }
 }

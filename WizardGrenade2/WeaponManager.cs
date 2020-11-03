@@ -12,7 +12,7 @@ namespace WizardGrenade2
 {
     class WeaponManager
     {
-        private Fireball _fireball = new Fireball(4f, 30);
+        private Fireball _fireball = new Fireball(4f, 40);
         private Arrow _arrow = new Arrow();
         private Crosshair _crosshair = new Crosshair();
 
@@ -39,9 +39,11 @@ namespace WizardGrenade2
         {
             _crosshair.UpdateCrosshair(gameTime, activePlayerPosition);
             CycleWeapons(Keys.Tab);
+            
             if (!_hasFired)
                 ChargeWeapon(gameTime, activePlayerPosition);
             ResetCharge();
+            
             _weapons[_activeWeapon].Update(gameTime);
         }
 

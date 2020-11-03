@@ -14,15 +14,15 @@ namespace WizardGrenade2
     class Explosion : Sprite
     {
         private readonly string _fileName = "Explosion";
-        private int _explosionRadius;
+        private int _explosionDiameter;
         private bool _isVisible;
-        private float _explosionTime = 0.2f;
+        private float _explosionTime = 0.1f;
         private Timer _explosionTimer;
         private Vector2 _position;
 
-        public Explosion(int explosionRadius)
+        public Explosion(int blastRadius)
         {
-            _explosionRadius = explosionRadius;
+            _explosionDiameter = blastRadius * 2 - 12;
             _explosionTimer = new Timer(_explosionTime);
         }
 
@@ -30,18 +30,17 @@ namespace WizardGrenade2
         {
             LoadContent(contentManager, _fileName);
             SetExplosionRadius(GetSpriteTexture());
-
         }
 
         private void SetExplosionRadius(Texture2D texture)
         {
-            SetSpriteScale(_explosionRadius / texture.Width);
+            SetSpriteScale((float)_explosionDiameter / (float)texture.Width);
         }
 
         public void ShowExplosion(Vector2 position)
         {
             _isVisible = true;
-            _position = position;
+            _position = position - GetSpriteOrigin();
             _explosionTimer.ResetTimer(_explosionTime);
         }
 
@@ -57,7 +56,7 @@ namespace WizardGrenade2
         public void Draw(SpriteBatch spriteBatch)
         {
             if (_isVisible)
-                DrawSprite(spriteBatch, _position, 0f);
+                DrawSprite(spriteBatch, _position);
         }
 
 
