@@ -1,11 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace WizardGrenade2
 {
@@ -17,16 +12,18 @@ namespace WizardGrenade2
         private const float DAMPING_FACTOR = 0.6f;
         private const int CHARGE_POWER = 400;
         private const float MAX_CHARGE = 2f;
-        private int _blastRadius = 20;
+        private int _blastRadius = 40;
 
         private Timer _timer;
         private float _detonationTime;
+        private Explosion _explosion;
 
         public Fireball(float detonationTime, int blastRadius)
         {
             _timer = new Timer(detonationTime);
             _detonationTime = detonationTime;
             _blastRadius = blastRadius;
+            _explosion = new Explosion(_blastRadius);
             
         }
 
@@ -34,6 +31,7 @@ namespace WizardGrenade2
         {
             LoadContent(contentManager, new GameObjectParameters(_fileName, MASS, true, NUMBER_OF_COLLISION_POINTS, DAMPING_FACTOR));
             SetFiringBehaviour(CHARGE_POWER, MAX_CHARGE);
+            _explosion.LoadContent(contentManager);
         }
 
         public override void Update(GameTime gameTime)
@@ -46,14 +44,22 @@ namespace WizardGrenade2
                 KillProjectile();
                 _timer.ResetTimer(_detonationTime);
             }
-
+            _explosion.UpdateExplosion(gameTime);
             base.Update(gameTime);
         }
 
         private void Explode()
         {
-            Map.Instance.DeformLevel(_blastRadius, GetPosition());
+            Vector2 position = GetPosition();
+            Map.Instance.DeformLevel(_blastRadius, position);
+            _explosion.ShowExplosion(position);
             SetMovementFlag(false);
+        }
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            _explosion.Draw(spriteBatch);
+            base.Draw(spriteBatch);
         }
     }
 }

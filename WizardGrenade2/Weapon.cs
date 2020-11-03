@@ -70,7 +70,7 @@ namespace WizardGrenade2
             _isMoving = false;
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public virtual void Draw(SpriteBatch spriteBatch)
         {
             if (_isMoving)
                 _weapon.Draw(spriteBatch);
