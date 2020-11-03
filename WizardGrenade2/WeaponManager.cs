@@ -38,7 +38,7 @@ namespace WizardGrenade2
         public void Update(GameTime gameTime, Vector2 activePlayerPosition)
         {
             _crosshair.UpdateCrosshair(gameTime, activePlayerPosition);
-            CycleWeapons(Keys.Tab);
+            CycleWeapons(Keys.Q);
             
             if (!_hasFired)
                 ChargeWeapon(gameTime, activePlayerPosition);
@@ -65,7 +65,6 @@ namespace WizardGrenade2
                 _weapons[_activeWeapon].SetToPlayerPosition(activePlayerPosition);
                 _chargeTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
-
 
             if (InputManager.WasKeyReleased(Keys.Space) || _chargeTime >= _weapons[_activeWeapon].GetMaxCharge())
             {
