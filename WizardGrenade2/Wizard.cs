@@ -20,6 +20,8 @@ namespace WizardGrenade2
         private const bool CAN_ROTATE = false;
         private const float DAMPING_FACTOR = 0.5f;
 
+        private int _health;
+
         private enum States
         { 
             Idle,
@@ -40,11 +42,12 @@ namespace WizardGrenade2
 
         private GameObject _wizard;
 
-        public Wizard(int skinNumber, Vector2 position)
+        public Wizard(int skinNumber, Vector2 position, int startHealth)
         {
             GameObjectParameters parameters = new GameObjectParameters(_baseFileName + skinNumber,
                 MASS, CAN_ROTATE, COLLISION_POINTS, DAMPING_FACTOR, FRAMES_H, FRAMES_V);
 
+            _health = startHealth;
             _wizard = new GameObject(parameters, position);
         }
 
@@ -55,11 +58,8 @@ namespace WizardGrenade2
 
         public void Update(GameTime gameTime)
         {
-            UpdateMovement(gameTime);
-
             _wizard.Update(gameTime);
-            ResetMovement();
-            
+            //ResetMovement();
         }
 
         private void UpdateControl(GameTime gameTime)
@@ -67,7 +67,7 @@ namespace WizardGrenade2
 
         }
 
-        private void UpdateMovement(GameTime gameTime)
+        public void UpdateMovement(GameTime gameTime)
         {
             if (InputManager.IsKeyDown(Keys.Left) && State != States.Jumping)
                 Walk(Directions.Left, -1, SpriteEffects.None, gameTime);
@@ -97,6 +97,11 @@ namespace WizardGrenade2
         public Vector2 GetPosition()
         {
             return _wizard.GetPosition();
+        }
+
+        public GameObject GetWizard()
+        {
+            return _wizard;
         }
     }
 }
