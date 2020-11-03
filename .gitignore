@@ -20,6 +20,7 @@ bld/
 [Bb]in/
 [Oo]bj/
 x86/
+Content/
 
 # MSTest test Results
 [Tt]est[Rr]esult*/
@@ -58,6 +59,7 @@ dlldata.c
 *.pidb
 *.svclog
 *.scc
+
 
 # Visual C++ cache files
 ipch/
