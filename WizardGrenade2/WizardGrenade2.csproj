@@ -58,6 +58,8 @@
     <Compile Include="Polygon.cs" />
     <Compile Include="Space2D.cs" />
     <Compile Include="Sprite.cs" />
+    <Compile Include="Team.cs" />
+    <Compile Include="Teams.cs" />
     <Compile Include="Timer.cs" />
     <Compile Include="UserInterface.cs" />
     <Compile Include="Utility.cs" />
