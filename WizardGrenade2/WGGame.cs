@@ -17,6 +17,7 @@ namespace WizardGrenade2
         private const int SCREEN_RESOLUTION_WIDTH = 1920;
         private const int SCREEN_RESOLUTION_HEIGHT = 1080;
 
+        Color backgroundColour = new Color(40, 40, 45);
         private SpriteFont _debugFont;
 
         public WGGame()
@@ -68,7 +69,7 @@ namespace WizardGrenade2
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(backgroundColour);
 
             _spriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.PointClamp, null, null, null,  _interfaceManager.GetScaleMatrix());
 

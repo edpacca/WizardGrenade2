@@ -54,6 +54,7 @@ namespace WizardGrenade2
             int directionX = 0;
             int directionY = 0;
 
+            // Make better
             if (cursor.X <= 0)
                 directionX = -1;
             else if (cursor.X >= _screenBounds.X)

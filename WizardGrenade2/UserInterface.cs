@@ -28,7 +28,7 @@ namespace WizardGrenade2
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            _cursor.Draw(spriteBatch, InputManager.CursorPosition(), 0f);
+            _cursor.DrawSprite(spriteBatch, InputManager.CursorPosition(), 0f);
             _timer.Draw(spriteBatch);
         }
     }
