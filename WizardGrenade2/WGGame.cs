@@ -17,6 +17,10 @@ namespace WizardGrenade2
         private const int SCREEN_RESOLUTION_WIDTH = 1920;
         private const int SCREEN_RESOLUTION_HEIGHT = 1080;
 
+        public float GetScreenWidth => TARGET_SCREEN_WIDTH;
+        public float GetScreenHeight => TARGET_SCREEN_HEIGHT;
+        public Vector2 GetScreenCentre => new Vector2(TARGET_SCREEN_WIDTH / 2, TARGET_SCREEN_HEIGHT / 2);
+
         Color backgroundColour = new Color(40, 40, 45);
         private SpriteFont _debugFont;
 
@@ -39,6 +43,7 @@ namespace WizardGrenade2
         protected override void Initialize()
         {
             _gameScreen.Initialise();
+            Mouse.SetPosition((int)TARGET_SCREEN_WIDTH / 2, (int)TARGET_SCREEN_HEIGHT / 2);
             base.Initialize();
         }
 
@@ -66,16 +71,12 @@ namespace WizardGrenade2
             base.Update(gameTime);
         }
 
-
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(backgroundColour);
 
             _spriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.PointClamp, null, null, null,  _interfaceManager.GetScaleMatrix());
-
             _gameScreen.Draw(_spriteBatch);
-
-
             _spriteBatch.End();
 
             _spriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.PointClamp, null, null, null, _interfaceManager.GetOriginMatrix());
