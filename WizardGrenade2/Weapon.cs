@@ -24,49 +24,10 @@ namespace WizardGrenade2
                 _weapon.Update(gameTime);
         }
 
-        public void SetToPlayerPosition(Vector2 newPosition)
-        {
-            _weapon.SetPosition(newPosition);
-        }
-
-        public void SetWeapon(bool isActive)
-        {
-            _isActiveWeapon = isActive;
-        }
-
-        public void SetMovementFlag(bool isMoving)
-        {
-            _isMoving = isMoving;
-        }
-
-        public bool GetMovementFlag()
-        {
-            return _isMoving;
-        }
-
-        public void SetFiringBehaviour(int power)
-        {
-            _weaponPower = power;
-        }
-
-        public void SetFiringBehaviour(int power, float maxCharge)
-        {
-            _weaponPower = power;
-            _maxCharge = maxCharge;
-        }
-
-        public float GetMaxCharge() => _maxCharge;
-        public Vector2 GetPosition() => _weapon.GetPosition();
-
         public virtual void FireProjectile(float chargeTime, float firingAngle)
         {
             _weapon.SetVelocity(Mechanics.VectorComponents(chargeTime * _weaponPower, firingAngle));
             _isMoving = true;
-        }
-
-        public virtual void FireWeapon(GameTime gameTime)
-        {
-
         }
 
         public void KillProjectile()
@@ -81,5 +42,17 @@ namespace WizardGrenade2
                 _weapon.Draw(spriteBatch);
         }
 
+        public void SetToPlayerPosition(Vector2 newPosition) => _weapon.SetPosition(newPosition);
+        public void SetWeapon(bool isActive) => _isActiveWeapon = isActive;
+        public void SetMovementFlag(bool isMoving) => _isMoving = isMoving;
+        public bool GetMovementFlag() =>_isMoving;
+        public float GetMaxCharge() => _maxCharge;
+        public Vector2 GetPosition() => _weapon.GetPosition();
+        public void SetFiringBehaviour(int power) => _weaponPower = power;
+        public void SetFiringBehaviour(int power, float maxCharge)
+        {
+            _weaponPower = power;
+            _maxCharge = maxCharge;
+        }
     }
 }
