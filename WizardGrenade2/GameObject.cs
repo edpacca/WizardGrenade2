@@ -106,9 +106,14 @@ namespace WizardGrenade2
             return (Mechanics.VectorMagnitude(dampedVelocity) < 20f) ? Vector2.Zero : dampedVelocity;
         }
 
-        public void AddVelocity(GameTime gameTime, Vector2 deltaVelocity)
+        public void AddDisplacementVelocity(GameTime gameTime, Vector2 deltaVelocity)
         {
             _realSpace.velocity += deltaVelocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
+        }
+
+        public void AddVelocity(Vector2 deltaVelocity)
+        {
+            _realSpace.velocity += deltaVelocity;
         }
 
         public Vector2 GetPosition() => _realSpace.position;
