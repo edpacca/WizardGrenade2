@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
+using System;
 
 namespace WizardGrenade2
 {
@@ -24,7 +26,6 @@ namespace WizardGrenade2
             _detonationTime = detonationTime;
             _blastRadius = blastRadius;
             _explosion = new Explosion(_blastRadius);
-            
         }
 
         public void LoadContent(ContentManager contentManager)
@@ -34,28 +35,43 @@ namespace WizardGrenade2
             _explosion.LoadContent(contentManager);
         }
 
-        public override void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime, List<GameObject> gameObjects)
         {
             if (GetMovementFlag())
                 _timer.Update(gameTime);
 
             if (!_timer.IsRunning)
             {
-                Explode();
+                Explode(gameTime, gameObjects);
                 KillProjectile();
                 _timer.ResetTimer(_detonationTime);
             }
 
             _explosion.UpdateExplosion(gameTime);
-            base.Update(gameTime);
+            base.Update(gameTime, gameObjects);
         }
 
-        private void Explode()
+        private void Explode(GameTime gameTime, List<GameObject> gameObjects)
         {
             Vector2 position = GetPosition();
             Map.Instance.DeformLevel(_blastRadius, position);
             _explosion.ShowExplosion(position);
+            GameObjectInteraction(gameTime, gameObjects, position);
             SetMovementFlag(false);
+        }
+
+        public virtual void GameObjectInteraction(GameTime gameTime, List<GameObject> gameObjects, Vector2 explosionPosition)
+        {
+            foreach (var gameObject in gameObjects)
+            {
+                Vector2 explosionToObject = _explosion.ExplosionToObject(explosionPosition, gameObject.GetPosition());
+                if (_explosion.IsWithinExplosionArea(explosionToObject, _blastRadius + 15))
+                {
+                    Vector2 pushBack = _explosion.ExplosionVector(explosionToObject);
+                    gameObject.AddVelocity(pushBack);
+                }
+                    
+            }
         }
 
         public override void Draw(SpriteBatch spriteBatch)

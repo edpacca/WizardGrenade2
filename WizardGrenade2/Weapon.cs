@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 
 namespace WizardGrenade2
 {
@@ -18,7 +19,7 @@ namespace WizardGrenade2
             _weapon.LoadContent(contentManager);
         }
 
-        public virtual void Update(GameTime gameTime)
+        public virtual void Update(GameTime gameTime, List<GameObject> gameObjects)
         {
             if (_isMoving)
                 _weapon.Update(gameTime);
@@ -36,6 +37,11 @@ namespace WizardGrenade2
             _isMoving = false;
         }
 
+        public virtual void GameObjectInteraction(List<GameObject> gameObjects)
+        {
+
+        }
+
         public virtual void Draw(SpriteBatch spriteBatch)
         {
             if (_isMoving)
@@ -49,6 +55,7 @@ namespace WizardGrenade2
         public float GetMaxCharge() => _maxCharge;
         public Vector2 GetPosition() => _weapon.GetPosition();
         public void SetFiringBehaviour(int power) => _weaponPower = power;
+
         public void SetFiringBehaviour(int power, float maxCharge)
         {
             _weaponPower = power;
