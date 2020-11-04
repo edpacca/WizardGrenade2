@@ -45,7 +45,5 @@ namespace WizardGrenade2
             foreach (var wizard in _wizards)
                 wizard.Draw(spriteBatch);
         }
-
-
     }
 }

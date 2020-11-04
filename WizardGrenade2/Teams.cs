@@ -12,7 +12,7 @@ namespace WizardGrenade2
     class Teams
     {
         private List<Team> _teams = new List<Team>();
-        private GameObject[] _allWizards;
+        private readonly List<GameObject> _allWizards;
 
         private int _activeWizard;
         private int _activeTeam;
@@ -27,7 +27,11 @@ namespace WizardGrenade2
             for (int i = 0; i < numberOfTeams; i++)
                 _teams.Add(new Team(i, "Team " + i + 1, teamSize, wizardHealth));
 
-            _allWizards = new GameObject[_numberOfTeams * _teamSize];
+            _allWizards = new List<GameObject>();
+
+            foreach (var team in _teams)
+                foreach (var wizard in team._wizards)
+                    _allWizards.Add(wizard.GetWizard());
         }
 
         public void LoadContent(ContentManager contentManager)
@@ -73,7 +77,7 @@ namespace WizardGrenade2
             return _teams[_activeTeam]._wizards[_activeWizard].GetPosition();
         }
 
-        public GameObject[] GetAllWizards()
+        public List<GameObject> GetAllWizards()
         {
             return _allWizards;
         }

@@ -15,13 +15,14 @@ namespace WizardGrenade2
         private Fireball _fireball = new Fireball(4f, 40);
         private Arrow _arrow = new Arrow();
         private Crosshair _crosshair = new Crosshair();
+        private List<GameObject> _gameObjects;
 
         private List<Weapon> _weapons = new List<Weapon>();
         private int _activeWeapon = 0;
         private int _numberOfWeapons;
 
         private float _chargeTime = 0f;
-        private bool _hasFired;
+        private bool _isLoaded;
 
         public void LoadContent(ContentManager contentManager)
         {
@@ -40,11 +41,13 @@ namespace WizardGrenade2
             _crosshair.UpdateCrosshair(gameTime, activePlayerPosition);
             CycleWeapons(Keys.Q);
             
-            if (!_hasFired)
+            if (_isLoaded)
                 ChargeWeapon(gameTime, activePlayerPosition);
-            ResetCharge();
             
-            _weapons[_activeWeapon].Update(gameTime);
+            if (!_weapons[_activeWeapon].GetMovementFlag())
+                ResetCharge();
+            
+            _weapons[_activeWeapon].Update(gameTime, _gameObjects);
         }
 
         public void CycleWeapons(Keys key)
@@ -68,7 +71,7 @@ namespace WizardGrenade2
 
             if (InputManager.WasKeyReleased(Keys.Space) || _chargeTime >= _weapons[_activeWeapon].GetMaxCharge())
             {
-                _hasFired = true;
+                _isLoaded = false;
                 _weapons[_activeWeapon].FireProjectile(_chargeTime, _crosshair.GetAimAngle());
                 _chargeTime = 0f;
             }
@@ -76,13 +79,18 @@ namespace WizardGrenade2
 
         private void ResetCharge()
         {
-            if (InputManager.WasKeyReleased(Keys.Space))
-                _hasFired = false;
+            if (!InputManager.IsKeyDown(Keys.Space))
+            _isLoaded = true;
         }
 
         public float GetChargePower()
         {
             return _chargeTime;
+        }
+
+        public void PopulateGameObjects(List<GameObject> gameObjects)
+        {
+            _gameObjects = gameObjects;
         }
 
         public void Draw(SpriteBatch spriteBatch)
