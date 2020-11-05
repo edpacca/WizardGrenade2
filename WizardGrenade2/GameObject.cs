@@ -13,6 +13,7 @@ namespace WizardGrenade2
         private Space2D _potentialSpace = new Space2D();
         private Polygon _collisionPoints;
         private CollisionManager Collider = CollisionManager.Instance;
+        public bool IgnoreGravity { get; set; }
 
         public GameObject(GameObjectParameters inputParameters)
         {
@@ -34,7 +35,7 @@ namespace WizardGrenade2
             else
                 LoadContent(contentManager, _parameters.fileName, _parameters.framesH, _parameters.framesV);
 
-            _collisionPoints = new Polygon(GetSpriteTexture(), _parameters.numberOfCollisionPoints);
+            _collisionPoints = new Polygon(GetSpriteRectangle(), _parameters.numberOfCollisionPoints);
             _collisionPoints.LoadPolyContent(contentManager);
         }
 
@@ -68,7 +69,7 @@ namespace WizardGrenade2
             if (collidingPoints.Count > 0)
             {
                 Vector2 reflectionVector = Collider.ResolveCollision
-                    (collidingPoints, _realSpace.position, _realSpace.velocity);
+                    (collidingPoints, _potentialSpace.position, _realSpace.velocity);
 
                 // If colliding in potential space then update position with damped reflection vector
                 _realSpace.velocity = ApplyDamping(reflectionVector, _parameters.dampingFactor);
@@ -82,7 +83,6 @@ namespace WizardGrenade2
                     // If still colliding update position along reflection vector without damping
                     _realSpace.velocity = reflectionVector;
                     UpdateRealSpace(gameTime);
-
                 }
             }
             else
