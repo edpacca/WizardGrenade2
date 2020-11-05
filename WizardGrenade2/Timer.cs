@@ -6,15 +6,15 @@ namespace WizardGrenade2
 {
     class Timer
     {
-        private bool isRunning = true;
-        private float _timer;
         private SpriteFont _timerFont;
 
-        public bool IsRunning { get => isRunning; }
+        public bool IsRunning { get; private set; }
+        public float Time { get; private set; }
 
         public Timer(float startTime)
         {
-            _timer = startTime;
+            Time = startTime;
+            IsRunning = true;
         }
 
         public void LoadContent(ContentManager contentManager)
@@ -25,21 +25,21 @@ namespace WizardGrenade2
         public void Update(GameTime gameTime)
         {
             if (IsRunning)
-                _timer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+                Time -= (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (_timer <= 0)
-                isRunning = false;
+            if (Time <= 0)
+                IsRunning = false;
         }
 
         public void ResetTimer(float resetTime)
         {
-            _timer = resetTime;
-            isRunning = true;
+            Time = resetTime;
+            IsRunning = true;
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(_timerFont, _timer.ToString("0"), new Vector2(10, 600), Color.Yellow);
+            spriteBatch.DrawString(_timerFont, Time.ToString("0"), new Vector2(10, 600), Color.Yellow);
         }
     }
 }
