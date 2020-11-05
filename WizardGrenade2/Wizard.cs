@@ -21,6 +21,8 @@ namespace WizardGrenade2
         private int _health;
         private GameObject _wizard;
         private Timer _animationTimer = new Timer(6);
+        private int _animationCounter = 0;
+        private const int BLINK_CYCLES = 4;
 
         private Dictionary<string, int[]> _animationStates = new Dictionary<string, int[]>()
         {
@@ -121,20 +123,44 @@ namespace WizardGrenade2
         {
             _animationTimer.Update(gameTime);
 
-            if (_animationTimer.Time <= 1f)
+            // Periodically shows looking around animation
+            if (_animationCounter > BLINK_CYCLES)
+            {
+                if (_animationCounter == BLINK_CYCLES)
+                    _animationTimer.ResetTimer(3);
+
+                IdleLook(gameTime);
+            }
+            // More frequently shows blinking animation
+            else if (_animationTimer.Time <= 1f)
             {
                 _wizard.UpdateAnimationState("Idle", 4f, gameTime);
+
                 if (!_animationTimer.IsRunning)
+                {
                     _animationTimer.ResetTimer(6);
+                    _animationCounter++;
+                }
             }
+            // Otherwise shows Idle frame
             else
             {
                 _wizard.UpdateAnimationState("Idle");
             }
 
+            // Check for true Idle state
             if (_wizard.GetVelocity() == Vector2.Zero)
             {
                 State = States.Idle;
+            }
+        }
+
+        private void IdleLook(GameTime gameTime)
+        {
+           _wizard.UpdateAnimationState("Looking", 1, gameTime);
+            if (!_animationTimer.IsRunning)
+            {
+                _animationCounter = 0;
             }
         }
 
