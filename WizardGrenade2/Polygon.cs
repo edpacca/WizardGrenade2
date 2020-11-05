@@ -13,11 +13,11 @@ namespace WizardGrenade2
         private Texture2D _pixelTexture;
         private Rectangle _pixelRectangle = new Rectangle(0, 0, 1, 1);
 
-        public Polygon(Texture2D texture, int numberOfCollisionPoints)
+        public Polygon(Rectangle spriteRectangle, int numberOfCollisionPoints)
         {
             polyPoints = (numberOfCollisionPoints == 0) ?
-                CalcRectanglePoints(texture.Width, texture.Height) :
-                CalcCircleCollisionPoints((texture.Width + texture.Height) / 4, numberOfCollisionPoints);
+                CalcRectanglePoints(spriteRectangle.Width, spriteRectangle.Height) :
+                CalcCircleCollisionPoints((spriteRectangle.Width + spriteRectangle.Height) / 4, numberOfCollisionPoints);
 
             foreach (var point in polyPoints)
                 transformedPolyPoints.Add(point);
