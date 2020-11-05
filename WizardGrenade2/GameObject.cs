@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using System.Collections.Generic;
 
 namespace WizardGrenade2
@@ -10,6 +9,7 @@ namespace WizardGrenade2
     {
         private readonly GameObjectParameters _parameters = new GameObjectParameters();
         private Space2D _realSpace = new Space2D();
+        private Vector2 _acceleration = Vector2.Zero;
         private Space2D _potentialSpace = new Space2D();
         private Polygon _collisionPoints;
         private CollisionManager Collider = CollisionManager.Instance;
@@ -40,7 +40,9 @@ namespace WizardGrenade2
 
         public void Update(GameTime gameTime)
         {
-            _realSpace.velocity += Mechanics.ApplyGravity(_parameters.mass) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            _acceleration += Mechanics.ApplyGravity(_parameters.mass);
+            _realSpace.velocity += _acceleration * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            _acceleration = Vector2.Zero;
             UpdatePotentialSpace(gameTime);
             ResolveCollisions(gameTime);
         }
@@ -116,6 +118,7 @@ namespace WizardGrenade2
             _realSpace.velocity += deltaVelocity;
         }
 
+        public Vector2 GetVelocity() => _realSpace.velocity;
         public Vector2 GetPosition() => _realSpace.position;
         public void SetVelocity(Vector2 velocity) => _realSpace.velocity = velocity;
         public void SetPosition(Vector2 position) => _realSpace.position = position;

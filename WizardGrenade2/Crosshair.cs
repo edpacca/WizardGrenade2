@@ -15,18 +15,28 @@ namespace WizardGrenade2
         private const float RAD = (float)Math.PI / 180;
         private float _crosshairAngle = START_ANGLE * RAD;
         private Vector2 _position;
+        private int _previousDirection = 1;
+        private int _currentDirection = 1;
 
         public void LoadContent(ContentManager contentManager)
         {
             LoadContent(contentManager, _fileName);
         }
 
-        public void UpdateCrosshair(GameTime gameTime, Vector2 parentPosition)
+        public void UpdateCrosshair(GameTime gameTime, Vector2 parentPosition, int direciontCoefficient)
         {
+            _previousDirection = _currentDirection;
+            _currentDirection = direciontCoefficient;
+
+            if (_currentDirection != _previousDirection)
+                _crosshairAngle = MathsExt.FlipAngle(_crosshairAngle);
+
+            RestrictAngle(direciontCoefficient);
+            
             if (InputManager.IsKeyDown(Keys.Up))
-                _crosshairAngle += Utility.DifferentialGameTimeValue(gameTime, AIM_SPEED, 1);
+                _crosshairAngle += Utility.DifferentialGameTimeValue(gameTime, AIM_SPEED, direciontCoefficient);
             else if (InputManager.IsKeyDown(Keys.Down))
-                _crosshairAngle -= Utility.DifferentialGameTimeValue(gameTime, AIM_SPEED, 1);
+                _crosshairAngle -= Utility.DifferentialGameTimeValue(gameTime, AIM_SPEED, direciontCoefficient);
 
             UpdateCrosshairPosition(parentPosition);
         }
@@ -37,6 +47,25 @@ namespace WizardGrenade2
             _position.Y = parentPosition.Y + ((float)Math.Cos(_crosshairAngle) * CROSSHAIR_RADIUS);
         }
 
+        private void RestrictAngle(int directionCoeff)
+        {
+            if (directionCoeff == 1)
+            {
+                if (_crosshairAngle > Mechanics.PI)
+                    _crosshairAngle = Mechanics.PI;
+                if (_crosshairAngle < 0)
+                    _crosshairAngle = 0;
+            }
+
+            if (directionCoeff == -1)
+            {
+                if (_crosshairAngle < Mechanics.PI)
+                    _crosshairAngle = Mechanics.PI;
+                if (_crosshairAngle > Mechanics.TAO)
+                    _crosshairAngle = Mechanics.TAO;
+            }
+        }
+
         public float GetAimAngle()
         {
             return _crosshairAngle;
@@ -44,7 +73,7 @@ namespace WizardGrenade2
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            DrawSprite(spriteBatch, _position, 0f);
+            DrawSprite(spriteBatch, _position - GetSpriteOrigin());
         }
     }
 }

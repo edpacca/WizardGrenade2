@@ -2,16 +2,12 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Xml.Schema;
 
 namespace WizardGrenade2
 {
     public class Wizard
     {
-        private readonly string _baseFileName = "Wizard";
+        private readonly string _baseFileName = "WizardSpritesheet";
         private const int MASS = 100;
         private const int FRAMES_V = 1;
         private const int FRAMES_H = 1;
@@ -97,6 +93,11 @@ namespace WizardGrenade2
         public Vector2 GetPosition()
         {
             return _wizard.GetPosition();
+        }
+
+        public int GetDirection()
+        {
+            return Direction == Directions.Left ? -1 : 1;
         }
 
         public GameObject GetWizard()
