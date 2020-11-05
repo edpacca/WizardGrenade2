@@ -2,11 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WizardGrenade2
 {
@@ -36,13 +32,13 @@ namespace WizardGrenade2
             _crosshair.LoadContent(contentManager);
         }
 
-        public void Update(GameTime gameTime, Vector2 activePlayerPosition)
+        public void Update(GameTime gameTime, Vector2 activeWizardPosition, int activeDirection)
         {
-            _crosshair.UpdateCrosshair(gameTime, activePlayerPosition);
+            _crosshair.UpdateCrosshair(gameTime, activeWizardPosition, activeDirection);
             CycleWeapons(Keys.Q);
             
             if (_isLoaded)
-                ChargeWeapon(gameTime, activePlayerPosition);
+                ChargeWeapon(gameTime, activeWizardPosition, activeDirection);
             
             if (!_weapons[_activeWeapon].GetMovementFlag())
                 ResetCharge();
@@ -60,12 +56,12 @@ namespace WizardGrenade2
             }
         }
 
-        public void ChargeWeapon(GameTime gameTime, Vector2 activePlayerPosition)
+        public void ChargeWeapon(GameTime gameTime, Vector2 activePlayerPosition, int activeDirection)
         {
             if (InputManager.IsKeyDown(Keys.Space))
             {
                 _weapons[_activeWeapon].KillProjectile();
-                _weapons[_activeWeapon].SetToPlayerPosition(activePlayerPosition);
+                _weapons[_activeWeapon].SetToPlayerPosition(activePlayerPosition, activeDirection);
                 _chargeTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
 

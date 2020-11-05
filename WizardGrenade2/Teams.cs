@@ -2,10 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace WizardGrenade2
 {
@@ -18,11 +15,12 @@ namespace WizardGrenade2
         private int _activeTeam;
         private int _numberOfTeams;
         private int _teamSize;
+        private const int MAXIMUM_TEAMS = 4;
 
         public Teams(int numberOfTeams, int teamSize, int wizardHealth)
         {
             _teamSize = teamSize;
-            _numberOfTeams = numberOfTeams;
+            _numberOfTeams = numberOfTeams > MAXIMUM_TEAMS ? MAXIMUM_TEAMS : numberOfTeams;
 
             for (int i = 0; i < numberOfTeams; i++)
                 _teams.Add(new Team(i, "Team " + i + 1, teamSize, wizardHealth));
@@ -75,6 +73,11 @@ namespace WizardGrenade2
         public Vector2 GetActiveWizardPosition()
         {
             return _teams[_activeTeam]._wizards[_activeWizard].GetPosition();
+        }
+
+        public int GetActiveWizardDirection()
+        {
+            return _teams[_activeTeam]._wizards[_activeWizard].GetDirection();
         }
 
         public List<GameObject> GetAllWizards()

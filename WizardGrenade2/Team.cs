@@ -1,11 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace WizardGrenade2
 {
@@ -24,7 +20,7 @@ namespace WizardGrenade2
 
             for (int i = 0; i < teamSize; i++)
             {
-                _wizards.Add(new Wizard(0 /*change when skins are included*/, new Vector2((100 + i * 100) + teamNumber * 300, 300), wizardHealth));
+                _wizards.Add(new Wizard(teamNumber, new Vector2((100 + i * 100) + teamNumber * 300, 300), wizardHealth));
             }
         }
 

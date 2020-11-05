@@ -31,16 +31,13 @@ namespace WizardGrenade2
             _isMoving = true;
         }
 
-        public void KillProjectile()
+        public virtual void KillProjectile()
         {
             _weapon.SetVelocity(Vector2.Zero);
             _isMoving = false;
         }
 
-        public virtual void GameObjectInteraction(List<GameObject> gameObjects)
-        {
-
-        }
+        public virtual void GameObjectInteraction(List<GameObject> gameObjects){}
 
         public virtual void Draw(SpriteBatch spriteBatch)
         {
@@ -48,12 +45,13 @@ namespace WizardGrenade2
                 _weapon.Draw(spriteBatch);
         }
 
-        public void SetToPlayerPosition(Vector2 newPosition) => _weapon.SetPosition(newPosition);
+        public virtual void SetToPlayerPosition(Vector2 newPosition, int activeDirection) => _weapon.SetPosition(newPosition);
         public void SetWeapon(bool isActive) => _isActiveWeapon = isActive;
         public void SetMovementFlag(bool isMoving) => _isMoving = isMoving;
         public bool GetMovementFlag() =>_isMoving;
         public float GetMaxCharge() => _maxCharge;
         public Vector2 GetPosition() => _weapon.GetPosition();
+        public Vector2 GetVelocity() => _weapon.GetVelocity();
         public void SetFiringBehaviour(int power) => _weaponPower = power;
 
         public void SetFiringBehaviour(int power, float maxCharge)

@@ -38,7 +38,7 @@ namespace WizardGrenade2
         public void Update(GameTime gameTime)
         {
             _wizardTeams.Update(gameTime);
-            _weaponManager.Update(gameTime, _wizardTeams.GetActiveWizardPosition());
+            _weaponManager.Update(gameTime, _wizardTeams.GetActiveWizardPosition(), _wizardTeams.GetActiveWizardDirection());
         }
 
         public void Draw(SpriteBatch spriteBatch)

@@ -1,11 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WizardGrenade2
 {
@@ -24,7 +20,32 @@ namespace WizardGrenade2
             SetFiringBehaviour(CHARGE_POWER, MAX_CHARGE);
         }
 
-        
+        public override void GameObjectInteraction(List<GameObject> gameObjects)
+        {
+            foreach (var gameObject in gameObjects)
+            {
+                float distance = Math.Abs(Mechanics.VectorMagnitude(GetPosition() - gameObject.GetPosition()));
+                if (distance <= 16)
+                {
+                    gameObject.AddVelocity(GetVelocity());
+                    KillProjectile();
+                }
+            }
+        }
 
+        public override void SetToPlayerPosition(Vector2 newPosition, int activeDirection)
+        {
+            base.SetToPlayerPosition(newPosition + new Vector2(17 * activeDirection, 0), 1);
+        }
+
+        public override void Update(GameTime gameTime, List<GameObject> gameObjects)
+        {
+            GameObjectInteraction(gameObjects);
+
+            if (GetVelocity() == Vector2.Zero)
+                KillProjectile();
+
+            base.Update(gameTime, gameObjects);
+        }
     }
 }
