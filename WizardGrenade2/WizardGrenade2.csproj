@@ -41,6 +41,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Animator.cs" />
     <Compile Include="Arrow.cs" />
     <Compile Include="BattleManager.cs" />
     <Compile Include="CollisionManager.cs" />
@@ -49,10 +50,13 @@
     <Compile Include="Fireball.cs" />
     <Compile Include="GameObject.cs" />
     <Compile Include="GameObjectParameters.cs" />
+    <Compile Include="GameOptions.cs" />
     <Compile Include="GameScreen.cs" />
+    <Compile Include="HealthBar.cs" />
     <Compile Include="InputManager.cs" />
     <Compile Include="InterfaceManager.cs" />
     <Compile Include="Map.cs" />
+    <Compile Include="Marker.cs" />
     <Compile Include="MathsExt.cs" />
     <Compile Include="Mechanics.cs" />
     <Compile Include="Polygon.cs" />
