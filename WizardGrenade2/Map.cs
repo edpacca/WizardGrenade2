@@ -75,15 +75,13 @@ namespace WizardGrenade2
 
         public void DeformLevel(int blastRadius, Vector2 blastPosition)
         {
-            for (int x = 0; x < 2 * blastRadius; x++)
+            int blastDiameter = 2 * blastRadius;
+
+            for (int x = 0; x < blastDiameter; x++)
             {
-                for (int y = 0; y < 2 * blastRadius; y++)
+                for (int y = 0; y < blastDiameter; y++)
                 {
-                    if (MathsExt.isWithinCircleInSquare(blastRadius, x, y) &&
-                        blastPosition.X + x - blastRadius < _mapPixelCollisionData.GetLength(0) - 1 &&
-                        blastPosition.Y + y - blastRadius < _mapPixelCollisionData.GetLength(1) - 1 &&
-                        blastPosition.X + x - blastRadius >= 0 &&
-                        blastPosition.Y + y - blastRadius >= 0)
+                    if (IsPointInBlastArea(blastRadius, blastPosition, x, y))
                     {
                         _mapPixelColourData[((int)blastPosition.X + x - blastRadius) + ((int)blastPosition.Y + y - blastRadius) * _mapTexture.Width] = 0;
                         _mapPixelCollisionData[(int)blastPosition.X + x - blastRadius, ((int)blastPosition.Y + y - blastRadius)] = false;
@@ -91,6 +89,18 @@ namespace WizardGrenade2
                 }
             }
             _mapTexture.SetData(_mapPixelColourData);
+        }
+
+        private bool IsPointInBlastArea(int blastRadius, Vector2 blastPosition, int x, int y)
+        {
+            if (MathsExt.isWithinCircleInSquare(blastRadius, x, y) &&
+                blastPosition.X + x - blastRadius < _mapPixelCollisionData.GetLength(0) - 1 &&
+                blastPosition.Y + y - blastRadius < _mapPixelCollisionData.GetLength(1) - 1 &&
+                blastPosition.X + x - blastRadius >= 0 &&
+                blastPosition.Y + y - blastRadius >= 0)
+                return true;
+
+            return false;
         }
 
         public void Draw(SpriteBatch spriteBatch)
