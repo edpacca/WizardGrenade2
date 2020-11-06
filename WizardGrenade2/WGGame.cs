@@ -17,8 +17,8 @@ namespace WizardGrenade2
         private const int SCREEN_RESOLUTION_WIDTH = 1920;
         private const int SCREEN_RESOLUTION_HEIGHT = 1080;
 
-        public float GetScreenWidth => TARGET_SCREEN_WIDTH;
-        public float GetScreenHeight => TARGET_SCREEN_HEIGHT;
+        public static float GetScreenWidth => TARGET_SCREEN_WIDTH;
+        public static float GetScreenHeight => TARGET_SCREEN_HEIGHT;
         public Vector2 GetScreenCentre => new Vector2(TARGET_SCREEN_WIDTH / 2, TARGET_SCREEN_HEIGHT / 2);
 
         Color backgroundColour = new Color(40, 40, 45);
@@ -35,7 +35,6 @@ namespace WizardGrenade2
             _interfaceManager = new InterfaceManager
                 (SCREEN_RESOLUTION_WIDTH, SCREEN_RESOLUTION_HEIGHT, 
                 TARGET_SCREEN_WIDTH, TARGET_SCREEN_HEIGHT);
-            _userInterface = new UserInterface();
 
             Window.AllowUserResizing = true;
         }
@@ -43,6 +42,7 @@ namespace WizardGrenade2
         protected override void Initialize()
         {
             _gameScreen.Initialise();
+            _userInterface = new UserInterface(_gameScreen.GetGameOptions());
             Mouse.SetPosition((int)TARGET_SCREEN_WIDTH / 2, (int)TARGET_SCREEN_HEIGHT / 2);
             base.Initialize();
         }
@@ -55,10 +55,6 @@ namespace WizardGrenade2
             _debugFont = Content.Load<SpriteFont>("StatFont");
         }
 
-        protected override void UnloadContent()
-        {
-        }
-
         protected override void Update(GameTime gameTime)
         {
             if (InputManager.IsKeyDown(Keys.Escape))
@@ -66,7 +62,7 @@ namespace WizardGrenade2
 
             InputManager.Update();
             _interfaceManager.Update(gameTime);
-            _userInterface.Update(gameTime);
+            _userInterface.Update(gameTime, _gameScreen.GetTeamHealths());
             _gameScreen.Update(gameTime);
             base.Update(gameTime);
         }

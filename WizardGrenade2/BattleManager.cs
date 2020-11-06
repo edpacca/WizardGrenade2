@@ -9,20 +9,16 @@ namespace WizardGrenade2
     class BattleManager
     {
         private SpriteFont _debugFont;
-        private readonly string _mapFileName = "TestMap2";
+        private readonly string _mapFileName = "Map2";
         private Map _map = Map.Instance;
 
         private Teams _wizardTeams;
         private List<GameObject> _allWizards;
         private WeaponManager _weaponManager = new WeaponManager();
 
-        private const int WIZARD_HEALTH = 100;
-        private const int NUMBER_OF_TEAMS = 3;
-        private const int TEAM_SIZE = 3;
-
-        public void Initialise()
+        public void Initialise(GameOptions gameOptions)
         {
-            _wizardTeams = new Teams(NUMBER_OF_TEAMS, TEAM_SIZE, WIZARD_HEALTH);
+            _wizardTeams = new Teams(gameOptions);
             _allWizards = _wizardTeams.GetAllWizards();
         }
 
@@ -34,6 +30,8 @@ namespace WizardGrenade2
             _weaponManager.PopulateGameObjects(_allWizards);
             _debugFont = contentManager.Load<SpriteFont>("StatFont");
         }
+
+        public int[] GetTeamHealths() => _wizardTeams.GetTeamHealths();
 
         public void Update(GameTime gameTime)
         {

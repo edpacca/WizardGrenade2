@@ -36,6 +36,16 @@ namespace WizardGrenade2
                 wizard.Update(gameTime);
         }
 
+        public int GetTeamHealth()
+        {
+            int teamHealth = 0;
+            foreach (var wizard in _wizards)
+            {
+                teamHealth += wizard.GetHealth();
+            }
+            return teamHealth;
+        }
+
         public void Draw(SpriteBatch spriteBatch)
         {
             foreach (var wizard in _wizards)

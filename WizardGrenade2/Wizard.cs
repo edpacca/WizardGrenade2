@@ -73,7 +73,6 @@ namespace WizardGrenade2
         public void Update(GameTime gameTime)
         {
             _wizard.Update(gameTime);
-            //ResetMovement();
         }
 
         private void UpdateControl(GameTime gameTime)
@@ -127,7 +126,7 @@ namespace WizardGrenade2
             if (_animationCounter > BLINK_CYCLES)
             {
                 if (_animationCounter == BLINK_CYCLES)
-                    _animationTimer.ResetTimer(3);
+                    _animationTimer.ResetTimer(1.5f);
 
                 IdleLook(gameTime);
             }
@@ -164,29 +163,15 @@ namespace WizardGrenade2
             }
         }
 
-        private void ResetMovement()
-        {
-            _wizard.ModifyVelocityX(0);
-        }
-
         public void Draw(SpriteBatch spriteBatch)
         {
             _wizard.Draw(spriteBatch);
         }
 
-        public Vector2 GetPosition()
-        {
-            return _wizard.GetPosition();
-        }
-
-        public int GetDirection()
-        {
-            return Direction == Directions.Left ? -1 : 1;
-        }
-
-        public GameObject GetWizard()
-        {
-            return _wizard;
-        }
+        public Vector2 GetPosition() => _wizard.GetPosition();
+        public int GetDirection() => Direction == Directions.Left ? -1 : 1;
+        public int GetHealth() => _health;
+        public GameObject GetWizard() => _wizard;
+        
     }
 }

@@ -8,12 +8,21 @@ namespace WizardGrenade2
 {
     class GameScreen
     {
-        private BattleManager _battleManager = new BattleManager();
+        private const int NUMBER_OF_TEAMS = 3;
+        private const int TEAM_SIZE = 3;
+        private const int WIZARD_HEALTH = 100;
+
+        public BattleManager _battleManager = new BattleManager();
+        private GameOptions _gameOptions;
 
         public void Initialise()
         {
-            _battleManager.Initialise();
+            _gameOptions = new GameOptions(NUMBER_OF_TEAMS, TEAM_SIZE, WIZARD_HEALTH);
+            _battleManager.Initialise(_gameOptions);
         }
+
+        public int[] GetTeamHealths() => _battleManager.GetTeamHealths();
+        public GameOptions GetGameOptions() => _gameOptions;
 
         public void LoadContent(ContentManager contentManager)
         {

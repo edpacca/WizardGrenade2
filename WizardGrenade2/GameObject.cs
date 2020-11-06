@@ -128,7 +128,7 @@ namespace WizardGrenade2
         public void Draw(SpriteBatch spriteBatch)
         {
             DrawSprite(spriteBatch, _realSpace.position, _realSpace.rotation);
-            _collisionPoints.DrawCollisionPoints(spriteBatch, _realSpace.position);
+            //_collisionPoints.DrawCollisionPoints(spriteBatch, _realSpace.position);
         }
 
 
