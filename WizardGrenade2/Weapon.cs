@@ -45,6 +45,11 @@ namespace WizardGrenade2
                 _weapon.Draw(spriteBatch);
         }
 
+        public void DrawSymbol(SpriteBatch spriteBatch)
+        {
+            _weapon.DrawSpriteAtScale(spriteBatch, new Vector2(20, 20), 3f);
+        }
+
         public virtual void SetToPlayerPosition(Vector2 newPosition, int activeDirection) => _weapon.SetPosition(newPosition);
         public void SetWeapon(bool isActive) => _isActiveWeapon = isActive;
         public void SetMovementFlag(bool isMoving) => _isMoving = isMoving;

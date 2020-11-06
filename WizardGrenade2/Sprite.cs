@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace WizardGrenade2
 {
@@ -52,6 +53,17 @@ namespace WizardGrenade2
             spriteBatch.Draw(_spriteTexture, position, _spriteRectangle, _spriteColour, 0f, Vector2.Zero, _spriteScale, _spriteEffect, _layerDepth);
         }
 
+        public void DrawSpriteAtScale(SpriteBatch spriteBatch, Vector2 position, float scale)
+        {
+            spriteBatch.Draw(_spriteTexture, position, _spriteRectangle, _spriteColour, 0f, Vector2.Zero, scale, _spriteEffect, _layerDepth);
+        }
+
+        public void DrawSprite(SpriteBatch spriteBatch, Vector2 position, float rotation)
+        {
+            Vector2 rotationOffset = CalcRotationOffset(rotation);
+            spriteBatch.Draw(_spriteTexture, position + rotationOffset, _spriteRectangle, _spriteColour, rotation, Vector2.Zero, _spriteScale, _spriteEffect, _layerDepth);
+        }
+
         public void UpdateAnimationState(string state, float targetFrameRate, GameTime gameTime)
         {
             int frame = _animator.GetCurrentFrame(state, targetFrameRate, gameTime);
@@ -64,13 +76,12 @@ namespace WizardGrenade2
             _spriteRectangle.X = frame * _frameSize;
         }
 
-        public void DrawSprite(SpriteBatch spriteBatch, Vector2 position, float rotation)
+        public void SpriteRectangleMaskX(float maskPercentage)
         {
-            Vector2 rotationOffset = CalcRotationOffset(rotation);
-            spriteBatch.Draw(_spriteTexture, position + rotationOffset, _spriteRectangle, _spriteColour, rotation, Vector2.Zero, _spriteScale, _spriteEffect, _layerDepth);
+            float percentage = maskPercentage <= 1 && maskPercentage >= 0 ? maskPercentage : 1;
+            _spriteRectangle.X = (int)(_spriteTexture.Width * percentage);
         }
 
-        // Utility methods
         private Vector2 CalcRotationOffset(float rotation)
         {
             float xOffset = -_spriteRectangle.Width / 2 * (float)Math.Cos(rotation) + (_spriteTexture.Height / 2 * (float)Math.Sin(rotation));
@@ -79,34 +90,15 @@ namespace WizardGrenade2
             return new Vector2(xOffset, yOffset);
         }
 
-        public void SetColour(Color colour)
-        {
-            _spriteColour = colour;
-        }
-
-        public void SetSpriteEffect(SpriteEffects spriteEffect)
-        {
-            _spriteEffect = spriteEffect;
-        }
-
-        public void SetSpriteScale(float spriteScale)
-        {
-            _spriteScale = spriteScale;
-        }
-
-        public Texture2D GetSpriteTexture()
-        {
-            return _spriteTexture;
-        }
-
-        public Rectangle GetSpriteRectangle()
-        {
-            return _spriteRectangle;
-        }
+        public void SetColour(Color colour) => _spriteColour = colour;
+        public void SetSpriteEffect(SpriteEffects spriteEffect) => _spriteEffect = spriteEffect;
+        public void SetSpriteScale(float spriteScale) => _spriteScale = spriteScale;
+        public Texture2D GetSpriteTexture() => _spriteTexture;
+        public Rectangle GetSpriteRectangle() => _spriteRectangle;
 
         public Vector2 GetSpriteOrigin()
         {
-            return new Vector2((float)_spriteTexture.Width / 2, (float)_spriteTexture.Height / 2) * _spriteScale;
+            return new Vector2((float)_spriteRectangle.Width / 2, (float)_spriteRectangle.Height / 2) * _spriteScale;
         }
     }
 }

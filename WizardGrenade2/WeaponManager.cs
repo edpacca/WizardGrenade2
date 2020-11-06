@@ -20,6 +20,8 @@ namespace WizardGrenade2
         private float _chargeTime = 0f;
         private bool _isLoaded;
 
+        public bool IsCharging { get; set; }
+        
         public void LoadContent(ContentManager contentManager)
         {
             _weapons.Add(_fireball);
@@ -63,6 +65,7 @@ namespace WizardGrenade2
                 _weapons[_activeWeapon].KillProjectile();
                 _weapons[_activeWeapon].SetToPlayerPosition(activePlayerPosition, activeDirection);
                 _chargeTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                IsCharging = true;
             }
 
             if (InputManager.WasKeyReleased(Keys.Space) || _chargeTime >= _weapons[_activeWeapon].GetMaxCharge())
@@ -70,6 +73,7 @@ namespace WizardGrenade2
                 _isLoaded = false;
                 _weapons[_activeWeapon].FireProjectile(_chargeTime, _crosshair.GetAimAngle());
                 _chargeTime = 0f;
+                IsCharging = false;
             }
         }
 
@@ -92,6 +96,7 @@ namespace WizardGrenade2
         public void Draw(SpriteBatch spriteBatch)
         {
             _weapons[_activeWeapon].Draw(spriteBatch);
+            _weapons[_activeWeapon].DrawSymbol(spriteBatch);
             _crosshair.Draw(spriteBatch);
         }
     }
