@@ -20,9 +20,11 @@ namespace WizardGrenade2
         public static float GetScreenWidth => TARGET_SCREEN_WIDTH;
         public static float GetScreenHeight => TARGET_SCREEN_HEIGHT;
         public Vector2 GetScreenCentre => new Vector2(TARGET_SCREEN_WIDTH / 2, TARGET_SCREEN_HEIGHT / 2);
+        private SpriteFont _debugFont;
+        private string _debugParameter;
 
         Color backgroundColour = new Color(40, 40, 45);
-        private SpriteFont _debugFont;
+
 
         public WGGame()
         {
@@ -77,7 +79,8 @@ namespace WizardGrenade2
 
             _spriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.PointClamp, null, null, null, _interfaceManager.GetOriginMatrix());
             _userInterface.Draw(_spriteBatch);
-            //_spriteBatch.DrawString(_debugFont, _interfaceManager.cross.ToString("0.00"), new Vector2(300, 300), Color.White);
+            
+             //_spriteBatch.DrawString(_debugFont, _debugParameter, new Vector2(GetScreenWidth - 20, 20), Color.White);
             _spriteBatch.End();
 
             base.Draw(gameTime);
