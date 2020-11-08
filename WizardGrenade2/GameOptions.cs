@@ -1,6 +1,6 @@
 ﻿namespace WizardGrenade2
 {
-    class GameOptions
+    public class GameOptions
     {
         public int WizardHealth { get; private set; }
         public int NumberOfTeams { get; private set; }
