@@ -9,7 +9,8 @@ namespace WizardGrenade2
     {
         private readonly string _teamName;
         public List<Wizard> _wizards = new List<Wizard>();
-
+        private Vector2 _healthTextOffset = new Vector2(10, 36);
+        private SpriteFont _spriteFont;
         private bool _isActiveTeam;
         private int _teamHealth;
 
@@ -26,6 +27,7 @@ namespace WizardGrenade2
 
         public void LoadContent(ContentManager contentManager)
         {
+            _spriteFont = contentManager.Load<SpriteFont>("WizardHealthFont");
             foreach (var wizard in _wizards)
                 wizard.LoadContent(contentManager);
         }
@@ -46,10 +48,21 @@ namespace WizardGrenade2
             return teamHealth;
         }
 
+        public void DrawHealth(SpriteBatch spriteBatch)
+        {
+            foreach (var wizard in _wizards)
+                spriteBatch.DrawString(_spriteFont, wizard.GetHealth().ToString(), wizard.GetPosition() - _healthTextOffset, Color.White);
+        }
+
         public void Draw(SpriteBatch spriteBatch)
         {
             foreach (var wizard in _wizards)
+            {
+                if (!wizard.isActive)
+                    spriteBatch.DrawString(_spriteFont, wizard.GetHealth().ToString(), wizard.GetPosition() - _healthTextOffset, Color.White);
+
                 wizard.Draw(spriteBatch);
+            }
         }
     }
 }

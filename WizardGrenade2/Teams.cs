@@ -12,7 +12,7 @@ namespace WizardGrenade2
         private List<Team> _teams = new List<Team>();
         private int[] _teamHealthValues;
         private Marker _marker = new Marker();
-        private readonly List<GameObject> _allWizards;
+        private readonly List<Wizard> _allWizards;
 
         private int _activeWizard;
         private int _activeTeam;
@@ -28,9 +28,10 @@ namespace WizardGrenade2
             for (int i = 0; i < _numberOfTeams; i++)
                 _teams.Add(new Team(i, "Team " + i + 1, _teamSize, gameOptions.WizardHealth));
 
-            _allWizards = new List<GameObject>();
+            _allWizards = new List<Wizard>();
             _teamHealthValues = new int[_numberOfTeams];
             LoadTeamHealth();
+            _teams[_activeTeam]._wizards[_activeWizard].isActive = true;
 
             foreach (var team in _teams)
                 foreach (var wizard in team._wizards)
@@ -40,6 +41,7 @@ namespace WizardGrenade2
         public void LoadContent(ContentManager contentManager)
         {
             _marker.LoadContent(contentManager);
+
             foreach (var team in _teams)
             {
                 team.LoadContent(contentManager);
@@ -48,12 +50,26 @@ namespace WizardGrenade2
 
         private void ChangeWizard()
         {
+            _teams[_activeTeam]._wizards[_activeWizard].isActive = false;
             _activeWizard = Utility.WrapAroundCounter(_activeWizard, _teamSize);
+            _teams[_activeTeam]._wizards[_activeWizard].isActive = true;
         }
 
         private void ChangeTeam()
         {
+            _teams[_activeTeam]._wizards[_activeWizard].isActive = false;
             _activeTeam = Utility.WrapAroundCounter(_activeTeam, _numberOfTeams);
+            _teams[_activeTeam]._wizards[_activeWizard].isActive = true;
+        }
+
+        private void DamageWizard()
+        {
+            if (InputManager.WasKeyPressed(Keys.D1))
+                _teams[0]._wizards[0].entity.ApplyDamage(10);
+            if (InputManager.WasKeyPressed(Keys.D2))
+                _teams[0]._wizards[1].entity.ApplyDamage(20);
+            if (InputManager.WasKeyPressed(Keys.D3))
+                _teams[0]._wizards[2].entity.ApplyDamage(30);
         }
 
         public void ControlActiveTeamWizard(Keys changeTeam, Keys changeWizard)
@@ -74,8 +90,9 @@ namespace WizardGrenade2
   
             ControlActiveTeamWizard(Keys.CapsLock, Keys.Tab);
 
-            _teams[_activeTeam]._wizards[_activeWizard].UpdateMovement(gameTime);
+            _teams[_activeTeam]._wizards[_activeWizard].UpdateControl(gameTime);
             _marker.Update(gameTime, GetActiveWizardPosition());
+            DamageWizard();
         }
 
         private void LoadTeamHealth()
@@ -96,7 +113,7 @@ namespace WizardGrenade2
             return _teams[_activeTeam]._wizards[_activeWizard].GetDirection();
         }
 
-        public List<GameObject> GetAllWizards()
+        public List<Wizard> GetAllWizards()
         {
             return _allWizards;
         }
@@ -105,7 +122,9 @@ namespace WizardGrenade2
         {
             _marker.Draw(spriteBatch);
             foreach (var team in _teams)
+            {
                 team.Draw(spriteBatch);
+            }
         }
     }
 }
