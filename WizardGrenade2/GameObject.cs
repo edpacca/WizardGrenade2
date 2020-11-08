@@ -13,7 +13,7 @@ namespace WizardGrenade2
         private Space2D _potentialSpace = new Space2D();
         private Polygon _collisionPoints;
         private CollisionManager Collider = CollisionManager.Instance;
-        public bool IgnoreGravity { get; set; }
+        public bool Collided { get; set; }
 
         public GameObject(GameObjectParameters inputParameters)
         {
@@ -68,6 +68,7 @@ namespace WizardGrenade2
 
             if (collidingPoints.Count > 0)
             {
+                Collided = true;
                 Vector2 reflectionVector = Collider.ResolveCollision
                     (collidingPoints, _potentialSpace.position, _realSpace.velocity);
 
@@ -116,6 +117,11 @@ namespace WizardGrenade2
         public void AddVelocity(Vector2 deltaVelocity)
         {
             _realSpace.velocity += deltaVelocity;
+        }
+
+        public void AddRotation(float rotation)
+        {
+            _realSpace.rotation += rotation;
         }
 
         public Vector2 GetVelocity() => _realSpace.velocity;

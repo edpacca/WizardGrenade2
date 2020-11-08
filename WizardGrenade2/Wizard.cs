@@ -17,8 +17,8 @@ namespace WizardGrenade2
         private const int COLLISION_POINTS = 15;
         private const bool CAN_ROTATE = false;
         private const float DAMPING_FACTOR = 0.5f;
-
-        private int _health;
+        public bool isActive { get; set; }
+        public Entity entity;
         private GameObject _wizard;
         private Timer _animationTimer = new Timer(6);
         private int _animationCounter = 0;
@@ -29,8 +29,7 @@ namespace WizardGrenade2
             ["Idle"] = new int[] { 0, 12 },
             ["Looking"] = new int[] { 13, 14 },
             ["Walking"] = new int[] { 1, 2 },
-            ["Charging1"] = new int[] { 3, 4, 5, 6 },
-            ["Charging2"] = new int[] { 7, 8 },
+            ["Charging"] = new int[] { 3, 4, 5, 6, 7, 8, 7, 8 },
             ["Firing"] = new int[] { 9 },
             ["Weak"] = new int[] { 10 },
             ["Jumping"] = new int[] { 11 },
@@ -60,7 +59,7 @@ namespace WizardGrenade2
             GameObjectParameters parameters = new GameObjectParameters(_baseFileName + skinNumber,
                 MASS, CAN_ROTATE, COLLISION_POINTS, DAMPING_FACTOR, FRAMES_H, FRAMES_V);
 
-            _health = startHealth;
+            entity = new Entity(startHealth);
             _wizard = new GameObject(parameters, position);
         }
 
@@ -73,10 +72,13 @@ namespace WizardGrenade2
         public void Update(GameTime gameTime)
         {
             _wizard.Update(gameTime);
+            Die();
         }
 
-        private void UpdateControl(GameTime gameTime)
+        public void UpdateControl(GameTime gameTime)
         {
+            Charge(gameTime);
+
             if (State != States.Charging)
             {
                 UpdateMovement(gameTime);
@@ -87,6 +89,7 @@ namespace WizardGrenade2
 
         public void UpdateMovement(GameTime gameTime)
         {
+
             if (InputManager.IsKeyDown(Keys.Left) && State != States.Jumping)
                 Walk(Directions.Left, -1, SpriteEffects.None, gameTime);
             else if (InputManager.IsKeyDown(Keys.Right) && State != States.Jumping)
@@ -101,7 +104,7 @@ namespace WizardGrenade2
         {
             _wizard.ModifyVelocityX(directionCoefficient * WALK_SPEED);
             State = States.Walking;
-            _wizard.UpdateAnimationState("Walking", 10, gameTime);
+            _wizard.UpdateAnimationStateH("Walking", 10, gameTime);
             Direction = direction;
             _wizard.SetSpriteEffect(effect);
         }
@@ -109,13 +112,24 @@ namespace WizardGrenade2
         private void Jump()
         {
             if (InputManager.IsKeyDown(Keys.Enter))
-                _wizard.UpdateAnimationState("Jumping");
+                _wizard.UpdateAnimationStateH("Jumping");
 
             if (InputManager.WasKeyReleased(Keys.Enter))
             {
                 State = States.Jumping;
                 _wizard.ModifyVelocityY(200);
             }
+        }
+
+        private void Charge(GameTime gameTime)
+        {
+            if (WeaponManager.Instance.IsCharging)
+            {
+                _wizard.UpdateAnimationStateH("Charging", 4, gameTime);
+                State = States.Charging;
+            }
+            else
+                State = States.Idle;
         }
 
         private void Idle(GameTime gameTime)
@@ -126,14 +140,14 @@ namespace WizardGrenade2
             if (_animationCounter > BLINK_CYCLES)
             {
                 if (_animationCounter == BLINK_CYCLES)
-                    _animationTimer.ResetTimer(1.5f);
+                    _animationTimer.ResetTimer(0.5f);
 
                 IdleLook(gameTime);
             }
             // More frequently shows blinking animation
             else if (_animationTimer.Time <= 1f)
             {
-                _wizard.UpdateAnimationState("Idle", 4f, gameTime);
+                _wizard.UpdateAnimationStateH("Idle", 4f, gameTime);
 
                 if (!_animationTimer.IsRunning)
                 {
@@ -144,7 +158,7 @@ namespace WizardGrenade2
             // Otherwise shows Idle frame
             else
             {
-                _wizard.UpdateAnimationState("Idle");
+                _wizard.UpdateAnimationStateH("Idle");
             }
 
             // Check for true Idle state
@@ -156,10 +170,19 @@ namespace WizardGrenade2
 
         private void IdleLook(GameTime gameTime)
         {
-           _wizard.UpdateAnimationState("Looking", 1, gameTime);
+           _wizard.UpdateAnimationStateH("Looking", 1, gameTime);
             if (!_animationTimer.IsRunning)
             {
                 _animationCounter = 0;
+            }
+        }
+
+        private void Die()
+        {
+            if (entity.IsDead)
+            {
+                _wizard.SetColour(Color.Red);
+                _wizard.AddRotation(Mechanics.PI / 2);
             }
         }
 
@@ -170,8 +193,10 @@ namespace WizardGrenade2
 
         public Vector2 GetPosition() => _wizard.GetPosition();
         public int GetDirection() => Direction == Directions.Left ? -1 : 1;
-        public int GetHealth() => _health;
-        public GameObject GetWizard() => _wizard;
+        public int GetHealth() => entity.Health;
+        public bool IsDead() => entity.IsDead;
+        public Wizard GetWizard() => this;
+        public void AddVelocity(Vector2 velocity) => _wizard.AddVelocity(velocity);
         
     }
 }
