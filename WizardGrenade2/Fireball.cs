@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 
 namespace WizardGrenade2
@@ -13,15 +14,15 @@ namespace WizardGrenade2
         private const float DAMPING_FACTOR = 0.6f;
         private const int CHARGE_POWER = 400;
         private const float MAX_CHARGE = 2f;
+        private const float EXPLOSION_DAMPING = 0.6f;
 
-        private Timer _timer;
         private float _detonationTime;
         private int _blastRadius;
         private Explosion _explosion;
 
         public Fireball(float detonationTime, int blastRadius)
         {
-            _timer = new Timer(detonationTime);
+            DetonationDimer = new Timer(detonationTime);
             _detonationTime = detonationTime;
             _blastRadius = blastRadius;
             _explosion = new Explosion(_blastRadius);
@@ -34,23 +35,23 @@ namespace WizardGrenade2
             _explosion.LoadContent(contentManager);
         }
 
-        public override void Update(GameTime gameTime, List<GameObject> gameObjects)
+        public override void Update(GameTime gameTime, List<Wizard> gameObjects)
         {
             if (GetMovementFlag())
-                _timer.Update(gameTime);
+                DetonationDimer.Update(gameTime);
 
-            if (!_timer.IsRunning)
+            if (!DetonationDimer.IsRunning)
             {
                 Explode(gameTime, gameObjects);
                 KillProjectile();
-                _timer.ResetTimer(_detonationTime);
+                DetonationDimer.ResetTimer(WeaponManager.Instance.GetDetonationTime());
             }
 
             _explosion.UpdateExplosion(gameTime);
             base.Update(gameTime, gameObjects);
         }
 
-        private void Explode(GameTime gameTime, List<GameObject> gameObjects)
+        private void Explode(GameTime gameTime, List<Wizard> gameObjects)
         {
             Vector2 position = GetPosition();
             Map.Instance.DeformLevel(_blastRadius, position);
@@ -59,18 +60,31 @@ namespace WizardGrenade2
             SetMovementFlag(false);
         }
 
-        public virtual void GameObjectInteraction(GameTime gameTime, List<GameObject> gameObjects, Vector2 explosionPosition)
+        public virtual void GameObjectInteraction(GameTime gameTime, List<Wizard> gameObjects, Vector2 explosionPosition)
         {
             foreach (var gameObject in gameObjects)
             {
                 Vector2 explosionToObject = _explosion.ExplosionToObject(explosionPosition, gameObject.GetPosition());
                 if (_explosion.IsWithinExplosionArea(explosionToObject, _blastRadius + 15))
                 {
-                    Vector2 pushBack = _explosion.ExplosionVector(explosionToObject);
+                    Vector2 pushBack = _explosion.ExplosionVector(explosionToObject) * EXPLOSION_DAMPING;
                     gameObject.AddVelocity(pushBack);
+                    gameObject.entity.ApplyDamage((int)Mechanics.VectorMagnitude(pushBack) / 3);
                 }
-                    
             }
+        }
+
+        private void SetDetonationTime(int time)
+        {
+            DetonationDimer.ResetTimer(time);
+        }
+
+        private int GetDetonationTime(Keys key)
+        {
+            if (InputManager.WasKeyPressed(key))
+                return 1;
+                //return key.ToString();
+            return 0;
         }
 
         public override void Draw(SpriteBatch spriteBatch)

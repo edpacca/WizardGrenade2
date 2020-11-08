@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace WizardGrenade2
 {
-    class Timer
+    public class Timer
     {
         private SpriteFont _timerFont;
 
