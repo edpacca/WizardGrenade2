@@ -1,5 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using System;
+using System.Linq;
 
 namespace WizardGrenade2
 {
@@ -48,6 +50,24 @@ namespace WizardGrenade2
         public static MouseState GetMouseState()
         {
             return _currentMouseState;
+        }
+
+        public static int NumberKeys()
+        {
+            Keys[] keys = _currentKeyboardState.GetPressedKeys();
+            int numberKey = 0;
+            foreach (var key in keys)
+            {
+                try
+                {
+                    numberKey = Convert.ToByte(key.ToString().Substring(1));
+                }
+                catch (System.Exception)
+                {
+                    return 0;
+                }
+            }
+            return numberKey;
         }
 
         public static Vector2 CursorPosition()
