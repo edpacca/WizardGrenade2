@@ -25,6 +25,7 @@ namespace WizardGrenade2
         {
             _fileName = "HealthBar";
             _startTeamHealth = startTeamHealth;
+            _displayedTeamHealth = _startTeamHealth;
             _healthBarPosition = new Vector2((WGGame.GetScreenWidth / 2), WGGame.GetScreenHeight - 20 - (15 * teamNumber));
         }
 
@@ -37,23 +38,18 @@ namespace WizardGrenade2
 
         public void Update(GameTime gameTime, int actualTeamHealth)
         {
-            UpdateAnimationState("bar", 1, gameTime);
+            UpdateAnimationStateV("bar", 5, gameTime);
             SmoothUpdateHealthBar(gameTime, actualTeamHealth);
-            float healthPercentage = _displayedTeamHealth / _startTeamHealth;
+            float healthPercentage = 1 - ((float)_displayedTeamHealth / (float)_startTeamHealth);
             SpriteRectangleMaskX(healthPercentage);
-
         }
 
         private void SmoothUpdateHealthBar(GameTime gameTime, int actualTeamHealth)
         {
             if (_displayedTeamHealth > actualTeamHealth)
-            {
                 _displayedTeamHealth -= (int)(gameTime.ElapsedGameTime.TotalSeconds * 100);
-            }
             else
-            {
                 _displayedTeamHealth = actualTeamHealth;
-            }
         }
 
         public void Draw(SpriteBatch spriteBatch)

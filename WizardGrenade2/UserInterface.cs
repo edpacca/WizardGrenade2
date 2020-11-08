@@ -2,10 +2,11 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using System;
 
 namespace WizardGrenade2
 {
-    class UserInterface
+    public class UserInterface
     {
         private Sprite _cursor;
         private Timer _timer;
@@ -13,6 +14,9 @@ namespace WizardGrenade2
         private int _numberOfTeams;
         private int _teamStartHealth;
         private const float ROUND_TIME = 60f;
+        private List<Weapon> _weaponList;
+        private DetonationTimer _detonationTimer;
+        private Vector2 _weaponSymbolPosition = new Vector2(20, 20);
 
         public UserInterface(GameOptions gameOptions)
         {
@@ -24,19 +28,23 @@ namespace WizardGrenade2
         {
             _cursor = new Sprite(contentManager, "Cursor");
             _timer = new Timer(ROUND_TIME);
+            _detonationTimer = new DetonationTimer(contentManager);
             _timer.LoadContent(contentManager);
-
             _healthBars = new List<HealthBar>();
+
             for (int i = 0; i < _numberOfTeams; i++)
             {
                 _healthBars.Add(new HealthBar(i, _teamStartHealth));
                 _healthBars[i].LoadContent(contentManager);
             }
+
+            _weaponList = WeaponManager.Instance.GetWeaponList();
         }
 
         public void Update(GameTime gameTime, int[] teamHealths)
         {
             _timer.Update(gameTime);
+            _detonationTimer.SetTimer((int)WeaponManager.Instance.GetDetonationTime());
 
             for (int i = 0; i < _numberOfTeams; i++)
             {
@@ -51,6 +59,9 @@ namespace WizardGrenade2
                 healthBar.Draw(spriteBatch);
 
             _cursor.DrawSprite(spriteBatch, InputManager.CursorPosition());
+            _weaponList[WeaponManager.Instance.GetActiveWeapon()].DrawSymbol(spriteBatch, _weaponSymbolPosition, 4f);
+            _detonationTimer.Draw(spriteBatch, _weaponSymbolPosition + new Vector2(8, 1));
+            
         }
     }
 }
