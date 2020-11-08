@@ -64,22 +64,46 @@ namespace WizardGrenade2
             spriteBatch.Draw(_spriteTexture, position + rotationOffset, _spriteRectangle, _spriteColour, rotation, Vector2.Zero, _spriteScale, _spriteEffect, _layerDepth);
         }
 
-        public void UpdateAnimationState(string state, float targetFrameRate, GameTime gameTime)
+        public void UpdateAnimationStateH(string state, float targetFrameRate, GameTime gameTime)
         {
             int frame = _animator.GetCurrentFrame(state, targetFrameRate, gameTime);
             _spriteRectangle.X = frame * _frameSize;
         }
 
-        public void UpdateAnimationState(string state)
+        public void AnimationSequence(string state1, string state2, float targetFrameRate1, float targetFrameRate2, GameTime gameTime)
+        {
+            int frame = _animator.GetAnimationFrameSequence(state1, state2, targetFrameRate1, targetFrameRate2, gameTime);
+            _spriteRectangle.X = frame * _frameSize;
+        }
+
+        public void UpdateAnimationStateH(string state)
         {
             int frame = _animator.GetSingleFrame(state);
             _spriteRectangle.X = frame * _frameSize;
+        }
+
+        public void UpdateAnimationStateV(string state, float targetFrameRate, GameTime gameTime)
+        {
+            int frame = _animator.GetCurrentFrame(state, targetFrameRate, gameTime);
+            _spriteRectangle.Y = frame * _frameSize;
+        }
+
+        public void UpdateAnimationStateV(string state)
+        {
+            int frame = _animator.GetSingleFrame(state);
+            _spriteRectangle.Y = frame * _frameSize;
         }
 
         public void SpriteRectangleMaskX(float maskPercentage)
         {
             float percentage = maskPercentage <= 1 && maskPercentage >= 0 ? maskPercentage : 1;
             _spriteRectangle.X = (int)(_spriteTexture.Width * percentage);
+        }
+
+        public void SpriteRectangleMaskY(float maskPercentage)
+        {
+            float percentage = maskPercentage <= 1 && maskPercentage >= 0 ? maskPercentage : 1;
+            _spriteRectangle.Y = (int)(_spriteTexture.Width * percentage);
         }
 
         private Vector2 CalcRotationOffset(float rotation)

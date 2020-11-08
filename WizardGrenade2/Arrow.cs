@@ -13,6 +13,7 @@ namespace WizardGrenade2
         private const float DAMPING_FACTOR = 0f;
         private const int CHARGE_POWER = 1500;
         private const float MAX_CHARGE = 0.6f;
+        private const float KNOCKBACK_DAMPING = 0.86f;
 
         public void LoadContent(ContentManager contentManager)
         {
@@ -20,14 +21,15 @@ namespace WizardGrenade2
             SetFiringBehaviour(CHARGE_POWER, MAX_CHARGE);
         }
 
-        public override void GameObjectInteraction(List<GameObject> gameObjects)
+        public override void GameObjectInteraction(List<Wizard> gameObjects)
         {
             foreach (var gameObject in gameObjects)
             {
                 float distance = Math.Abs(Mechanics.VectorMagnitude(GetPosition() - gameObject.GetPosition()));
                 if (distance <= 16)
                 {
-                    gameObject.AddVelocity(GetVelocity());
+                    gameObject.AddVelocity(GetVelocity() * KNOCKBACK_DAMPING);
+                    gameObject.entity.ApplyDamage((int)(Mechanics.VectorMagnitude(GetVelocity()) * 0.028));
                     KillProjectile();
                 }
             }
@@ -38,7 +40,7 @@ namespace WizardGrenade2
             base.SetToPlayerPosition(newPosition + new Vector2(17 * activeDirection, 0), 1);
         }
 
-        public override void Update(GameTime gameTime, List<GameObject> gameObjects)
+        public override void Update(GameTime gameTime, List<Wizard> gameObjects)
         {
             GameObjectInteraction(gameObjects);
 

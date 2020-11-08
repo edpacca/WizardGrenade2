@@ -5,13 +5,26 @@ using System.Collections.Generic;
 
 namespace WizardGrenade2
 {
-    class Weapon
+    public class Weapon
     {
         private GameObject _weapon;
         private bool _isActiveWeapon;
         private bool _isMoving;
         private int _weaponPower = 100;
         private float _maxCharge = 5f;
+        public Timer DetonationDimer { get; set; }
+
+        public bool HasCollided 
+        {  
+            get 
+            { 
+                return _weapon.Collided; 
+            } 
+            set 
+            { 
+                _weapon.Collided = value; 
+            } 
+        }
 
         public void LoadContent(ContentManager contentManager, GameObjectParameters parameters)
         {
@@ -19,7 +32,7 @@ namespace WizardGrenade2
             _weapon.LoadContent(contentManager);
         }
 
-        public virtual void Update(GameTime gameTime, List<GameObject> gameObjects)
+        public virtual void Update(GameTime gameTime, List<Wizard> gameObjects)
         {
             if (_isMoving)
                 _weapon.Update(gameTime);
@@ -37,7 +50,7 @@ namespace WizardGrenade2
             _isMoving = false;
         }
 
-        public virtual void GameObjectInteraction(List<GameObject> gameObjects){}
+        public virtual void GameObjectInteraction(List<Wizard> gameObjects){}
 
         public virtual void Draw(SpriteBatch spriteBatch)
         {
@@ -45,9 +58,9 @@ namespace WizardGrenade2
                 _weapon.Draw(spriteBatch);
         }
 
-        public void DrawSymbol(SpriteBatch spriteBatch)
+        public void DrawSymbol(SpriteBatch spriteBatch, Vector2 position, float scale)
         {
-            _weapon.DrawSpriteAtScale(spriteBatch, new Vector2(20, 20), 3f);
+            _weapon.DrawSpriteAtScale(spriteBatch, position, scale);
         }
 
         public virtual void SetToPlayerPosition(Vector2 newPosition, int activeDirection) => _weapon.SetPosition(newPosition);
@@ -55,8 +68,10 @@ namespace WizardGrenade2
         public void SetMovementFlag(bool isMoving) => _isMoving = isMoving;
         public bool GetMovementFlag() =>_isMoving;
         public float GetMaxCharge() => _maxCharge;
+        
         public Vector2 GetPosition() => _weapon.GetPosition();
         public Vector2 GetVelocity() => _weapon.GetVelocity();
+        public Texture2D GetSymbol() => _weapon.GetSpriteTexture();
         public void SetFiringBehaviour(int power) => _weaponPower = power;
 
         public void SetFiringBehaviour(int power, float maxCharge)
