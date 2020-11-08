@@ -13,8 +13,8 @@ namespace WizardGrenade2
         private Map _map = Map.Instance;
 
         private Teams _wizardTeams;
-        private List<GameObject> _allWizards;
-        private WeaponManager _weaponManager = new WeaponManager();
+        private List<Wizard> _allWizards;
+        private WeaponManager _weaponManager = WeaponManager.Instance;
 
         public void Initialise(GameOptions gameOptions)
         {
