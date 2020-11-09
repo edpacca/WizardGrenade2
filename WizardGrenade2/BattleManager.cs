@@ -26,8 +26,7 @@ namespace WizardGrenade2
         {
             _map.LoadContent(contentManager, _mapFileName, true);
             _wizardTeams.LoadContent(contentManager);
-            _weaponManager.LoadContent(contentManager);
-            _weaponManager.PopulateGameObjects(_allWizards);
+            _weaponManager.LoadContent(contentManager, _allWizards);
             _debugFont = contentManager.Load<SpriteFont>("StatFont");
         }
 

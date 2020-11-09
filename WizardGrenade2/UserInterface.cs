@@ -38,7 +38,7 @@ namespace WizardGrenade2
                 _healthBars[i].LoadContent(contentManager);
             }
 
-            _weaponList = WeaponManager.Instance.GetWeaponList();
+            _weaponList = WeaponManager.Instance.Weapons;
         }
 
         public void Update(GameTime gameTime, int[] teamHealths)
@@ -59,9 +59,8 @@ namespace WizardGrenade2
                 healthBar.Draw(spriteBatch);
 
             _cursor.DrawSprite(spriteBatch, InputManager.CursorPosition());
-            _weaponList[WeaponManager.Instance.GetActiveWeapon()].DrawSymbol(spriteBatch, _weaponSymbolPosition, 4f);
+            _weaponList[WeaponManager.Instance.ActiveWeapon].DrawSymbol(spriteBatch, _weaponSymbolPosition, 4f);
             _detonationTimer.Draw(spriteBatch, _weaponSymbolPosition + new Vector2(8, 1));
-            
         }
     }
 }

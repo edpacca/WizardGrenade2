@@ -196,6 +196,7 @@ namespace WizardGrenade2
         public int GetHealth() => entity.Health;
         public bool IsDead() => entity.IsDead;
         public Wizard GetWizard() => this;
+        public Rectangle GetSpriteRectangle() => _wizard.GetSpriteRectangle();
         public void AddVelocity(Vector2 velocity) => _wizard.AddVelocity(velocity);
         
     }

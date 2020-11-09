@@ -62,16 +62,6 @@ namespace WizardGrenade2
             _teams[_activeTeam]._wizards[_activeWizard].isActive = true;
         }
 
-        private void DamageWizard()
-        {
-            if (InputManager.WasKeyPressed(Keys.D1))
-                _teams[0]._wizards[0].entity.ApplyDamage(10);
-            if (InputManager.WasKeyPressed(Keys.D2))
-                _teams[0]._wizards[1].entity.ApplyDamage(20);
-            if (InputManager.WasKeyPressed(Keys.D3))
-                _teams[0]._wizards[2].entity.ApplyDamage(30);
-        }
-
         public void ControlActiveTeamWizard(Keys changeTeam, Keys changeWizard)
         {
             if (InputManager.WasKeyReleased(changeTeam))
@@ -92,7 +82,6 @@ namespace WizardGrenade2
 
             _teams[_activeTeam]._wizards[_activeWizard].UpdateControl(gameTime);
             _marker.Update(gameTime, GetActiveWizardPosition());
-            DamageWizard();
         }
 
         private void LoadTeamHealth()
