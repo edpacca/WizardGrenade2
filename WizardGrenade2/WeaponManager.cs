@@ -9,49 +9,42 @@ namespace WizardGrenade2
 {
     public sealed class WeaponManager
     {
-        private WeaponManager() { }
-
+        private WeaponManager() {}
         private static readonly Lazy<WeaponManager> lazyManager = new Lazy<WeaponManager>(() => new WeaponManager());
+        public static WeaponManager Instance { get => lazyManager.Value; }
 
-        public static WeaponManager Instance
-        { 
-            get
-            {
-                return lazyManager.Value;
-            }
-        }
-        private SpriteFont _debugFont;
-        private Fireball _fireball = new Fireball(4f, 40);
+        private Fireball _fireball = new Fireball();
         private Arrow _arrow = new Arrow();
-        private IceBomb _iceBomb = new IceBomb(70);
+        private IceBomb _iceBomb = new IceBomb();
         private Crosshair _crosshair = new Crosshair();
-        private List<Wizard> _gameObjects;
+        private List<Wizard> _allWizards;
 
-        private List<Weapon> _weapons = new List<Weapon>();
-        private int _activeWeapon = 0;
         private int _numberOfWeapons;
         private int _timer = 4;
-
-        private float _chargeTime = 0f;
         private bool _isLoaded;
 
+        public float ChargePower { get; private set; }
+        public int ActiveWeapon { get; private set; }
         public bool IsCharging { get; private set; }
+        public List<Weapon> Weapons { get; private set; }
+        public Rectangle WizardSpriteRectangle { get; private set; }
 
         private readonly int[] _detonationTimes = new int[] { 1, 2, 3, 4, 5 };
         
-        public void LoadContent(ContentManager contentManager)
+        public void LoadContent(ContentManager contentManager, List<Wizard> allWizards)
         {
-            _weapons.Add(_fireball);
-            _weapons.Add(_arrow);
-            _weapons.Add(_iceBomb);
+            PopulateGameObjects(allWizards);
 
-            _fireball.LoadContent(contentManager);
-            _arrow.LoadContent(contentManager);
-            _iceBomb.LoadContent(contentManager);
+            Weapons = new List<Weapon>();
+            Weapons.Add(_fireball);
+            Weapons.Add(_arrow);
+            Weapons.Add(_iceBomb);
 
-            _numberOfWeapons = _weapons.Count;
+            foreach (var weapon in Weapons)
+                weapon.LoadContent(contentManager);
+
+            _numberOfWeapons = Weapons.Count;
             _crosshair.LoadContent(contentManager);
-            _debugFont = contentManager.Load<SpriteFont>("StatFont");
         }
 
         public void Update(GameTime gameTime, Vector2 activeWizardPosition, int activeDirection)
@@ -62,21 +55,27 @@ namespace WizardGrenade2
             if (_isLoaded)
                 ChargeWeapon(gameTime, activeWizardPosition, activeDirection);
             
-            if (!_weapons[_activeWeapon].GetMovementFlag())
+            if (!Weapons[ActiveWeapon].IsMoving)
                 ResetCharge();
             
-            _weapons[_activeWeapon].Update(gameTime, _gameObjects);
+            Weapons[ActiveWeapon].Update(gameTime, _allWizards);
             UpdateGrenadeTimer();
             ResetTimer();
+        }
+
+        public void PopulateGameObjects(List<Wizard> allWizards)
+        {
+            _allWizards = allWizards;
+            WizardSpriteRectangle = _allWizards[0].GetSpriteRectangle();
         }
 
         private void CycleWeapons(Keys key)
         {
             if (InputManager.WasKeyPressed(key))
             {
-                _weapons[_activeWeapon].SetWeapon(false);
-                _activeWeapon = Utility.WrapAroundCounter(_activeWeapon, _numberOfWeapons);
-                _weapons[_activeWeapon].SetWeapon(true);
+                Weapons[ActiveWeapon].IsMoving = false;
+                ActiveWeapon = Utility.WrapAroundCounter(ActiveWeapon, _numberOfWeapons);
+                Weapons[ActiveWeapon].IsActive = true;
             }
         }
 
@@ -85,23 +84,23 @@ namespace WizardGrenade2
             if (InputManager.IsKeyDown(Keys.Space))
             {
                 IsCharging = true;
-                _weapons[_activeWeapon].KillProjectile();
-                _weapons[_activeWeapon].SetToPlayerPosition(activePlayerPosition, activeDirection);
-                _chargeTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                Weapons[ActiveWeapon].KillProjectile();
+                Weapons[ActiveWeapon].SetToPlayerPosition(activePlayerPosition, activeDirection);
+                ChargePower += (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
 
-            if (InputManager.WasKeyReleased(Keys.Space) || _chargeTime >= _weapons[_activeWeapon].GetMaxCharge())
+            if (InputManager.WasKeyReleased(Keys.Space) || ChargePower >= Weapons[ActiveWeapon].MaxChargeTime)
             {
                 _isLoaded = false;
                 IsCharging = false;
-                _weapons[_activeWeapon].FireProjectile(_chargeTime, _crosshair.GetAimAngle());
-                _chargeTime = 0f;
+                Weapons[ActiveWeapon].FireProjectile(ChargePower, _crosshair.GetAimAngle());
+                ChargePower = 0f;
             }
         }
 
         private void ResetCharge()
         {
-            if (!InputManager.IsKeyDown(Keys.Space))
+            if (InputManager.IsKeyUp(Keys.Space))
             _isLoaded = true;
         }
 
@@ -125,18 +124,18 @@ namespace WizardGrenade2
         private void SetTimer(int time)
         {
             if (!TimerIsNull())
-                _weapons[_activeWeapon].DetonationDimer.ResetTimer(time);
+                Weapons[ActiveWeapon].DetonationTimer.ResetTimer(time);
         }
 
         private void ResetTimer()
         {
-            if ((!TimerIsNull()) && _weapons[_activeWeapon].DetonationDimer.Time < 0)
-                _weapons[_activeWeapon].DetonationDimer.ResetTimer(_timer);
+            if ((!TimerIsNull()) && Weapons[ActiveWeapon].DetonationTimer.Time < 0)
+                Weapons[ActiveWeapon].DetonationTimer.ResetTimer(_timer);
         }
 
         private bool TimerIsNull()
         {
-            return (_weapons[_activeWeapon].DetonationDimer == null);
+            return (Weapons[ActiveWeapon].DetonationTimer == null);
         }
 
         public float GetDetonationTime()
@@ -144,18 +143,13 @@ namespace WizardGrenade2
             if (TimerIsNull())
                 return 0;
             
-            return _weapons[_activeWeapon].DetonationDimer.Time;
+            return Weapons[ActiveWeapon].DetonationTimer.Time;
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            _weapons[_activeWeapon].Draw(spriteBatch);
+            Weapons[ActiveWeapon].Draw(spriteBatch);
             _crosshair.Draw(spriteBatch);
         }
-
-        public float GetChargePower() => _chargeTime;
-        public void PopulateGameObjects(List<Wizard> gameObjects) => _gameObjects = gameObjects;
-        public int GetActiveWeapon() => _activeWeapon;
-        public List<Weapon> GetWeaponList() => _weapons;
     }
 }

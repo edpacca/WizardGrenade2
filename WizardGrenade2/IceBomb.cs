@@ -8,30 +8,29 @@ namespace WizardGrenade2
 {
     class IceBomb : Weapon
     {
-        private readonly string _fileName = "IceBomb";
-        private const int MASS = 80;
-        private const int NUMBER_OF_COLLISION_POINTS = 6;
-        private const float DAMPING_FACTOR = 0.1f;
-        private const int CHARGE_POWER = 400;
-        private const float MAX_CHARGE = 2f;
-        private const float PUSHBACK_DAMPING = 0.8f;
-        private const int KNOCKBACK_AREA = 20;
+        //private readonly string _fileName = "IceBomb";
+        //private const int MASS = 80;
+        //private const int NUMBER_OF_COLLISION_POINTS = 6;
+        //private const float DAMPING_FACTOR = 0.1f;
+        //private const int CHARGE_POWER = 400;
+        //private const float MAX_CHARGE = 2f;
+        //private const float PUSHBACK_DAMPING = 0.8f;
+        //private const int KNOCKBACK_AREA = 20;
 
-        private float _detonationTime;
-        private int _blastRadius;
+        //private float _detonationTime;
+        //private int _blastRadius;
         private Explosion _explosion;
 
-        public IceBomb(int blastRadius)
+        public IceBomb()
         {
-            _blastRadius = blastRadius;
-            _explosion = new Explosion(_blastRadius / 2);
+            _explosion = new Explosion(WeaponSettings.ICEBOMB_EXPLOSION_RADIUS);
+            LoadWeaponObject(WeaponSettings.ICEBOMB_GAMEOBJECT, WeaponSettings.ICEBOMB_CHARGE_POWER, WeaponSettings.ICEBOMB_MAX_CHARGE_TIME);
         }
 
-        public void LoadContent(ContentManager contentManager)
+        public override void LoadContent(ContentManager contentManager)
         {
-            LoadContent(contentManager, new GameObjectParameters(_fileName, MASS, true, NUMBER_OF_COLLISION_POINTS, DAMPING_FACTOR));
-            SetFiringBehaviour(CHARGE_POWER, MAX_CHARGE);
             _explosion.LoadContent(contentManager);
+            base.LoadContent(contentManager);
         }
 
         public override void Update(GameTime gameTime, List<Wizard> gameObjects)
@@ -51,10 +50,10 @@ namespace WizardGrenade2
         private void Explode(GameTime gameTime, List<Wizard> gameObjects)
         {
             Vector2 position = GetPosition();
-            Map.Instance.DeformLevel(_blastRadius / 2, position);
+            Map.Instance.DeformLevel(WeaponSettings.ICEBOMB_EXPLOSION_RADIUS, position);
             _explosion.ShowExplosion(position);
             GameObjectInteraction(gameTime, gameObjects, position);
-            SetMovementFlag(false);
+            IsMoving = false;
         }
 
         public virtual void GameObjectInteraction(GameTime gameTime, List<Wizard> gameObjects, Vector2 explosionPosition)
@@ -62,7 +61,7 @@ namespace WizardGrenade2
             foreach (var gameObject in gameObjects)
             {
                 Vector2 explosionToObject = _explosion.ExplosionToObject(explosionPosition, gameObject.GetPosition());
-                if (_explosion.IsWithinExplosionArea(explosionToObject, _blastRadius + KNOCKBACK_AREA))
+                if (_explosion.IsWithinExplosionArea(explosionToObject, WeaponSettings.ICEBOMB_EFFECT_RADIUS))
                 {
                     Vector2 pushBack = _explosion.ExplosionVector(explosionToObject) / 2;
                     gameObject.AddVelocity(pushBack);
@@ -76,6 +75,5 @@ namespace WizardGrenade2
             _explosion.Draw(spriteBatch);
             base.Draw(spriteBatch);
         }
-        
     }
 }

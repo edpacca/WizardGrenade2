@@ -8,43 +8,31 @@ namespace WizardGrenade2
 {
     class Fireball : Weapon
     {
-        private readonly string _fileName = "Fireball";
-        private const int MASS = 35;
-        private const int NUMBER_OF_COLLISION_POINTS = 6;
-        private const float DAMPING_FACTOR = 0.6f;
-        private const int CHARGE_POWER = 400;
-        private const float MAX_CHARGE = 2f;
-        private const float EXPLOSION_DAMPING = 0.6f;
-
-        private float _detonationTime;
-        private int _blastRadius;
         private Explosion _explosion;
 
-        public Fireball(float detonationTime, int blastRadius)
+        public Fireball()
         {
-            DetonationDimer = new Timer(detonationTime);
-            _detonationTime = detonationTime;
-            _blastRadius = blastRadius;
-            _explosion = new Explosion(_blastRadius);
+            DetonationTimer = new Timer(WeaponSettings.FIREBALL_DETONATION_TIME);
+            _explosion = new Explosion(WeaponSettings.FIREBALL_EXPLOSION_RADIUS);
+            LoadWeaponObject(WeaponSettings.FIREBALL_GAMEOBJECT, WeaponSettings.FIREBALL_CHARGE_POWER, WeaponSettings.FIREBALL_MAX_CHARGE_TIME);
         }
 
-        public void LoadContent(ContentManager contentManager)
+        public override void LoadContent(ContentManager contentManager)
         {
-            LoadContent(contentManager, new GameObjectParameters(_fileName, MASS, true, NUMBER_OF_COLLISION_POINTS, DAMPING_FACTOR));
-            SetFiringBehaviour(CHARGE_POWER, MAX_CHARGE);
             _explosion.LoadContent(contentManager);
+            base.LoadContent(contentManager);
         }
 
         public override void Update(GameTime gameTime, List<Wizard> gameObjects)
         {
-            if (GetMovementFlag())
-                DetonationDimer.Update(gameTime);
+            if (IsMoving)
+                DetonationTimer.Update(gameTime);
 
-            if (!DetonationDimer.IsRunning)
+            if (!DetonationTimer.IsRunning)
             {
                 Explode(gameTime, gameObjects);
                 KillProjectile();
-                DetonationDimer.ResetTimer(WeaponManager.Instance.GetDetonationTime());
+                DetonationTimer.ResetTimer(WeaponManager.Instance.GetDetonationTime());
             }
 
             _explosion.UpdateExplosion(gameTime);
@@ -54,10 +42,10 @@ namespace WizardGrenade2
         private void Explode(GameTime gameTime, List<Wizard> gameObjects)
         {
             Vector2 position = GetPosition();
-            Map.Instance.DeformLevel(_blastRadius, position);
+            Map.Instance.DeformLevel(WeaponSettings.FIREBALL_EXPLOSION_RADIUS, position);
             _explosion.ShowExplosion(position);
             GameObjectInteraction(gameTime, gameObjects, position);
-            SetMovementFlag(false);
+            IsMoving = false;
         }
 
         public virtual void GameObjectInteraction(GameTime gameTime, List<Wizard> gameObjects, Vector2 explosionPosition)
@@ -65,9 +53,9 @@ namespace WizardGrenade2
             foreach (var gameObject in gameObjects)
             {
                 Vector2 explosionToObject = _explosion.ExplosionToObject(explosionPosition, gameObject.GetPosition());
-                if (_explosion.IsWithinExplosionArea(explosionToObject, _blastRadius + 15))
+                if (_explosion.IsWithinExplosionArea(explosionToObject, WeaponSettings.FIREBALL_EXPLOSION_RADIUS + 15))
                 {
-                    Vector2 pushBack = _explosion.ExplosionVector(explosionToObject) * EXPLOSION_DAMPING;
+                    Vector2 pushBack = _explosion.ExplosionVector(explosionToObject) * WeaponSettings.FIREBALL_EXPLOSION_DAMPING;
                     gameObject.AddVelocity(pushBack);
                     gameObject.entity.ApplyDamage((int)Mechanics.VectorMagnitude(pushBack) / 3);
                 }
@@ -76,14 +64,14 @@ namespace WizardGrenade2
 
         private void SetDetonationTime(int time)
         {
-            DetonationDimer.ResetTimer(time);
+            DetonationTimer.ResetTimer(time);
         }
 
         private int GetDetonationTime(Keys key)
         {
             if (InputManager.WasKeyPressed(key))
                 return 1;
-                //return key.ToString();
+            //return key.ToString();
             return 0;
         }
 

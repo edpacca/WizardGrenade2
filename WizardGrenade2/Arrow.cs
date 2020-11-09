@@ -7,29 +7,38 @@ namespace WizardGrenade2
 {
     class Arrow : Weapon
     {
-        private readonly string _fileName = "MelfsAcidArrow";
-        private const int MASS = 15;
-        private const int NUMBER_OF_COLLISION_POINTS = 0;
-        private const float DAMPING_FACTOR = 0f;
-        private const int CHARGE_POWER = 1500;
-        private const float MAX_CHARGE = 0.6f;
-        private const float KNOCKBACK_DAMPING = 0.86f;
+        private int _arrowOffset;
 
-        public void LoadContent(ContentManager contentManager)
+        public Arrow()
         {
-            LoadContent(contentManager, new GameObjectParameters(_fileName, MASS, true, NUMBER_OF_COLLISION_POINTS, DAMPING_FACTOR));
-            SetFiringBehaviour(CHARGE_POWER, MAX_CHARGE);
+            LoadWeaponObject(WeaponSettings.ARROW_GAMEOBJECT, WeaponSettings.ARROW_POWER, WeaponSettings.ARROW_MAX_CHARGE_TIME);
         }
 
-        public override void GameObjectInteraction(List<Wizard> gameObjects)
+        public override void LoadContent (ContentManager contentManager)
         {
-            foreach (var gameObject in gameObjects)
+            _arrowOffset = (WeaponManager.Instance.WizardSpriteRectangle.Width / 2) + 1;
+            base.LoadContent(contentManager);
+        }
+
+        public override void Update(GameTime gameTime, List<Wizard> gameObjects)
+        {
+            WizardInteraction(gameObjects);
+
+            if (GetVelocity() == Vector2.Zero)
+                KillProjectile();
+
+            base.Update(gameTime, gameObjects);
+        }
+
+        public override void WizardInteraction(List<Wizard> wizards)
+        {
+            foreach (var wizard in wizards)
             {
-                float distance = Math.Abs(Mechanics.VectorMagnitude(GetPosition() - gameObject.GetPosition()));
-                if (distance <= 16)
+                float distance = Math.Abs(Mechanics.VectorMagnitude(GetPosition() - wizard.GetPosition()));
+                if (distance <= wizard.GetSpriteRectangle().Width / 2)
                 {
-                    gameObject.AddVelocity(GetVelocity() * KNOCKBACK_DAMPING);
-                    gameObject.entity.ApplyDamage((int)(Mechanics.VectorMagnitude(GetVelocity()) * 0.028));
+                    wizard.AddVelocity(GetVelocity() * WeaponSettings.ARROW_KNOCKBACK_FACTOR);
+                    wizard.entity.ApplyDamage((int)(Mechanics.VectorMagnitude(GetVelocity()) * WeaponSettings.ARROW_DAMAGE_FACTOR));
                     KillProjectile();
                 }
             }
@@ -37,17 +46,9 @@ namespace WizardGrenade2
 
         public override void SetToPlayerPosition(Vector2 newPosition, int activeDirection)
         {
-            base.SetToPlayerPosition(newPosition + new Vector2(17 * activeDirection, 0), 1);
+            base.SetToPlayerPosition(newPosition + new Vector2(_arrowOffset * activeDirection, 0), 1);
         }
 
-        public override void Update(GameTime gameTime, List<Wizard> gameObjects)
-        {
-            GameObjectInteraction(gameObjects);
 
-            if (GetVelocity() == Vector2.Zero)
-                KillProjectile();
-
-            base.Update(gameTime, gameObjects);
-        }
     }
 }
