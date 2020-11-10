@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Security.Permissions;
 
 namespace WizardGrenade2
 {
@@ -11,24 +11,28 @@ namespace WizardGrenade2
     {
         private Texture2D _spriteTexture;
         private Rectangle _spriteRectangle;
-        private Color _spriteColour = Color.White;
-        private SpriteEffects _spriteEffect = SpriteEffects.None;
-        private float _layerDepth = 0f;
-        private float _spriteScale = 1f;
         private Animator _animator;
+        private float _layerDepth = 0f;
         private int _frameSize;
         private bool _verticalAnimation;
 
-        public void SetColour(Color colour) => _spriteColour = colour;
-        public void SetSpriteEffect(SpriteEffects spriteEffect) => _spriteEffect = spriteEffect;
-        public void SetSpriteScale(float spriteScale) => _spriteScale = spriteScale;
+        public Color SpriteColour { get; set; }
+        public SpriteEffects SpriteVisualEffect { get; set; }
+        public float SpriteScale { get; set; }
+ 
         public Texture2D GetSpriteTexture() => _spriteTexture;
         public Rectangle GetSpriteRectangle() => _spriteRectangle;
 
         // Constructors
-        public Sprite(){}
+        public Sprite()
+        {
+            SpriteColour = Color.White;
+            SpriteVisualEffect = SpriteEffects.None;
+            SpriteScale = 1f;
+        }
 
         public Sprite(ContentManager contentManager, string fileName)
+            : this()
         {
             LoadContent(contentManager, fileName);
         }
@@ -62,7 +66,7 @@ namespace WizardGrenade2
 
         public Vector2 GetSpriteOrigin()
         {
-            return new Vector2((float)_spriteRectangle.Width / 2, (float)_spriteRectangle.Height / 2) * _spriteScale;
+            return new Vector2((float)_spriteRectangle.Width / 2, (float)_spriteRectangle.Height / 2) * SpriteScale;
         }
 
         private Vector2 CalcRotationOffset(float rotation)
@@ -75,18 +79,18 @@ namespace WizardGrenade2
 
         public void DrawSprite(SpriteBatch spriteBatch, Vector2 position)
         {
-            spriteBatch.Draw(_spriteTexture, position, _spriteRectangle, _spriteColour, 0f, Vector2.Zero, _spriteScale, _spriteEffect, _layerDepth);
+            spriteBatch.Draw(_spriteTexture, position, _spriteRectangle, SpriteColour, 0f, Vector2.Zero, SpriteScale, SpriteVisualEffect, _layerDepth);
         }
 
         public void DrawSprite(SpriteBatch spriteBatch, Vector2 position, float rotation)
         {
             Vector2 rotationOffset = CalcRotationOffset(rotation);
-            spriteBatch.Draw(_spriteTexture, position + rotationOffset, _spriteRectangle, _spriteColour, rotation, Vector2.Zero, _spriteScale, _spriteEffect, _layerDepth);
+            spriteBatch.Draw(_spriteTexture, position + rotationOffset, _spriteRectangle, SpriteColour, rotation, Vector2.Zero, SpriteScale, SpriteVisualEffect, _layerDepth);
         }
 
         public void DrawSpriteAtScale(SpriteBatch spriteBatch, Vector2 position, float scale)
         {
-            spriteBatch.Draw(_spriteTexture, position - GetSpriteOrigin(), _spriteRectangle, _spriteColour, 0f, Vector2.Zero, scale, _spriteEffect, _layerDepth);
+            spriteBatch.Draw(_spriteTexture, position - GetSpriteOrigin(), _spriteRectangle, SpriteColour, 0f, Vector2.Zero, scale, SpriteVisualEffect, _layerDepth);
         }
 
         public void UpdateAnimationSequence(string state, float targetFrameRate, GameTime gameTime)

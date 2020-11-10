@@ -9,16 +9,8 @@ namespace WizardGrenade2
     {
         // Singleton pattern ensures only one instance of Map is called.
         private Map(){}
-
         private static readonly Lazy<Map> lazyMap = new Lazy<Map>(() => new Map());
-
-        public static Map Instance
-        {
-            get
-            {
-                return lazyMap.Value;
-            }
-        }
+        public static Map Instance { get => lazyMap.Value; }
 
         private CollisionManager _collisionManager;
         private readonly string _defaultFileName = "Map2";

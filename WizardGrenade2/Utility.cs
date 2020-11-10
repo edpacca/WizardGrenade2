@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace WizardGrenade2
 {
@@ -14,6 +13,5 @@ namespace WizardGrenade2
         {
             return (i + 1) % listLength;
         }
-
     }
 }

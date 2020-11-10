@@ -1,24 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 
 namespace WizardGrenade2
 {
     class IceBomb : Weapon
     {
-        //private readonly string _fileName = "IceBomb";
-        //private const int MASS = 80;
-        //private const int NUMBER_OF_COLLISION_POINTS = 6;
-        //private const float DAMPING_FACTOR = 0.1f;
-        //private const int CHARGE_POWER = 400;
-        //private const float MAX_CHARGE = 2f;
-        //private const float PUSHBACK_DAMPING = 0.8f;
-        //private const int KNOCKBACK_AREA = 20;
-
-        //private float _detonationTime;
-        //private int _blastRadius;
         private Explosion _explosion;
 
         public IceBomb()
@@ -35,7 +23,6 @@ namespace WizardGrenade2
 
         public override void Update(GameTime gameTime, List<Wizard> gameObjects)
         {
-
             if (HasCollided)
             {
                 Explode(gameTime, gameObjects);

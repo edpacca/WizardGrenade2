@@ -35,7 +35,7 @@ namespace WizardGrenade2
 
         private void SetExplosionRadius(Texture2D texture)
         {
-            SetSpriteScale((float)_explosionDiameter / (float)texture.Width);
+            SpriteScale = (float)_explosionDiameter / (float)texture.Width;
         }
 
         public void UpdateExplosion(GameTime gameTime)

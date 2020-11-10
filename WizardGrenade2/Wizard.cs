@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
-using System.Resources;
 
 namespace WizardGrenade2
 {
@@ -18,7 +17,7 @@ namespace WizardGrenade2
         private const bool CAN_ROTATE = false;
         private const float DAMPING_FACTOR = 0.5f;
         private const int JUMP_HEIGHT = 200;
-        public bool isActive { get; set; }
+        public bool IsActive { get; set; }
         public Entity entity;
         private GameObject _wizard;
         private Timer _animationTimer = new Timer(6);
@@ -107,7 +106,7 @@ namespace WizardGrenade2
             State = States.Walking;
             _wizard.UpdateAnimationSequence("Walking", 10f, gameTime);
             Direction = direction;
-            _wizard.SetSpriteEffect(effect);
+            _wizard.SpriteVisualEffect = effect;
         }
 
         private void Jump(GameTime gameTime)
@@ -182,7 +181,7 @@ namespace WizardGrenade2
         {
             if (entity.IsDead)
             {
-                _wizard.SetColour(Color.Red);
+                _wizard.SpriteColour = Color.Red;
                 _wizard.AddRotation(Mechanics.PI / 2);
             }
         }

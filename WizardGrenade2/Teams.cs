@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
 using System.Collections.Generic;
 
 namespace WizardGrenade2
@@ -31,7 +30,7 @@ namespace WizardGrenade2
             _allWizards = new List<Wizard>();
             _teamHealthValues = new int[_numberOfTeams];
             LoadTeamHealth();
-            _teams[_activeTeam]._wizards[_activeWizard].isActive = true;
+            _teams[_activeTeam]._wizards[_activeWizard].IsActive = true;
 
             foreach (var team in _teams)
                 foreach (var wizard in team._wizards)
@@ -50,16 +49,16 @@ namespace WizardGrenade2
 
         private void ChangeWizard()
         {
-            _teams[_activeTeam]._wizards[_activeWizard].isActive = false;
+            _teams[_activeTeam]._wizards[_activeWizard].IsActive = false;
             _activeWizard = Utility.WrapAroundCounter(_activeWizard, _teamSize);
-            _teams[_activeTeam]._wizards[_activeWizard].isActive = true;
+            _teams[_activeTeam]._wizards[_activeWizard].IsActive = true;
         }
 
         private void ChangeTeam()
         {
-            _teams[_activeTeam]._wizards[_activeWizard].isActive = false;
+            _teams[_activeTeam]._wizards[_activeWizard].IsActive = false;
             _activeTeam = Utility.WrapAroundCounter(_activeTeam, _numberOfTeams);
-            _teams[_activeTeam]._wizards[_activeWizard].isActive = true;
+            _teams[_activeTeam]._wizards[_activeWizard].IsActive = true;
         }
 
         public void ControlActiveTeamWizard(Keys changeTeam, Keys changeWizard)
