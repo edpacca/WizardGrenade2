@@ -60,7 +60,7 @@ namespace WizardGrenade2
 
             _cursor.DrawSprite(spriteBatch, InputManager.CursorPosition());
             _weaponList[WeaponManager.Instance.ActiveWeapon].DrawSymbol(spriteBatch, _weaponSymbolPosition, 4f);
-            _detonationTimer.Draw(spriteBatch, _weaponSymbolPosition + new Vector2(8, 1));
+            _detonationTimer.Draw(spriteBatch, _weaponSymbolPosition + new Vector2(4, -2));
         }
     }
 }
