@@ -38,10 +38,10 @@ namespace WizardGrenade2
 
         public void Update(GameTime gameTime, int actualTeamHealth)
         {
-            UpdateAnimationStateV("bar", 5, gameTime);
+            UpdateAnimationSequence("bar", 5, gameTime);
             SmoothUpdateHealthBar(gameTime, actualTeamHealth);
             float healthPercentage = 1 - ((float)_displayedTeamHealth / (float)_startTeamHealth);
-            SpriteRectangleMaskX(healthPercentage);
+            MaskSpriteRectangleWidth(healthPercentage);
         }
 
         private void SmoothUpdateHealthBar(GameTime gameTime, int actualTeamHealth)

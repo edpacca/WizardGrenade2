@@ -17,7 +17,15 @@ namespace WizardGrenade2
         private float _spriteScale = 1f;
         private Animator _animator;
         private int _frameSize;
+        private bool _verticalAnimation;
 
+        public void SetColour(Color colour) => _spriteColour = colour;
+        public void SetSpriteEffect(SpriteEffects spriteEffect) => _spriteEffect = spriteEffect;
+        public void SetSpriteScale(float spriteScale) => _spriteScale = spriteScale;
+        public Texture2D GetSpriteTexture() => _spriteTexture;
+        public Rectangle GetSpriteRectangle() => _spriteRectangle;
+
+        // Constructors
         public Sprite(){}
 
         public Sprite(ContentManager contentManager, string fileName)
@@ -25,17 +33,26 @@ namespace WizardGrenade2
             LoadContent(contentManager, fileName);
         }
 
+        // LoadContent for single sprite
         protected void LoadContent(ContentManager contentManager, string fileName)
         {
             _spriteTexture = contentManager.Load<Texture2D>(fileName);
             _spriteRectangle = new Rectangle(0, 0, _spriteTexture.Width, _spriteTexture.Height);
         }
 
+        // LoadContent from animation spriteSheet
         protected void LoadContent(ContentManager contentManager, string fileName, int framesH, int framesV)
         {
             _spriteTexture = contentManager.Load<Texture2D>(fileName);
             _spriteRectangle = new Rectangle(0, 0, _spriteTexture.Width / framesH, _spriteTexture.Height / framesV);
-            _frameSize = framesH >= framesV ? _spriteRectangle.Width : _spriteRectangle.Height;
+
+            if (framesV > framesH)
+            {
+                _frameSize = _spriteRectangle.Height;
+                _verticalAnimation = true;
+            }
+            else
+                _frameSize = _spriteRectangle.Width;
         }
 
         public void LoadAnimationContent(Dictionary<string, int[]> animationStates)
@@ -43,67 +60,9 @@ namespace WizardGrenade2
             _animator = new Animator(animationStates, _frameSize);
         }
 
-        public void DrawSprite(SpriteBatch spriteBatch)
+        public Vector2 GetSpriteOrigin()
         {
-            spriteBatch.Draw(_spriteTexture, Vector2.Zero, _spriteRectangle, _spriteColour, 0f, Vector2.Zero, _spriteScale, _spriteEffect, _layerDepth);
-        }
-
-        public void DrawSprite(SpriteBatch spriteBatch, Vector2 position)
-        {
-            spriteBatch.Draw(_spriteTexture, position, _spriteRectangle, _spriteColour, 0f, Vector2.Zero, _spriteScale, _spriteEffect, _layerDepth);
-        }
-
-        public void DrawSpriteAtScale(SpriteBatch spriteBatch, Vector2 position, float scale)
-        {
-            spriteBatch.Draw(_spriteTexture, position, _spriteRectangle, _spriteColour, 0f, Vector2.Zero, scale, _spriteEffect, _layerDepth);
-        }
-
-        public void DrawSprite(SpriteBatch spriteBatch, Vector2 position, float rotation)
-        {
-            Vector2 rotationOffset = CalcRotationOffset(rotation);
-            spriteBatch.Draw(_spriteTexture, position + rotationOffset, _spriteRectangle, _spriteColour, rotation, Vector2.Zero, _spriteScale, _spriteEffect, _layerDepth);
-        }
-
-        public void UpdateAnimationStateH(string state, float targetFrameRate, GameTime gameTime)
-        {
-            int frame = _animator.GetCurrentFrame(state, targetFrameRate, gameTime);
-            _spriteRectangle.X = frame * _frameSize;
-        }
-
-        public void AnimationSequence(string state1, string state2, float targetFrameRate1, float targetFrameRate2, GameTime gameTime)
-        {
-            int frame = _animator.GetAnimationFrameSequence(state1, state2, targetFrameRate1, targetFrameRate2, gameTime);
-            _spriteRectangle.X = frame * _frameSize;
-        }
-
-        public void UpdateAnimationStateH(string state)
-        {
-            int frame = _animator.GetSingleFrame(state);
-            _spriteRectangle.X = frame * _frameSize;
-        }
-
-        public void UpdateAnimationStateV(string state, float targetFrameRate, GameTime gameTime)
-        {
-            int frame = _animator.GetCurrentFrame(state, targetFrameRate, gameTime);
-            _spriteRectangle.Y = frame * _frameSize;
-        }
-
-        public void UpdateAnimationStateV(string state)
-        {
-            int frame = _animator.GetSingleFrame(state);
-            _spriteRectangle.Y = frame * _frameSize;
-        }
-
-        public void SpriteRectangleMaskX(float maskPercentage)
-        {
-            float percentage = maskPercentage <= 1 && maskPercentage >= 0 ? maskPercentage : 1;
-            _spriteRectangle.X = (int)(_spriteTexture.Width * percentage);
-        }
-
-        public void SpriteRectangleMaskY(float maskPercentage)
-        {
-            float percentage = maskPercentage <= 1 && maskPercentage >= 0 ? maskPercentage : 1;
-            _spriteRectangle.Y = (int)(_spriteTexture.Width * percentage);
+            return new Vector2((float)_spriteRectangle.Width / 2, (float)_spriteRectangle.Height / 2) * _spriteScale;
         }
 
         private Vector2 CalcRotationOffset(float rotation)
@@ -114,15 +73,52 @@ namespace WizardGrenade2
             return new Vector2(xOffset, yOffset);
         }
 
-        public void SetColour(Color colour) => _spriteColour = colour;
-        public void SetSpriteEffect(SpriteEffects spriteEffect) => _spriteEffect = spriteEffect;
-        public void SetSpriteScale(float spriteScale) => _spriteScale = spriteScale;
-        public Texture2D GetSpriteTexture() => _spriteTexture;
-        public Rectangle GetSpriteRectangle() => _spriteRectangle;
-
-        public Vector2 GetSpriteOrigin()
+        public void DrawSprite(SpriteBatch spriteBatch, Vector2 position)
         {
-            return new Vector2((float)_spriteRectangle.Width / 2, (float)_spriteRectangle.Height / 2) * _spriteScale;
+            spriteBatch.Draw(_spriteTexture, position, _spriteRectangle, _spriteColour, 0f, Vector2.Zero, _spriteScale, _spriteEffect, _layerDepth);
+        }
+
+        public void DrawSprite(SpriteBatch spriteBatch, Vector2 position, float rotation)
+        {
+            Vector2 rotationOffset = CalcRotationOffset(rotation);
+            spriteBatch.Draw(_spriteTexture, position + rotationOffset, _spriteRectangle, _spriteColour, rotation, Vector2.Zero, _spriteScale, _spriteEffect, _layerDepth);
+        }
+
+        public void DrawSpriteAtScale(SpriteBatch spriteBatch, Vector2 position, float scale)
+        {
+            spriteBatch.Draw(_spriteTexture, position - GetSpriteOrigin(), _spriteRectangle, _spriteColour, 0f, Vector2.Zero, scale, _spriteEffect, _layerDepth);
+        }
+
+        public void UpdateAnimationSequence(string state, float targetFrameRate, GameTime gameTime)
+        {
+            int frame = _animator.GetCurrentFrame(state, targetFrameRate, gameTime);
+
+            if (_verticalAnimation)
+                _spriteRectangle.Y = frame * _frameSize;
+            else
+                _spriteRectangle.X = frame * _frameSize;
+        }
+
+        public void UpdateAnimationFrame(string state, int frame)
+        {
+            int frameNumber = _animator.GetSingleFrame(state, frame);
+
+            if (_verticalAnimation)
+                _spriteRectangle.Y = frameNumber * _frameSize;
+            else
+                _spriteRectangle.X = frameNumber * _frameSize;
+        }
+
+        public void MaskSpriteRectangleWidth(float maskPercentage)
+        {
+            float percentage = maskPercentage <= 1 && maskPercentage >= 0 ? maskPercentage : 1;
+            _spriteRectangle.X = (int)(_spriteTexture.Width * percentage);
+        }
+
+        public void MaskSpriteRectangleHeight(float maskPercentage)
+        {
+            float percentage = maskPercentage <= 1 && maskPercentage >= 0 ? maskPercentage : 1;
+            _spriteRectangle.Y = (int)(_spriteTexture.Width * percentage);
         }
     }
 }
