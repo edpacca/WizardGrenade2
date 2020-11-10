@@ -46,9 +46,7 @@ namespace WizardGrenade2
 
         public override void SetToPlayerPosition(Vector2 newPosition, int activeDirection)
         {
-            base.SetToPlayerPosition(newPosition + new Vector2(_arrowOffset * activeDirection, 0), 1);
+            base.SetToPlayerPosition(newPosition + new Vector2(_arrowOffset * activeDirection, 0), 0);
         }
-
-
     }
 }
