@@ -12,37 +12,23 @@ namespace WizardGrenade2
         private InterfaceManager _interfaceManager;
         private UserInterface _userInterface;
 
-        private const float TARGET_SCREEN_WIDTH = 1200;
-        private const float TARGET_SCREEN_HEIGHT = TARGET_SCREEN_WIDTH * 0.5625f;
-        private const int SCREEN_RESOLUTION_WIDTH = 1920;
-        private const int SCREEN_RESOLUTION_HEIGHT = 1080;
-
-        public static float GetScreenWidth => TARGET_SCREEN_WIDTH;
-        public static float GetScreenHeight => TARGET_SCREEN_HEIGHT;
-        public Vector2 GetScreenCentre => new Vector2(TARGET_SCREEN_WIDTH / 2, TARGET_SCREEN_HEIGHT / 2);
-
         Color backgroundColour = new Color(40, 40, 45);
 
         public WGGame()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-
-            _graphics.PreferredBackBufferWidth = SCREEN_RESOLUTION_WIDTH;
-            _graphics.PreferredBackBufferHeight = SCREEN_RESOLUTION_HEIGHT;
-
-            _interfaceManager = new InterfaceManager
-                (SCREEN_RESOLUTION_WIDTH, SCREEN_RESOLUTION_HEIGHT, 
-                TARGET_SCREEN_WIDTH, TARGET_SCREEN_HEIGHT);
-
+            _graphics.PreferredBackBufferWidth = ScreenSettings.RESOLUTION_WIDTH;
+            _graphics.PreferredBackBufferHeight = ScreenSettings.RESOLUTION_HEIGHT;
+            _interfaceManager = new InterfaceManager();
             Window.AllowUserResizing = true;
         }
 
         protected override void Initialize()
         {
             _gameScreen.Initialise();
-            _userInterface = new UserInterface(_gameScreen.GetGameOptions());
-            Mouse.SetPosition((int)TARGET_SCREEN_WIDTH / 2, (int)TARGET_SCREEN_HEIGHT / 2);
+            _userInterface = new UserInterface(_gameScreen.GameOptions, _gameScreen.TeamNames);
+            Mouse.SetPosition(ScreenSettings.CentreScreenWidth, ScreenSettings.CentreScreenHeight);
             base.Initialize();
         }
 
@@ -60,7 +46,7 @@ namespace WizardGrenade2
 
             InputManager.Update();
             _interfaceManager.Update(gameTime);
-            _userInterface.Update(gameTime, _gameScreen.GetTeamHealths());
+            _userInterface.Update(gameTime, _gameScreen.TeamHealths);
             _gameScreen.Update(gameTime);
             base.Update(gameTime);
         }

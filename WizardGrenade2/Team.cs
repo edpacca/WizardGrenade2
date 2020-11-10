@@ -7,14 +7,14 @@ namespace WizardGrenade2
 {
     class Team
     {
-        private readonly string _teamName;
+        public string TeamName { get; private set; }
         public List<Wizard> _wizards = new List<Wizard>();
         private Vector2 _healthTextOffset = new Vector2(10, 36);
         private SpriteFont _spriteFont;
 
         public Team(int teamNumber, string teamName, int teamSize, int wizardHealth)
         {
-            _teamName = teamName;
+            TeamName = teamName;
 
             for (int i = 0; i < teamSize; i++)
                 _wizards.Add(new Wizard(teamNumber, new Vector2((100 + i * 100) + teamNumber * 300, 300), wizardHealth));
@@ -23,6 +23,7 @@ namespace WizardGrenade2
         public void LoadContent(ContentManager contentManager)
         {
             _spriteFont = contentManager.Load<SpriteFont>("WizardHealthFont");
+
             foreach (var wizard in _wizards)
                 wizard.LoadContent(contentManager);
         }
@@ -36,17 +37,16 @@ namespace WizardGrenade2
         public int GetTeamHealth()
         {
             int teamHealth = 0;
+
             foreach (var wizard in _wizards)
-            {
                 teamHealth += wizard.GetHealth();
-            }
+
             return teamHealth;
         }
 
-        public void DrawHealth(SpriteBatch spriteBatch)
+        public void DrawHealth(SpriteBatch spriteBatch, Wizard wizard)
         {
-            foreach (var wizard in _wizards)
-                spriteBatch.DrawString(_spriteFont, wizard.GetHealth().ToString(), wizard.GetPosition() - _healthTextOffset, Color.White);
+           spriteBatch.DrawString(_spriteFont, wizard.GetHealth().ToString(), wizard.GetPosition() - _healthTextOffset, Color.White);
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -54,7 +54,7 @@ namespace WizardGrenade2
             foreach (var wizard in _wizards)
             {
                 if (!wizard.IsActive)
-                    spriteBatch.DrawString(_spriteFont, wizard.GetHealth().ToString(), wizard.GetPosition() - _healthTextOffset, Color.White);
+                    DrawHealth(spriteBatch, wizard);
 
                 wizard.Draw(spriteBatch);
             }

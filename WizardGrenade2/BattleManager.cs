@@ -12,6 +12,8 @@ namespace WizardGrenade2
         private WeaponManager _weaponManager = WeaponManager.Instance;
         private Teams _wizardTeams;
         private List<Wizard> _allWizards;
+        public int[] TeamHealths => _wizardTeams.TeamHealthValues;
+        public List<string> TeamNames => _wizardTeams.TeamNames;
 
         public BattleManager(string mapFileName)
         {
@@ -31,7 +33,6 @@ namespace WizardGrenade2
             _weaponManager.LoadContent(contentManager, _allWizards);
         }
 
-        public int[] GetTeamHealths() => _wizardTeams.GetTeamHealths();
 
         public void Update(GameTime gameTime)
         {

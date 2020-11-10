@@ -13,18 +13,22 @@ namespace WizardGrenade2
         private Vector2 _healthBarPosition;
         private int _framesH = 1;
         private int _framesV = 6;
+        private readonly string _teamName;
+        private Vector2 _teamNameOffset = new Vector2(-45, -2);
+        private SpriteFont _spriteFont;
 
         private Dictionary<string, int[]> _animationState = new Dictionary<string, int[]>
         {
             ["bar"] = new int[] { 0, 1, 2, 3, 4, 5, 4, 3, 2, 1 }
         };
 
-        public HealthBar(int teamNumber, int startTeamHealth)
+        public HealthBar(int teamNumber, int startTeamHealth, string teamName)
         {
             _fileName = "HealthBar";
+            _teamName = teamName;
             _startTeamHealth = startTeamHealth;
             _displayedTeamHealth = _startTeamHealth;
-            _healthBarPosition = new Vector2((WGGame.GetScreenWidth / 2), WGGame.GetScreenHeight - 20 - (15 * teamNumber));
+            _healthBarPosition = new Vector2(ScreenSettings.CentreScreenWidth, ScreenSettings.TARGET_HEIGHT -20 - (15 * teamNumber));
         }
 
         public void LoadContent(ContentManager contentManager)
@@ -32,6 +36,7 @@ namespace WizardGrenade2
             LoadContent(contentManager, _fileName, _framesH, _framesV);
             _healthBarPosition -= GetSpriteOrigin();
             LoadAnimationContent(_animationState);
+            _spriteFont = contentManager.Load<SpriteFont>("WizardHealthFont");
         }
 
         public void Update(GameTime gameTime, int actualTeamHealth)
@@ -53,6 +58,7 @@ namespace WizardGrenade2
         public void Draw(SpriteBatch spriteBatch)
         {
             DrawSprite(spriteBatch, _healthBarPosition);
+            spriteBatch.DrawString(_spriteFont, _teamName, _healthBarPosition + _teamNameOffset, Color.White);
         }
     }
 }

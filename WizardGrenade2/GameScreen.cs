@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 
 namespace WizardGrenade2
 {
@@ -11,16 +12,15 @@ namespace WizardGrenade2
         private const int WIZARD_HEALTH = 100;
 
         public BattleManager _battleManager = new BattleManager("Map2");
-        private GameOptions _gameOptions;
+        public int[] TeamHealths => _battleManager.TeamHealths;
+        public List<string> TeamNames => _battleManager.TeamNames;
+        public GameOptions GameOptions { get; private set; }
 
         public void Initialise()
         {
-            _gameOptions = new GameOptions(NUMBER_OF_TEAMS, TEAM_SIZE, WIZARD_HEALTH);
-            _battleManager.Initialise(_gameOptions);
+            GameOptions = new GameOptions(NUMBER_OF_TEAMS, TEAM_SIZE, WIZARD_HEALTH);
+            _battleManager.Initialise(GameOptions);
         }
-
-        public int[] GetTeamHealths() => _battleManager.GetTeamHealths();
-        public GameOptions GetGameOptions() => _gameOptions;
 
         public void LoadContent(ContentManager contentManager)
         {

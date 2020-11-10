@@ -9,9 +9,10 @@ namespace WizardGrenade2
     class Teams
     {
         private List<Team> _teams = new List<Team>();
-        private int[] _teamHealthValues;
         private Marker _marker = new Marker();
         private readonly List<Wizard> _allWizards;
+        public List<string> TeamNames { get; private set; }
+        public int[] TeamHealthValues { get; private set; }
 
         private int _activeWizard;
         private int _activeTeam;
@@ -23,12 +24,16 @@ namespace WizardGrenade2
         {
             _teamSize = gameOptions.TeamSize;
             _numberOfTeams = gameOptions.NumberOfTeams > MAXIMUM_TEAMS ? MAXIMUM_TEAMS : gameOptions.NumberOfTeams;
+            TeamNames = new List<string>();
 
             for (int i = 0; i < _numberOfTeams; i++)
+            {
                 _teams.Add(new Team(i, "Team " + i + 1, _teamSize, gameOptions.WizardHealth));
-
+                TeamNames.Add("Team " + i);
+            }
+            
             _allWizards = new List<Wizard>();
-            _teamHealthValues = new int[_numberOfTeams];
+            TeamHealthValues = new int[_numberOfTeams];
             LoadTeamHealth();
             _teams[_activeTeam]._wizards[_activeWizard].IsActive = true;
 
@@ -42,9 +47,7 @@ namespace WizardGrenade2
             _marker.LoadContent(contentManager);
 
             foreach (var team in _teams)
-            {
                 team.LoadContent(contentManager);
-            }
         }
 
         private void ChangeWizard()
@@ -74,7 +77,7 @@ namespace WizardGrenade2
             for (int i = 0; i < _numberOfTeams; i++)
             {
                 _teams[i].Update(gameTime);
-                _teamHealthValues[i] = _teams[i].GetTeamHealth();
+                TeamHealthValues[i] = _teams[i].GetTeamHealth();
             }
   
             ControlActiveTeamWizard(Keys.CapsLock, Keys.Tab);
@@ -86,33 +89,19 @@ namespace WizardGrenade2
         private void LoadTeamHealth()
         {
             for (int i = 0; i < _numberOfTeams; i++)
-                _teamHealthValues[i] = _teams[i].GetTeamHealth();
-        }
-
-        public int[] GetTeamHealths() => _teamHealthValues;
-
-        public Vector2 GetActiveWizardPosition()
-        {
-            return _teams[_activeTeam]._wizards[_activeWizard].GetPosition();
-        }
-
-        public int GetActiveWizardDirection()
-        {
-            return _teams[_activeTeam]._wizards[_activeWizard].GetDirection();
-        }
-
-        public List<Wizard> GetAllWizards()
-        {
-            return _allWizards;
+                TeamHealthValues[i] = _teams[i].GetTeamHealth();
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
             _marker.Draw(spriteBatch);
+
             foreach (var team in _teams)
-            {
                 team.Draw(spriteBatch);
-            }
         }
+
+        public Vector2 GetActiveWizardPosition() => _teams[_activeTeam]._wizards[_activeWizard].GetPosition();
+        public int GetActiveWizardDirection() => _teams[_activeTeam]._wizards[_activeWizard].GetDirection();
+        public List<Wizard> GetAllWizards() => _allWizards;
     }
 }
