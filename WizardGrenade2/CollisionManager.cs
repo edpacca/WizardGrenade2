@@ -7,16 +7,8 @@ namespace WizardGrenade2
     public sealed class CollisionManager
     {
         private CollisionManager(){}
-
         private static readonly Lazy<CollisionManager> lazyCollisionManager = new Lazy<CollisionManager>(() => new CollisionManager());
-
-        public static CollisionManager Instance
-        {
-            get
-            {
-                return lazyCollisionManager.Value;
-            }
-        }
+        public static CollisionManager Instance { get => lazyCollisionManager.Value; }
 
         private bool[,] _mapCollisionData;
         private int _mapWidth;
@@ -38,10 +30,7 @@ namespace WizardGrenade2
 
             foreach (var point in transformedCollisionPoints)
             {
-                if (point.X >= 0 && point.Y >= 0 &&
-                    point.X < _mapWidth - 1 &&
-                    point.Y < _mapHeight - 1)
-
+                if (IsPointWithinMap(point))
                     if (HasCollided(point))
                         collidingPoints.Add(point);
             }
@@ -49,7 +38,12 @@ namespace WizardGrenade2
             return collidingPoints;
         }
 
-        public bool HasCollided(Vector2 collisionPoint)
+        private bool IsPointWithinMap(Vector2 point)
+        {
+            return point.X >= 0 && point.Y >= 0 && point.X < _mapWidth - 1 && point.Y < _mapHeight - 1;
+        }
+
+        private bool HasCollided(Vector2 collisionPoint)
         {
             return _mapCollisionData[(int)collisionPoint.X, (int)collisionPoint.Y];
         }
@@ -61,7 +55,7 @@ namespace WizardGrenade2
             return reflectionVector;
         }
 
-        public Vector2 SumResponseVector(List<Vector2> collisionPoints, Vector2 centre)
+        private Vector2 SumResponseVector(List<Vector2> collisionPoints, Vector2 centre)
         {
             Vector2 responseVector = Vector2.Zero;
             foreach (var point in collisionPoints)

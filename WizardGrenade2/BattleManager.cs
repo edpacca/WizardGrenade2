@@ -10,10 +10,9 @@ namespace WizardGrenade2
     {
         private readonly string _mapFileName;
         private Map _map = Map.Instance;
-
+        private WeaponManager _weaponManager = WeaponManager.Instance;
         private Teams _wizardTeams;
         private List<Wizard> _allWizards;
-        private WeaponManager _weaponManager = WeaponManager.Instance;
 
         public BattleManager(string mapFileName)
         {
