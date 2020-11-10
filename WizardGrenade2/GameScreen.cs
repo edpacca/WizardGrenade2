@@ -12,7 +12,7 @@ namespace WizardGrenade2
         private const int TEAM_SIZE = 3;
         private const int WIZARD_HEALTH = 100;
 
-        public BattleManager _battleManager = new BattleManager();
+        public BattleManager _battleManager = new BattleManager("Map2");
         private GameOptions _gameOptions;
 
         public void Initialise()
