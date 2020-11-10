@@ -63,6 +63,7 @@
     <Compile Include="MathsExt.cs" />
     <Compile Include="Mechanics.cs" />
     <Compile Include="Polygon.cs" />
+    <Compile Include="ScreenSettings.cs" />
     <Compile Include="Space2D.cs" />
     <Compile Include="Sprite.cs" />
     <Compile Include="Team.cs" />

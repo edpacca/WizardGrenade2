@@ -93,7 +93,7 @@ namespace WizardGrenade2
             {
                 _isLoaded = false;
                 IsCharging = false;
-                Weapons[ActiveWeapon].FireProjectile(ChargePower, _crosshair.GetAimAngle());
+                Weapons[ActiveWeapon].FireProjectile(ChargePower, _crosshair.CrosshairAngle);
                 ChargePower = 0f;
             }
         }
@@ -121,29 +121,19 @@ namespace WizardGrenade2
             }
         }
 
+        private bool IsTimerNull() => (Weapons[ActiveWeapon].DetonationTimer == null);
+        public float GetDetonationTime() => IsTimerNull() ? 0 : Weapons[ActiveWeapon].DetonationTimer.Time;
+
         private void SetTimer(int time)
         {
-            if (!TimerIsNull())
+            if (!IsTimerNull())
                 Weapons[ActiveWeapon].DetonationTimer.ResetTimer(time);
         }
 
         private void ResetTimer()
         {
-            if ((!TimerIsNull()) && Weapons[ActiveWeapon].DetonationTimer.Time < 0)
+            if ((!IsTimerNull()) && Weapons[ActiveWeapon].DetonationTimer.Time < 0)
                 Weapons[ActiveWeapon].DetonationTimer.ResetTimer(_timer);
-        }
-
-        private bool TimerIsNull()
-        {
-            return (Weapons[ActiveWeapon].DetonationTimer == null);
-        }
-
-        public float GetDetonationTime()
-        {
-            if (TimerIsNull())
-                return 0;
-            
-            return Weapons[ActiveWeapon].DetonationTimer.Time;
         }
 
         public void Draw(SpriteBatch spriteBatch)

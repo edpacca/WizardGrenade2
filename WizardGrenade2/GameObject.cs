@@ -51,14 +51,14 @@ namespace WizardGrenade2
         private void UpdatePotentialSpace(GameTime gameTime)
         {
             _potentialSpace.position = _realSpace.position + _realSpace.velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            _potentialSpace.rotation = ApplyRotation(_realSpace.velocity);
+            _potentialSpace.rotation = CalculateRotation(_realSpace.velocity);
             _collisionPoints.UpdateCollisionPoints(_potentialSpace.position, _potentialSpace.rotation);
         }
 
         private void UpdateRealSpace(GameTime gameTime)
         {
             _realSpace.position += _realSpace.velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            _realSpace.rotation = ApplyRotation(_realSpace.velocity);
+            _realSpace.rotation = CalculateRotation(_realSpace.velocity);
         }
 
         private void ResolveCollisions(GameTime gameTime)
@@ -94,18 +94,9 @@ namespace WizardGrenade2
             }
         }
 
-        private float ApplyRotation(Vector2 velocity)
-        {
-            if (_parameters.canRotate)
-                return Mechanics.CalculateRotation(velocity);
-            
-            return 0f;
-        }
-
         private Vector2 ApplyDamping(Vector2 velocity, float dampingFactor)
         {
             Vector2 dampedVelocity = velocity *= dampingFactor;
-
             return (Mechanics.VectorMagnitude(dampedVelocity) < 20f) ? Vector2.Zero : dampedVelocity;
         }
 
@@ -114,16 +105,9 @@ namespace WizardGrenade2
             _realSpace.velocity += deltaVelocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
         }
 
-        public void AddVelocity(Vector2 deltaVelocity)
-        {
-            _realSpace.velocity += deltaVelocity;
-        }
-
-        public void AddRotation(float rotation)
-        {
-            _realSpace.rotation += rotation;
-        }
-
+        private float CalculateRotation(Vector2 velocity) => _parameters.CanRotate ? Mechanics.CalculateRotation(velocity) : 0f;
+        public void AddVelocity(Vector2 deltaVelocity) => _realSpace.velocity += deltaVelocity;
+        public void AddRotation(float rotation) => _realSpace.rotation += rotation;
         public Vector2 GetVelocity() => _realSpace.velocity;
         public Vector2 GetPosition() => _realSpace.position;
         public void SetVelocity(Vector2 velocity) => _realSpace.velocity = velocity;
@@ -136,7 +120,5 @@ namespace WizardGrenade2
             DrawSprite(spriteBatch, _realSpace.position, _realSpace.rotation);
             //_collisionPoints.DrawCollisionPoints(spriteBatch, _realSpace.position);
         }
-
-
     }
 }

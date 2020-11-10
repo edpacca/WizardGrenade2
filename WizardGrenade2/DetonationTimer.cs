@@ -10,20 +10,10 @@ namespace WizardGrenade2
         private SpriteFont _timerFont;
         private readonly string _fileName = "StatFont";
 
-        public DetonationTimer(ContentManager contentManager)
-        {
-            _timerFont = contentManager.Load<SpriteFont>(_fileName);
-        }
+        public DetonationTimer(ContentManager contentManager) => _timerFont = contentManager.Load<SpriteFont>(_fileName);
 
-        public void UpdateTimer()
-        {
-            Time = WeaponManager.Instance.GetDetonationTime();
-        }
-
-        public void SetTimer(int time)
-        {
-            Time = time;
-        }
+        public void UpdateTimer() => Time = WeaponManager.Instance.GetDetonationTime();
+        public void SetTimer(int time) => Time = time;
 
         public void Draw(SpriteBatch spriteBatch, Vector2 position)
         {

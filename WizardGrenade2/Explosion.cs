@@ -7,11 +7,11 @@ namespace WizardGrenade2
     class Explosion : Sprite
     {
         private readonly string _fileName = "Explosion";
-        private int _explosionDiameter;
         private bool _isVisible;
         private float _explosionTime = 0.1f;
         private Timer _explosionTimer;
         private Vector2 _position;
+        private readonly int _explosionDiameter;
         private readonly int _pushbackFactor = 6000;
         private int _minimumPushback = 100;
 
@@ -33,10 +33,8 @@ namespace WizardGrenade2
             SetExplosionRadius(GetSpriteTexture());
         }
 
-        private void SetExplosionRadius(Texture2D texture)
-        {
-            SpriteScale = (float)_explosionDiameter / (float)texture.Width;
-        }
+        private void SetExplosionRadius(Texture2D texture) => SpriteScale = (float)_explosionDiameter / (float)texture.Width;
+        public void SetMinimumPushBack(int minimumPushBack) => _minimumPushback = minimumPushBack;
 
         public void UpdateExplosion(GameTime gameTime)
         {
@@ -76,11 +74,6 @@ namespace WizardGrenade2
         public float ExplosionMagnitude(Vector2 explosionToObject)
         {
             return (_pushbackFactor / (1 + Mechanics.VectorMagnitude(explosionToObject))) + _minimumPushback;
-        }
-
-        public void SetMinimumPushBack(int minimumPushBack)
-        {
-            _minimumPushback = minimumPushBack;
         }
 
         public void Draw(SpriteBatch spriteBatch)

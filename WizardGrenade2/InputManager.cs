@@ -20,37 +20,6 @@ namespace WizardGrenade2
             _currentMouseState = Mouse.GetState();
         }
 
-        public static bool IsKeyDown(Keys key) => _currentKeyboardState.IsKeyDown(key);
-        public static bool IsKeyUp(Keys key) => _currentKeyboardState.IsKeyUp(key);
-
-        public static bool WasKeyPressed(Keys key)
-        {
-            return _currentKeyboardState.IsKeyDown(key) && _previousKeyboardState.IsKeyUp(key);
-        }
-
-        public static bool WasKeyReleased(Keys key)
-        {
-            return _currentKeyboardState.IsKeyUp(key) && _previousKeyboardState.IsKeyDown(key);
-        }
-
-        public static bool HasScrollWheelMoved()
-        {
-            if (_currentMouseState.ScrollWheelValue != _previousMouseState.ScrollWheelValue)
-                return true;
-
-            return false;
-        }
-
-        public static float GetScrollWheelValue()
-        {
-            return _currentMouseState.ScrollWheelValue;
-        }
-
-        public static MouseState GetMouseState()
-        {
-            return _currentMouseState;
-        }
-
         public static int NumberKeys()
         {
             Keys[] keys = _currentKeyboardState.GetPressedKeys();
@@ -74,5 +43,13 @@ namespace WizardGrenade2
             Vector2 cursor = new Vector2(_currentMouseState.X, _currentMouseState.Y);
             return cursor;
         }
+
+        public static bool IsKeyDown(Keys key) => _currentKeyboardState.IsKeyDown(key);
+        public static bool IsKeyUp(Keys key) => _currentKeyboardState.IsKeyUp(key);
+        public static bool WasKeyPressed(Keys key) => _currentKeyboardState.IsKeyDown(key) && _previousKeyboardState.IsKeyUp(key);
+        public static bool WasKeyReleased(Keys key) => _currentKeyboardState.IsKeyUp(key) && _previousKeyboardState.IsKeyDown(key);
+        public static bool HasScrollWheelMoved() => _currentMouseState.ScrollWheelValue != _previousMouseState.ScrollWheelValue;
+        public static float GetScrollWheelValue() => _currentMouseState.ScrollWheelValue;
+        public static MouseState GetMouseState() => _currentMouseState;
     }
 }

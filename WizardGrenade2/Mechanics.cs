@@ -9,30 +9,13 @@ namespace WizardGrenade2
         public const float PI = (float)Math.PI;
         public const float TAO = 2 * PI;
 
-        public static Vector2 ApplyGravity(float mass)
-        {
-            return new Vector2(0, GRAVITY * mass);
-        }
-
-        public static Vector2 VectorComponents(float magnitude, float angle)
-        {
-            return new Vector2((float)Math.Sin(angle) * magnitude, (float)Math.Cos(angle) * magnitude);
-        }
-
-        public static float VectorMagnitude(Vector2 vector)
-        {
-            return (float)Math.Sqrt(Math.Pow(vector.X, 2) + Math.Pow(vector.Y, 2));
-        }
-
-        public static Vector2 NormaliseVector(Vector2 vector)
-        {
-            return vector / (VectorMagnitude(vector));
-        }
-
-        public static float DotProduct(Vector2 vector1, Vector2 vector2)
-        {
-            return vector1.X * vector2.X + vector1.Y * vector2.Y;
-        }
+        public static Vector2 ApplyGravity(float mass) => new Vector2(0, GRAVITY * mass);
+        public static Vector2 VectorComponents(float magnitude, float angle) => new Vector2((float)Math.Sin(angle) * magnitude, (float)Math.Cos(angle) * magnitude);
+        public static Vector2 NormaliseVector(Vector2 vector) => vector / (VectorMagnitude(vector));
+        public static Vector2 VectorBetweenPoints(Vector2 point1, Vector2 point2) => point1 - point2;
+        public static float VectorMagnitude(Vector2 vector) => (float)Math.Sqrt(Math.Pow(vector.X, 2) + Math.Pow(vector.Y, 2));
+        public static float DotProduct(Vector2 vector1, Vector2 vector2) => vector1.X * vector2.X + vector1.Y * vector2.Y;
+        public static float CalculateRotation(Vector2 velocity) => (float)Math.Atan2(velocity.Y, velocity.X);
 
         public static float CrossProduct(Vector2 vector1, Vector2 vector2)
         {
@@ -50,11 +33,6 @@ namespace WizardGrenade2
             return (float)Math.Acos(DotProduct(vector1, vector2) / (v1Mag * v2Mag));
         }
 
-        public static Vector2 VectorBetweenPoints(Vector2 point1, Vector2 point2)
-        {
-            return point1 - point2;
-        }
-
         public static Vector2 ReflectionVector(Vector2 incident, Vector2 normal)
         {
             return incident + (-2 * normal * (DotProduct(incident, normal)) / (float)Math.Pow(VectorMagnitude(normal), 2));
@@ -66,11 +44,6 @@ namespace WizardGrenade2
             delta.Y += GRAVITY * mass / 2 * (float)Math.Pow((float)(gameTime.TotalGameTime.TotalSeconds - startTime.TotalSeconds), 2);
 
             return delta;
-        }
-
-        public static float CalculateRotation(Vector2 velocity)
-        {
-            return (float)Math.Atan2(velocity.Y, velocity.X);
         }
     }
 }

@@ -41,7 +41,7 @@ namespace WizardGrenade2
 
         private void Explode(GameTime gameTime, List<Wizard> gameObjects)
         {
-            Vector2 position = GetPosition();
+            Vector2 position = Position;
             Map.Instance.DeformLevel(WeaponSettings.FIREBALL_EXPLOSION_RADIUS, position);
             _explosion.ShowExplosion(position);
             GameObjectInteraction(gameTime, gameObjects, position);
@@ -60,19 +60,6 @@ namespace WizardGrenade2
                     gameObject.entity.ApplyDamage((int)Mechanics.VectorMagnitude(pushBack) / 3);
                 }
             }
-        }
-
-        private void SetDetonationTime(int time)
-        {
-            DetonationTimer.ResetTimer(time);
-        }
-
-        private int GetDetonationTime(Keys key)
-        {
-            if (InputManager.WasKeyPressed(key))
-                return 1;
-            //return key.ToString();
-            return 0;
         }
 
         public override void Draw(SpriteBatch spriteBatch)

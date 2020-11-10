@@ -8,10 +8,10 @@ namespace WizardGrenade2
     class Marker : Sprite
     {
         private readonly string _fileName = "Marker";
-        private Vector2 _position = Vector2.Zero;
-        private Vector2 _markerOffset = new Vector2(0, 36);
         private const int OSCILLATION_RATE = 2;
         private const int OSCILLATION_AMPLITUDE = 3;
+        private Vector2 _position = Vector2.Zero;
+        private Vector2 _markerOffset = new Vector2(0, 36);
 
         public void LoadContent(ContentManager contentManager)
         {

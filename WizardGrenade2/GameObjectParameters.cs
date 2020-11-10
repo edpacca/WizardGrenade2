@@ -6,25 +6,25 @@
         public readonly int framesH;
         public readonly int framesV;
         public readonly float mass;
-        public bool canRotate;
+        public bool CanRotate { get; set; }
         public readonly int numberOfCollisionPoints;
         public readonly float dampingFactor;
 
         public GameObjectParameters(){}
 
         // Constructor for single frame Sprite
-        public GameObjectParameters(string setFileName, float setMass, bool setCanRotate, int setNumberOfCollisionPoints, float setDampingFactor)
+        public GameObjectParameters(string setFileName, float setMass, bool canRotate, int setNumberOfCollisionPoints, float setDampingFactor)
         {
             fileName = setFileName;
             mass = setMass;
-            canRotate = setCanRotate;
+            CanRotate = canRotate;
             numberOfCollisionPoints = setNumberOfCollisionPoints;
             dampingFactor = setDampingFactor;
         }
 
         // Constructor with animation frames;
-        public GameObjectParameters(string setFileName, float setMass, bool setCanRotate, int setNumberOfCollisionPoints, float setDampingFactor, int setFramesH, int setFramesV)
-            : this (setFileName, setMass, setCanRotate, setNumberOfCollisionPoints, setDampingFactor)
+        public GameObjectParameters(string setFileName, float setMass, bool canRotate, int setNumberOfCollisionPoints, float setDampingFactor, int setFramesH, int setFramesV)
+            : this (setFileName, setMass, canRotate, setNumberOfCollisionPoints, setDampingFactor)
         {
             framesH = setFramesH;
             framesV = setFramesV;

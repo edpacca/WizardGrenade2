@@ -24,7 +24,7 @@ namespace WizardGrenade2
         {
             WizardInteraction(gameObjects);
 
-            if (GetVelocity() == Vector2.Zero)
+            if (Velocity == Vector2.Zero)
                 KillProjectile();
 
             base.Update(gameTime, gameObjects);
@@ -34,11 +34,11 @@ namespace WizardGrenade2
         {
             foreach (var wizard in wizards)
             {
-                float distance = Math.Abs(Mechanics.VectorMagnitude(GetPosition() - wizard.GetPosition()));
+                float distance = Math.Abs(Mechanics.VectorMagnitude(Position - wizard.GetPosition()));
                 if (distance <= wizard.GetSpriteRectangle().Width / 2)
                 {
-                    wizard.AddVelocity(GetVelocity() * WeaponSettings.ARROW_KNOCKBACK_FACTOR);
-                    wizard.entity.ApplyDamage((int)(Mechanics.VectorMagnitude(GetVelocity()) * WeaponSettings.ARROW_DAMAGE_FACTOR));
+                    wizard.AddVelocity(Velocity * WeaponSettings.ARROW_KNOCKBACK_FACTOR);
+                    wizard.entity.ApplyDamage((int)(Mechanics.VectorMagnitude(Velocity) * WeaponSettings.ARROW_DAMAGE_FACTOR));
                     KillProjectile();
                 }
             }

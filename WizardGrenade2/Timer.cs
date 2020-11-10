@@ -7,7 +7,6 @@ namespace WizardGrenade2
     public class Timer
     {
         private SpriteFont _timerFont;
-
         public bool IsRunning { get; private set; }
         public float Time { get; private set; }
 

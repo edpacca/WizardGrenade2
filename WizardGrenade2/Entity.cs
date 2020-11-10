@@ -5,10 +5,7 @@
         public int Health { get; private set; }
         public bool IsDead { get; private set; }
 
-        public Entity(int startHealth)
-        {
-            Health = startHealth;
-        }
+        public Entity(int startHealth) => Health = startHealth;
 
         public void ApplyDamage(int damage)
         {

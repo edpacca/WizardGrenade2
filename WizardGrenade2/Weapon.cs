@@ -9,18 +9,16 @@ namespace WizardGrenade2
     {
         private GameObject _weapon;
         public Timer DetonationTimer { get; set; }
-
         public int WeaponPower { get; private set; }
         public float MaxChargeTime { get; private set; }
         public bool IsMoving { get; set; }
         public bool IsActive { get; set; }
-
         public bool HasCollided { get => _weapon.Collided; set => _weapon.Collided = value; }
         public virtual void SetToPlayerPosition(Vector2 newPosition, int activeDirection) => _weapon.SetPosition(newPosition);
         public virtual void WizardInteraction(List<Wizard> gameObjects) {}
-        public Vector2 GetPosition() => _weapon.GetPosition();
-        public Vector2 GetVelocity() => _weapon.GetVelocity();
-        public Texture2D GetSymbol() => _weapon.GetSpriteTexture();
+        public Vector2 Position => _weapon.GetPosition();
+        public Vector2 Velocity => _weapon.GetVelocity();
+        public Texture2D Symbol => _weapon.GetSpriteTexture();
 
         public void LoadWeaponObject(GameObjectParameters parameters)
         {

@@ -7,11 +7,11 @@ namespace WizardGrenade2
 {
     class Polygon
     {
-        public List<Vector2> polyPoints = new List<Vector2>();
+        private List<Vector2> polyPoints = new List<Vector2>();
         public List<Vector2> transformedPolyPoints = new List<Vector2>();
-        private Texture2D _pixelTexture;
         private Rectangle _pixelRectangle = new Rectangle(0, 0, 1, 1);
-
+        private Texture2D _pixelTexture;
+        
         public Polygon(Rectangle spriteRectangle, int numberOfCollisionPoints)
         {
             polyPoints = (numberOfCollisionPoints == 0) ?
@@ -37,15 +37,13 @@ namespace WizardGrenade2
 
         public static List<Vector2> CalcRectanglePoints(float width, float height)
         {
-            List<Vector2> relativePoints = new List<Vector2>
+            return new List<Vector2>
             {
                 new Vector2(0 - width / 2, (0 - height / 2)),
                 new Vector2(0 + width / 2, (0 - height / 2)),
                 new Vector2(0 + width / 2, (0 + height / 2)),
                 new Vector2(0 - width / 2, (0 + height / 2)),
             };
-
-            return relativePoints;
         }
 
         public static List<Vector2> CalcCircleCollisionPoints(float radius, int numberOfPoints)
@@ -62,8 +60,8 @@ namespace WizardGrenade2
         public void DrawCollisionPoints(SpriteBatch spriteBatch, Vector2 position)
         {
             // Draw collision points as single pixel
-            //foreach (var point in polyPoints)
-            //    spriteBatch.Draw(_pixelTexture, point + position, _pixelRectangle, Color.White);
+            foreach (var point in polyPoints)
+                spriteBatch.Draw(_pixelTexture, point + position, _pixelRectangle, Color.White);
 
             foreach (var point in transformedPolyPoints)
                 spriteBatch.Draw(_pixelTexture, point, _pixelRectangle, Color.Aqua);

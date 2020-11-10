@@ -36,7 +36,7 @@ namespace WizardGrenade2
 
         private void Explode(GameTime gameTime, List<Wizard> gameObjects)
         {
-            Vector2 position = GetPosition();
+            Vector2 position = Position;
             Map.Instance.DeformLevel(WeaponSettings.ICEBOMB_EXPLOSION_RADIUS, position);
             _explosion.ShowExplosion(position);
             GameObjectInteraction(gameTime, gameObjects, position);
