@@ -34,7 +34,7 @@ namespace WizardGrenade2
 
             foreach (var team in _teams)
                 foreach (var wizard in team._wizards)
-                    _allWizards.Add(wizard.GetWizard());
+                    _allWizards.Add(wizard);
         }
 
         public void LoadContent(ContentManager contentManager)
