@@ -57,7 +57,7 @@ namespace WizardGrenade2
             _teams[_activeTeam]._wizards[_activeWizard].IsActive = true;
         }
 
-        private void ChangeTeam()
+        public void ChangeTeam()
         {
             _teams[_activeTeam]._wizards[_activeWizard].IsActive = false;
             _activeTeam = Utility.WrapAroundCounter(_activeTeam, _numberOfTeams);
@@ -83,7 +83,7 @@ namespace WizardGrenade2
             ControlActiveTeamWizard(Keys.CapsLock, Keys.Tab);
 
             _teams[_activeTeam]._wizards[_activeWizard].UpdateControl(gameTime);
-            _marker.Update(gameTime, GetActiveWizardPosition());
+            _marker.Update(gameTime, ActiveWizardPosition);
         }
 
         private void LoadTeamHealth()
@@ -91,6 +91,20 @@ namespace WizardGrenade2
             for (int i = 0; i < _numberOfTeams; i++)
                 TeamHealthValues[i] = _teams[i].GetTeamHealth();
         }
+
+        //public void PlaceTeams()
+        //{
+        //    for (int i = 0; i < _teamSize; i++)
+        //    {
+        //        for (int j = 0; j < _numberOfTeams; j++)
+        //        {
+        //            _teams[j].PlaceWizard(i);
+        //        }
+        //    }
+
+        //    gameStarted = false;
+        //}
+
 
         public void Draw(SpriteBatch spriteBatch)
         {
@@ -100,8 +114,8 @@ namespace WizardGrenade2
                 team.Draw(spriteBatch);
         }
 
-        public Vector2 GetActiveWizardPosition() => _teams[_activeTeam]._wizards[_activeWizard].GetPosition();
-        public int GetActiveWizardDirection() => _teams[_activeTeam]._wizards[_activeWizard].GetDirection();
-        public List<Wizard> GetAllWizards() => _allWizards;
+        public Vector2 ActiveWizardPosition { get => _teams[_activeTeam]._wizards[_activeWizard].Position; }
+        public int ActiveWizardDirection { get => _teams[_activeTeam]._wizards[_activeWizard].DirectionCoefficient; }
+        public List<Wizard> AllWizards { get => _allWizards; }
     }
 }

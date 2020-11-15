@@ -23,7 +23,7 @@ namespace WizardGrenade2
         public void Initialise(GameOptions gameOptions)
         {
             _wizardTeams = new Teams(gameOptions);
-            _allWizards = _wizardTeams.GetAllWizards();
+            _allWizards = _wizardTeams.AllWizards;
         }
 
         public void LoadContent(ContentManager contentManager)
@@ -37,7 +37,7 @@ namespace WizardGrenade2
         public void Update(GameTime gameTime)
         {
             _wizardTeams.Update(gameTime);
-            _weaponManager.Update(gameTime, _wizardTeams.GetActiveWizardPosition(), _wizardTeams.GetActiveWizardDirection());
+            _weaponManager.Update(gameTime, _wizardTeams.ActiveWizardPosition, _wizardTeams.ActiveWizardDirection);
         }
 
         public void Draw(SpriteBatch spriteBatch)

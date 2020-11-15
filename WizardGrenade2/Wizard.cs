@@ -13,6 +13,15 @@ namespace WizardGrenade2
         private Timer _animationTimer = new Timer(6);
         private int _animationCounter = 0;
         public bool IsActive { get; set; }
+        public bool IsDead { get => entity.IsDead; }
+        public int Health { get => entity.Health; }
+
+        public Vector2 Position { get => _wizard.GetPosition(); set => _wizard.SetPosition(value); }
+        public Rectangle GetSpriteRectangle() => _wizard.GetSpriteRectangle();
+        public int DirectionCoefficient { get => Direction == Directions.Left ? -1 : 1; }
+
+        public void AddVelocity(Vector2 velocity) => _wizard.AddVelocity(velocity);
+
         private enum States { Idle, Walking, Charging, Firing, Jumping, Weak, }
         private enum Directions { None, Left, Right, }
         private States State;
@@ -153,11 +162,6 @@ namespace WizardGrenade2
             _wizard.Draw(spriteBatch);
         }
 
-        public Vector2 GetPosition() => _wizard.GetPosition();
-        public Rectangle GetSpriteRectangle() => _wizard.GetSpriteRectangle();
-        public int GetDirection() => Direction == Directions.Left ? -1 : 1;
-        public int GetHealth() => entity.Health;
-        public bool IsDead() => entity.IsDead;
-        public void AddVelocity(Vector2 velocity) => _wizard.AddVelocity(velocity);
+
     }
 }

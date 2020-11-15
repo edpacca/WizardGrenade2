@@ -34,7 +34,7 @@ namespace WizardGrenade2
         {
             foreach (var wizard in wizards)
             {
-                float distance = Math.Abs(Mechanics.VectorMagnitude(Position - wizard.GetPosition()));
+                float distance = Math.Abs(Mechanics.VectorMagnitude(Position - wizard.Position));
                 if (distance <= wizard.GetSpriteRectangle().Width / 2)
                 {
                     wizard.AddVelocity(Velocity * WeaponSettings.ARROW_KNOCKBACK_FACTOR);

@@ -54,6 +54,7 @@
     <Compile Include="GameObjectParameters.cs" />
     <Compile Include="GameOptions.cs" />
     <Compile Include="GameScreen.cs" />
+    <Compile Include="StateMachine.cs" />
     <Compile Include="HealthBar.cs" />
     <Compile Include="IceBomb.cs" />
     <Compile Include="InputManager.cs" />

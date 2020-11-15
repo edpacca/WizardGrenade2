@@ -52,7 +52,7 @@ namespace WizardGrenade2
         {
             foreach (var gameObject in gameObjects)
             {
-                Vector2 explosionToObject = _explosion.ExplosionToObject(explosionPosition, gameObject.GetPosition());
+                Vector2 explosionToObject = _explosion.ExplosionToObject(explosionPosition, gameObject.Position);
                 if (_explosion.IsWithinExplosionArea(explosionToObject, WeaponSettings.FIREBALL_EXPLOSION_RADIUS + 15))
                 {
                     Vector2 pushBack = _explosion.ExplosionVector(explosionToObject) * WeaponSettings.FIREBALL_EXPLOSION_DAMPING;

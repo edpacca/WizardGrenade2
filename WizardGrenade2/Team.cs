@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 
 namespace WizardGrenade2
@@ -17,7 +18,9 @@ namespace WizardGrenade2
             TeamName = teamName;
 
             for (int i = 0; i < teamSize; i++)
+            {
                 _wizards.Add(new Wizard(teamNumber, new Vector2((100 + i * 100) + teamNumber * 300, 300), wizardHealth));
+            }
         }
 
         public void LoadContent(ContentManager contentManager)
@@ -39,21 +42,21 @@ namespace WizardGrenade2
             int teamHealth = 0;
 
             foreach (var wizard in _wizards)
-                teamHealth += wizard.GetHealth();
+                teamHealth += wizard.Health;
 
             return teamHealth;
         }
 
         public void DrawHealth(SpriteBatch spriteBatch, Wizard wizard)
         {
-           spriteBatch.DrawString(_spriteFont, wizard.GetHealth().ToString(), wizard.GetPosition() - _healthTextOffset, Color.White);
+           spriteBatch.DrawString(_spriteFont, wizard.Health.ToString(), wizard.Position - _healthTextOffset, Color.White);
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
             foreach (var wizard in _wizards)
             {
-                if (!wizard.IsActive)
+                if (!wizard.IsActive && !wizard.IsDead)
                     DrawHealth(spriteBatch, wizard);
 
                 wizard.Draw(spriteBatch);

@@ -47,7 +47,7 @@ namespace WizardGrenade2
         {
             foreach (var gameObject in gameObjects)
             {
-                Vector2 explosionToObject = _explosion.ExplosionToObject(explosionPosition, gameObject.GetPosition());
+                Vector2 explosionToObject = _explosion.ExplosionToObject(explosionPosition, gameObject.Position);
                 if (_explosion.IsWithinExplosionArea(explosionToObject, WeaponSettings.ICEBOMB_EFFECT_RADIUS))
                 {
                     Vector2 pushBack = _explosion.ExplosionVector(explosionToObject) / 2;
