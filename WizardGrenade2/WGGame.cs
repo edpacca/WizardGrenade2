@@ -10,7 +10,8 @@ namespace WizardGrenade2
         private SpriteBatch _spriteBatch;
         private GameScreen _gameScreen = new GameScreen();
         private InterfaceManager _interfaceManager;
-        private UserInterface _userInterface;
+        //private UserInterface _userInterface;
+        private GameSetup _gameSetup = new GameSetup();
 
         Color backgroundColour = new Color(40, 40, 45);
 
@@ -27,7 +28,7 @@ namespace WizardGrenade2
         protected override void Initialize()
         {
             _gameScreen.Initialise();
-            _userInterface = new UserInterface(_gameScreen.GameOptions, _gameScreen.TeamNames);
+            //_userInterface = new UserInterface(_gameScreen.GameOptions, _gameScreen.TeamNames);
             Mouse.SetPosition(ScreenSettings.CentreScreenWidth, ScreenSettings.CentreScreenHeight);
             base.Initialize();
         }
@@ -36,7 +37,8 @@ namespace WizardGrenade2
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _gameScreen.LoadContent(Content);
-            _userInterface.LoadContent(Content);
+            _gameSetup.LoadContent(Content);
+            //_userInterface.LoadContent(Content);
         }
 
         protected override void Update(GameTime gameTime)
@@ -44,9 +46,10 @@ namespace WizardGrenade2
             if (InputManager.IsKeyDown(Keys.Escape))
                 Exit();
 
+            _gameSetup.Update(gameTime);
             InputManager.Update();
             _interfaceManager.Update(gameTime);
-            _userInterface.Update(gameTime, _gameScreen.TeamHealths);
+            //_userInterface.Update(gameTime, _gameScreen.TeamHealths);
             _gameScreen.Update(gameTime);
             base.Update(gameTime);
         }
@@ -60,7 +63,8 @@ namespace WizardGrenade2
             _spriteBatch.End();
 
             _spriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.PointClamp, null, null, null, _interfaceManager.GetOriginMatrix());
-            _userInterface.Draw(_spriteBatch);
+            //_userInterface.Draw(_spriteBatch);
+            _gameSetup.Draw(_spriteBatch);
             _spriteBatch.End();
 
             base.Draw(gameTime);

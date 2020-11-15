@@ -90,7 +90,7 @@ namespace WizardGrenade2
 
         public void DrawSpriteAtScale(SpriteBatch spriteBatch, Vector2 position, float scale)
         {
-            spriteBatch.Draw(_spriteTexture, position - GetSpriteOrigin(), _spriteRectangle, SpriteColour, 0f, Vector2.Zero, scale, SpriteVisualEffect, _layerDepth);
+            spriteBatch.Draw(_spriteTexture, position - (GetSpriteOrigin() * scale), _spriteRectangle, SpriteColour, 0f, Vector2.Zero, scale, SpriteVisualEffect, _layerDepth);
         }
 
         public void UpdateAnimationSequence(string state, float targetFrameRate, GameTime gameTime)

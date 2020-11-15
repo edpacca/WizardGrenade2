@@ -11,11 +11,12 @@ namespace WizardGrenade2
         private const int TEAM_SIZE = 3;
         private const int WIZARD_HEALTH = 100;
 
-        public BattleManager _battleManager = new BattleManager("Map2");
-        public int[] TeamHealths => _battleManager.TeamHealths;
-        public List<string> TeamNames => _battleManager.TeamNames;
-        public GameOptions GameOptions { get; private set; }
+        //public BattleManager _battleManager = new BattleManager("Map2");
+        //public int[] TeamHealths { get => _battleManager.TeamHealths; }
+        //public List<string> TeamNames { get => _battleManager.TeamNames; }
+        //public GameOptions GameOptions { get; private set; }
         private StateMachine _stateMachine = new StateMachine();
+
 
         public void Initialise()
         {
@@ -25,16 +26,19 @@ namespace WizardGrenade2
 
         public void LoadContent(ContentManager contentManager)
         {
+
             //_battleManager.LoadContent(contentManager);
         }
 
         public void Update(GameTime gameTime)
         {
+
             //_battleManager.Update(gameTime);
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
+
             //_battleManager.Draw(spriteBatch);
         }
     }
