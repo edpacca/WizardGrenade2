@@ -46,7 +46,7 @@ namespace WizardGrenade2
         {
             MouseState cursor = Mouse.GetState();
             int directionX = cursor.X <= 0 ? -1 : cursor.X >= _screenBounds.X ? 1 : 0;
-            int directionY = cursor.Y <= 0 ? -1 : cursor.X >= _screenBounds.Y ? 1 : 0;
+            int directionY = cursor.Y <= 0 ? -1 : cursor.Y >= _screenBounds.Y ? 1 : 0;
 
             _camera.X += (Utility.DifferentialGameTimeValue(gameTime, CAMERA_SPEED * 100, directionX));
             _camera.Y += (Utility.DifferentialGameTimeValue(gameTime, CAMERA_SPEED * 100, directionY));
