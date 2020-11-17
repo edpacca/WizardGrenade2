@@ -71,8 +71,8 @@ namespace WizardGrenade2
 
         private Vector2 CalcRotationOffset(float rotation)
         {
-            float xOffset = -_spriteRectangle.Width / 2 * (float)Math.Cos(rotation) + (_spriteRectangle.Height / 2 * (float)Math.Sin(rotation));
-            float yOffset = -_spriteRectangle.Height / 2 * (float)Math.Cos(rotation) - (_spriteRectangle.Width / 2 * (float)Math.Sin(rotation));
+            float xOffset = -_spriteRectangle.Width  / 2 * (float)Math.Cos(rotation) + (_spriteRectangle.Height  / 2 * (float)Math.Sin(rotation)) * SpriteScale;
+            float yOffset = -_spriteRectangle.Height  / 2 * (float)Math.Cos(rotation) - (_spriteRectangle.Width  / 2 * (float)Math.Sin(rotation)) * SpriteScale;
 
             return new Vector2(xOffset, yOffset);
         }

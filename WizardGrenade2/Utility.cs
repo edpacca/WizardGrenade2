@@ -9,6 +9,7 @@ namespace WizardGrenade2
             return (float)gameTime.ElapsedGameTime.TotalSeconds * rateFactor * magnitude;
         }
 
-        public static int WrapAroundCounter(int i, int listLength) => (i + 1) % listLength;
+        public static int WrapAroundCounter(int number, int listLength) => (number + 1) % listLength;
+        public static int WrapAroundNegativeCounter(int number, int listLength) => number - 1 < 0 ? listLength - number - 1 : number - 1;
     }
 }
