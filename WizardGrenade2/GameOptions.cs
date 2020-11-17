@@ -9,8 +9,9 @@ namespace WizardGrenade2
         public int WizardHealth { get; set; }
         public int NumberOfTeams { get; set; }
         public int TeamSize { get; set; }
-        public List<string> Options { get => _options; }
-        private readonly List<string> _options = new List<string> { "# Teams", "# Wizards", "Wizard Health" };
+        public string MapFile { get; set; }
+        public readonly List<string> options = new List<string> { "Teams", "Wizards", "Health" };
+        public readonly List<string> mapNames = new List<string> { "Castle", "Two-Towers", "City", "Clouds", "Arena" };
         public List<Vector2> OptionsLayout { get; private set; }
 
         public GameOptions()
@@ -21,7 +22,7 @@ namespace WizardGrenade2
 
         private void SetUpOptions()
         {
-            int numberOfOptions = _options.Count;
+            int numberOfOptions = options.Count;
             float verticalInterval = ScreenSettings.TARGET_HEIGHT / (numberOfOptions + 2);
 
             for (int i = 0; i < numberOfOptions; i++)

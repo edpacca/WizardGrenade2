@@ -55,6 +55,7 @@
     <Compile Include="GameOptions.cs" />
     <Compile Include="GameScreen.cs" />
     <Compile Include="GameSetup.cs" />
+    <Compile Include="OptionArrows.cs" />
     <Compile Include="StateMachine.cs" />
     <Compile Include="HealthBar.cs" />
     <Compile Include="IceBomb.cs" />
