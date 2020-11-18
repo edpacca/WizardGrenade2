@@ -51,5 +51,10 @@ namespace WizardGrenade2
         public static bool HasScrollWheelMoved() => _currentMouseState.ScrollWheelValue != _previousMouseState.ScrollWheelValue;
         public static float GetScrollWheelValue() => _currentMouseState.ScrollWheelValue;
         public static MouseState GetMouseState() => _currentMouseState;
+
+        public static bool WasLeftMousePressed()
+        {
+            return _currentMouseState.LeftButton == ButtonState.Pressed && _currentMouseState.LeftButton != _previousMouseState.LeftButton;
+        }
     }
 }
