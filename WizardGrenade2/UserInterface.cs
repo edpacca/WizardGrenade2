@@ -16,7 +16,7 @@ namespace WizardGrenade2
         private int _teamStartHealth;
         private List<Weapon> _weaponList;
         private DetonationTimer _detonationTimer;
-        private Vector2 _weaponSymbolPosition = new Vector2(20, 20);
+        private Vector2 _weaponSymbolPosition = new Vector2(40, 40);
 
 
         public UserInterface(GameOptions gameOptions)
@@ -65,7 +65,7 @@ namespace WizardGrenade2
             _timer.Draw(spriteBatch);
             _cursor.DrawSprite(spriteBatch, InputManager.CursorPosition());
             _weaponList[WeaponManager.Instance.ActiveWeapon].DrawSymbol(spriteBatch, _weaponSymbolPosition, 4f);
-            _detonationTimer.Draw(spriteBatch, _weaponSymbolPosition + new Vector2(4, -2));
+            _detonationTimer.Draw(spriteBatch, _weaponSymbolPosition);
         }
     }
 }

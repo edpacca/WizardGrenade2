@@ -28,7 +28,7 @@ namespace WizardGrenade2
             _teamName = teamName;
             _startTeamHealth = startTeamHealth;
             _displayedTeamHealth = _startTeamHealth;
-            _healthBarPosition = new Vector2(ScreenSettings.CentreScreenWidth, ScreenSettings.TARGET_HEIGHT -20 - (15 * teamNumber));
+            _healthBarPosition = new Vector2(ScreenSettings.CentreScreenWidth, ScreenSettings.TARGET_HEIGHT -30 - (15 * teamNumber));
         }
 
         public void LoadContent(ContentManager contentManager)

@@ -17,8 +17,10 @@ namespace WizardGrenade2
 
         public void Draw(SpriteBatch spriteBatch, Vector2 position)
         {
+            Vector2 timerTextSize = _timerFont.MeasureString(Time.ToString("0"));
+
             if (Time > 0)
-                spriteBatch.DrawString(_timerFont, Time.ToString("0"), position, Color.Black);
+                spriteBatch.DrawString(_timerFont, Time.ToString("0"), position - timerTextSize / 2, Color.Black);
         }
     }
 }
