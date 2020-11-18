@@ -19,11 +19,15 @@ namespace WizardGrenade2
         private Vector2 _weaponSymbolPosition = new Vector2(20, 20);
 
 
-        public UserInterface(GameOptions gameOptions, List<string> teamNames)
+        public UserInterface(GameOptions gameOptions)
         {
             _numberOfTeams = gameOptions.NumberOfTeams;
             _teamStartHealth = gameOptions.TeamSize * gameOptions.WizardHealth;
-            _teamNames = teamNames;
+
+            for (int i = 0; i < gameOptions.NumberOfTeams; i++)
+            {
+                _teamNames.Add("Team " + i);
+            }
         }
 
         public void LoadContent(ContentManager contentManager)
