@@ -9,7 +9,7 @@ namespace WizardGrenade2
     {
         private readonly string _fileName = "Marker";
         private const float OSCILLATION_RATE = 2.5f;
-        private const float OSCILLATION_AMPLITUDE = 0.5f;
+        private const float OSCILLATION_AMPLITUDE = 0.2f;
         private Vector2 _positionL = Vector2.Zero;
         private Vector2 _positionR = Vector2.Zero;
 
@@ -19,12 +19,12 @@ namespace WizardGrenade2
             SpriteScale = 1.5f;
         }
 
-        public void SetPositions(Vector2 centre, float distance)
+        public void SetPositions(Vector2 position, float distance)
         {
-            _positionL.Y = centre.Y;
-            _positionR.Y = centre.Y;
-            _positionL.X = centre.X - (distance / 2);
-            _positionR.X = centre.X + (distance / 2);
+            _positionL.Y = position.Y;
+            _positionR.Y = position.Y;
+            _positionL.X = position.X;
+            _positionR.X = position.X + distance;
         }
 
         public void Update(GameTime gameTime)
