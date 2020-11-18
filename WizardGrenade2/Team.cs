@@ -13,7 +13,7 @@ namespace WizardGrenade2
         public List<Wizard> _wizards = new List<Wizard>();
         private Vector2 _healthTextOffset = new Vector2(10, 36);
         private SpriteFont _spriteFont;
-        private Random _randomNumberGenerator = new Random(DateTime.Now.Millisecond);
+        //private Random _randomNumberGenerator = new Random(DateTime.Now.Millisecond);
 
         public Team(int teamNumber, string teamName, int teamSize, int wizardHealth)
         {
@@ -21,8 +21,8 @@ namespace WizardGrenade2
 
             for (int i = 0; i < teamSize; i++)
             {
-                int randomPosition = _randomNumberGenerator.Next(100, (int)ScreenSettings.TARGET_WIDTH - 100);
-                 _wizards.Add(new Wizard(teamNumber, new Vector2(randomPosition, 0), wizardHealth));
+                //int randomPosition = _randomNumberGenerator.Next(100, (int)ScreenSettings.TARGET_WIDTH - 100);
+                 _wizards.Add(new Wizard(teamNumber, new Vector2(teamNumber * 100, 0), wizardHealth));
             }
         }
 

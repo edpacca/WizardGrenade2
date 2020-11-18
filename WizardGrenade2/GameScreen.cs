@@ -10,7 +10,6 @@ namespace WizardGrenade2
         public BattleManager _battleManager;
         public int[] TeamHealths { get => _battleManager.TeamHealths; }
         public List<string> TeamNames { get => _battleManager.TeamNames; }
-        private StateMachine _stateMachine = new StateMachine();
 
         public void Initialise(GameOptions gameOptions)
         {
@@ -21,6 +20,11 @@ namespace WizardGrenade2
         public void LoadContent(ContentManager contentManager)
         {
             _battleManager.LoadContent(contentManager);
+        }
+
+        public void StartGame()
+        {
+
         }
 
         public void Update(GameTime gameTime)

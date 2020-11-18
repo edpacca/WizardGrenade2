@@ -38,12 +38,22 @@ namespace WizardGrenade2
             return collidingPoints;
         }
 
+        public bool CheckObjectPlacement(List<Vector2> collisionPoints)
+        {
+            foreach (var point in collisionPoints)
+            {
+                if (IsPointWithinMap(point) && HasCollided(point))
+                        return false;
+            }
+            return true;
+        }
+
         private bool IsPointWithinMap(Vector2 point)
         {
             return point.X >= 0 && point.Y >= 0 && point.X < _mapWidth - 1 && point.Y < _mapHeight - 1;
         }
 
-        private bool HasCollided(Vector2 collisionPoint)
+        public bool HasCollided(Vector2 collisionPoint)
         {
             return _mapCollisionData[(int)collisionPoint.X, (int)collisionPoint.Y];
         }

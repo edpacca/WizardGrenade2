@@ -7,11 +7,13 @@ using System.Threading.Tasks;
 
 namespace WizardGrenade2
 {
-    class StateMachine
+    public class StateMachine
     {
+        private bool _isGameStarted;
+
         public enum GameStates 
         { 
-            GameStart,
+            PlaceWizards,
             PlayerTurn,
             PlayerFired,
             PlayerOut,
@@ -22,7 +24,19 @@ namespace WizardGrenade2
 
         public StateMachine()
         {
-            GameState = GameStates.GameStart;
+            GameState = GameStates.PlaceWizards;
+        }
+
+        public void UpdateStateMachine(Teams wizardTeams)
+        {
+            if (_isGameStarted)
+            {
+
+            }
+            else if (wizardTeams.IsTeamsPlaced)
+            {
+                GameState = GameStates.PlayerTurn;
+            }
         }
     }
 }

@@ -15,6 +15,7 @@ namespace WizardGrenade2
         public bool IsActive { get; set; }
         public bool IsDead { get => entity.IsDead; }
         public int Health { get => entity.Health; }
+        public bool IsPlaced { get; set; }
 
         public Vector2 Position { get => _wizard.GetPosition(); set => _wizard.SetPosition(value); }
         public Rectangle GetSpriteRectangle() => _wizard.GetSpriteRectangle();
@@ -155,6 +156,11 @@ namespace WizardGrenade2
                 _wizard.SpriteColour = Color.Red;
                 _wizard.AddRotation(Mechanics.PI / 2);
             }
+        }
+
+        public bool CheckPlacement()
+        {
+            return CollisionManager.Instance.CheckObjectPlacement(_wizard.GetTransformedPolyPoints(Position));
         }
 
         public void Draw(SpriteBatch spriteBatch)

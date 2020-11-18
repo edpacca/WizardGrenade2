@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace WizardGrenade2
 {
-    class Teams
+    public class Teams
     {
         private List<Team> _teams = new List<Team>();
         private Marker _marker = new Marker();
@@ -19,6 +19,7 @@ namespace WizardGrenade2
         private int _numberOfTeams;
         private int _teamSize;
         private const int MAXIMUM_TEAMS = 4;
+        public bool IsTeamsPlaced { get; private set; }
 
         public Teams(GameOptions gameOptions)
         {
@@ -92,19 +93,31 @@ namespace WizardGrenade2
                 TeamHealthValues[i] = _teams[i].GetTeamHealth();
         }
 
-        //public void PlaceTeams()
-        //{
-        //    for (int i = 0; i < _teamSize; i++)
-        //    {
-        //        for (int j = 0; j < _numberOfTeams; j++)
-        //        {
-        //            _teams[j].PlaceWizard(i);
-        //        }
-        //    }
+        public void PlaceTeams()
+        {
+            Vector2 position = InputManager.CursorPosition();
 
-        //    gameStarted = false;
-        //}
+            _teams[_activeTeam]._wizards[_activeWizard].Position = position;
 
+            if (InputManager.WasLeftMousePressed() && _teams[_activeTeam]._wizards[_activeWizard].CheckPlacement())
+            {
+                PlaceWizard(position);
+                _activeTeam = Utility.WrapAroundCounter(_activeTeam, _numberOfTeams);
+
+                if (_teams[_activeTeam]._wizards[_activeWizard].IsPlaced)
+                {
+                    _activeWizard = Utility.WrapAroundCounter(_activeWizard, _teamSize);
+                    if (_teams[_activeTeam]._wizards[_activeWizard].IsPlaced)
+                        IsTeamsPlaced = true;
+                }
+            }
+        }
+
+        private void PlaceWizard(Vector2 position)
+        {
+            _teams[_activeTeam]._wizards[_activeWizard].Position = position;
+            _teams[_activeTeam]._wizards[_activeWizard].IsPlaced = true;
+        }
 
         public void Draw(SpriteBatch spriteBatch)
         {

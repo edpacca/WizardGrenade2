@@ -105,6 +105,12 @@ namespace WizardGrenade2
             _realSpace.velocity += deltaVelocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
         }
 
+        public List<Vector2> GetTransformedPolyPoints(Vector2 position)
+        {
+            _collisionPoints.UpdateCollisionPoints(position, 0f);
+            return _collisionPoints.transformedPolyPoints;
+        }
+
         private float CalculateRotation(Vector2 velocity) => _parameters.CanRotate ? Mechanics.CalculateRotation(velocity) : 0f;
         public void AddVelocity(Vector2 deltaVelocity) => _realSpace.velocity += deltaVelocity;
         public void AddRotation(float rotation) => _realSpace.rotation += rotation;
