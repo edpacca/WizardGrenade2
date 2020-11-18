@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using System;
 
 namespace WizardGrenade2
 {
@@ -12,6 +13,7 @@ namespace WizardGrenade2
         public List<Wizard> _wizards = new List<Wizard>();
         private Vector2 _healthTextOffset = new Vector2(10, 36);
         private SpriteFont _spriteFont;
+        private Random _randomNumberGenerator = new Random(DateTime.Now.Millisecond);
 
         public Team(int teamNumber, string teamName, int teamSize, int wizardHealth)
         {
@@ -19,7 +21,8 @@ namespace WizardGrenade2
 
             for (int i = 0; i < teamSize; i++)
             {
-                _wizards.Add(new Wizard(teamNumber, new Vector2((100 + i * 100) + teamNumber * 300, 300), wizardHealth));
+                int randomPosition = _randomNumberGenerator.Next(100, (int)ScreenSettings.TARGET_WIDTH - 100);
+                 _wizards.Add(new Wizard(teamNumber, new Vector2(randomPosition, 0), wizardHealth));
             }
         }
 

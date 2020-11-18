@@ -23,7 +23,7 @@ namespace WizardGrenade2
         private const int MASS = 100;
         private const int COLLISION_POINTS = 15;
         private const bool CAN_ROTATE = false;
-        private const float BOUNCE_FACTOR = 0.5f;
+        private const float BOUNCE_FACTOR = 0.3f;
 
         public const int WALK_SPEED = 100;
         public const int JUMP_HEIGHT = 200;
