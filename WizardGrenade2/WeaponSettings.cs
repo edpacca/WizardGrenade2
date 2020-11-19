@@ -14,7 +14,7 @@
         public const int FIREBALL_EXPLOSION_RADIUS = 40;
         public const int FIREBALL_CHARGE_POWER = 400;
         public const float FIREBALL_MAX_CHARGE_TIME = 2f;
-        public const float FIREBALL_EXPLOSION_DAMPING = 0.6f;
+        public const float FIREBALL_EXPLOSION_DAMPING = 0.4f;
 
         public static GameObjectParameters FIREBALL_GAMEOBJECT = new GameObjectParameters
             (FIREBALL_FILENAME, FIREBALL_MASS, ROTATION, FIREBALL_COLLISION_POINTS, FIREBALL_BOUNCE_FACTOR);
@@ -27,7 +27,7 @@
 
         public const int ARROW_POWER = 1500;
         public const float ARROW_MAX_CHARGE_TIME = 0.6f;
-        public const float ARROW_KNOCKBACK_FACTOR = 0.86f;
+        public const float ARROW_KNOCKBACK_FACTOR = 0.96f;
         public const float ARROW_DAMAGE_FACTOR = 0.028f;
 
         public static GameObjectParameters ARROW_GAMEOBJECT = new GameObjectParameters
@@ -42,7 +42,7 @@
         public const int ICEBOMB_CHARGE_POWER = 400;
         public const float ICEBOMB_MAX_CHARGE_TIME = 3f;
         public const int ICEBOMB_EXPLOSION_RADIUS = 35;
-        public const int ICEBOMB_EFFECT_RADIUS = 70;
+        public const int ICEBOMB_EFFECT_RADIUS = 80;
         public const float ICEBOMB_PUSHBACK_FACTOR = 0.8f;
 
         public static GameObjectParameters ICEBOMB_GAMEOBJECT = new GameObjectParameters

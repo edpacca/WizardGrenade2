@@ -55,6 +55,7 @@ namespace WizardGrenade2
         {
             _weapon.SetVelocity(Vector2.Zero);
             IsMoving = false;
+            StateMachine.Instance.ShotLanded();
         }
 
         public virtual void Draw(SpriteBatch spriteBatch)

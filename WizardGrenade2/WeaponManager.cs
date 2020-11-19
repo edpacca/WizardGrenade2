@@ -28,6 +28,7 @@ namespace WizardGrenade2
         public bool IsCharging { get; private set; }
         public List<Weapon> Weapons { get; private set; }
         public Rectangle WizardSpriteRectangle { get; private set; }
+        private Vector2 _initialPosition;
 
         private readonly int[] _detonationTimes = new int[] { 1, 2, 3, 4, 5 };
         
@@ -51,16 +52,19 @@ namespace WizardGrenade2
         {
             _crosshair.UpdateCrosshair(gameTime, activeWizardPosition, activeDirection);
             CycleWeapons(Keys.Q);
-            
+
             if (_isLoaded)
                 ChargeWeapon(gameTime, activeWizardPosition, activeDirection);
-            
+
             if (!Weapons[ActiveWeapon].IsMoving)
                 ResetCharge();
-            
+
             Weapons[ActiveWeapon].Update(gameTime, _allWizards);
             UpdateGrenadeTimer();
             ResetTimer();
+
+            if (Vector2.Distance(_initialPosition, Weapons[ActiveWeapon].Position) > ScreenSettings.TARGET_WIDTH + 200)
+                Weapons[ActiveWeapon].KillProjectile();
         }
 
         public void PopulateGameObjects(List<Wizard> allWizards)
@@ -71,7 +75,7 @@ namespace WizardGrenade2
 
         private void CycleWeapons(Keys key)
         {
-            if (InputManager.WasKeyPressed(key))
+            if (InputManager.WasKeyPressed(key) && _isLoaded)
             {
                 Weapons[ActiveWeapon].IsMoving = false;
                 ActiveWeapon = Utility.WrapAroundCounter(ActiveWeapon, _numberOfWeapons);
@@ -81,7 +85,7 @@ namespace WizardGrenade2
 
         private void ChargeWeapon(GameTime gameTime, Vector2 activePlayerPosition, int activeDirection)
         {
-            if (InputManager.IsKeyDown(Keys.Space))
+            if (InputManager.IsKeyDown(Keys.Space) && StateMachine.Instance.GameState == StateMachine.GameStates.PlayerTurn)
             {
                 IsCharging = true;
                 Weapons[ActiveWeapon].KillProjectile();
@@ -94,7 +98,9 @@ namespace WizardGrenade2
                 _isLoaded = false;
                 IsCharging = false;
                 Weapons[ActiveWeapon].FireProjectile(ChargePower, _crosshair.CrosshairAngle);
+                _initialPosition = activePlayerPosition;
                 ChargePower = 0f;
+                StateMachine.Instance.ShotTaken();
             }
         }
 
@@ -139,7 +145,9 @@ namespace WizardGrenade2
         public void Draw(SpriteBatch spriteBatch)
         {
             Weapons[ActiveWeapon].Draw(spriteBatch);
-            _crosshair.Draw(spriteBatch);
+
+            if (StateMachine.Instance.GameState == StateMachine.GameStates.PlayerTurn)
+                _crosshair.Draw(spriteBatch);
         }
     }
 }
