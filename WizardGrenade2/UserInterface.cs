@@ -7,9 +7,9 @@ namespace WizardGrenade2
 {
     public class UserInterface
     {
-        private const float ROUND_TIME = 60f;
+        private const float ROUND_TIME = 45f;
         private Sprite _cursor;
-        private Timer _timer;
+        private RoundTimer _timer;
         private List<HealthBar> _healthBars;
         private List<string> _teamNames = new List<string>();
         private int _numberOfTeams;
@@ -26,7 +26,7 @@ namespace WizardGrenade2
 
             for (int i = 0; i < gameOptions.NumberOfTeams; i++)
             {
-                _teamNames.Add("Team " + i);
+                _teamNames.Add("Team " + (i + 1));
             }
         }
 
@@ -34,7 +34,7 @@ namespace WizardGrenade2
         {
 
             _cursor = new Sprite(contentManager, "Cursor");
-            _timer = new Timer(ROUND_TIME);
+            _timer = new RoundTimer(ROUND_TIME);
             _detonationTimer = new DetonationTimer(contentManager);
             _timer.LoadContent(contentManager);
             _healthBars = new List<HealthBar>();
@@ -50,7 +50,14 @@ namespace WizardGrenade2
 
         public void Update(GameTime gameTime, int[] teamHealths)
         {
-            _timer.Update(gameTime);
+            if (StateMachine.Instance.GameState == StateMachine.GameStates.PlayerTurn)
+                _timer.Update(gameTime);
+            if (!_timer.IsRunning)
+            {
+                StateMachine.Instance.TimerRanOut();
+                _timer.ResetTimer(ROUND_TIME);
+            }
+
             _detonationTimer.SetTimer((int)WeaponManager.Instance.GetDetonationTime());
 
             for (int i = 0; i < _numberOfTeams; i++)
@@ -62,7 +69,9 @@ namespace WizardGrenade2
             foreach (var healthBar in _healthBars)
                 healthBar.Draw(spriteBatch);
 
-            _timer.Draw(spriteBatch);
+            if (StateMachine.Instance.GameState == StateMachine.GameStates.PlayerTurn)
+                _timer.Draw(spriteBatch);
+
             _cursor.DrawSprite(spriteBatch, InputManager.CursorPosition());
             _weaponList[WeaponManager.Instance.ActiveWeapon].DrawSymbol(spriteBatch, _weaponSymbolPosition, 4f);
             _detonationTimer.Draw(spriteBatch, _weaponSymbolPosition);

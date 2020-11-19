@@ -43,6 +43,9 @@ namespace WizardGrenade2
 
         public void Update(GameTime gameTime)
         {
+            //if (StateMachine.Instance.GameState == StateMachine.GameStates.ShotTaken)
+            //    _wizard.UpdateAnimationFrame("Idle", 0);
+
             _wizard.Update(gameTime);
             Die();
         }

@@ -10,12 +10,12 @@ namespace WizardGrenade2
         private readonly string _mapFileName;
         private Map _map = Map.Instance;
         private WeaponManager _weaponManager = WeaponManager.Instance;
+        private StateMachine _stateMachine = StateMachine.Instance;
 
         private Teams _wizardTeams;
         private List<Wizard> _allWizards;
         public int[] TeamHealths => _wizardTeams.TeamHealthValues;
         public List<string> TeamNames => _wizardTeams.TeamNames;
-        private StateMachine _stateMachine = new StateMachine();
 
         public BattleManager(string mapFileName)
         {
@@ -37,13 +37,17 @@ namespace WizardGrenade2
 
         public void Update(GameTime gameTime)
         {
-            if (_wizardTeams.IsTeamsPlaced)
+            StateMachine.Instance.UpdateStateMachine(gameTime);
+
+            if (StateMachine.Instance.GameState == StateMachine.GameStates.PlaceWizards)
+            {
+                _wizardTeams.PlaceTeams();
+            }
+            else
             {
                 _wizardTeams.Update(gameTime);
                 _weaponManager.Update(gameTime, _wizardTeams.ActiveWizardPosition, _wizardTeams.ActiveWizardDirection);
             }
-            else
-                _wizardTeams.PlaceTeams();
         }
 
         public void Draw(SpriteBatch spriteBatch)

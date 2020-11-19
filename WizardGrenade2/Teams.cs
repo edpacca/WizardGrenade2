@@ -63,6 +63,9 @@ namespace WizardGrenade2
             _teams[_activeTeam]._wizards[_activeWizard].IsActive = false;
             _activeTeam = Utility.WrapAroundCounter(_activeTeam, _numberOfTeams);
             _teams[_activeTeam]._wizards[_activeWizard].IsActive = true;
+
+            if (_activeTeam == 0)
+                ChangeWizard();
         }
 
         public void ControlActiveTeamWizard(Keys changeTeam, Keys changeWizard)
@@ -80,10 +83,14 @@ namespace WizardGrenade2
                 _teams[i].Update(gameTime);
                 TeamHealthValues[i] = _teams[i].GetTeamHealth();
             }
-  
-            ControlActiveTeamWizard(Keys.CapsLock, Keys.Tab);
 
-            _teams[_activeTeam]._wizards[_activeWizard].UpdateControl(gameTime);
+            if (StateMachine.Instance.GameState == StateMachine.GameStates.PlayerTurn ||
+                StateMachine.Instance.GameState == StateMachine.GameStates.ShotTaken)
+                _teams[_activeTeam]._wizards[_activeWizard].UpdateControl(gameTime);
+
+            if (StateMachine.Instance.NewTurn())
+                ChangeTeam();
+
             _marker.Update(gameTime, ActiveWizardPosition);
         }
 
@@ -108,7 +115,7 @@ namespace WizardGrenade2
                 {
                     _activeWizard = Utility.WrapAroundCounter(_activeWizard, _teamSize);
                     if (_teams[_activeTeam]._wizards[_activeWizard].IsPlaced)
-                        IsTeamsPlaced = true;
+                        StateMachine.Instance.WizardsPlaced();
                 }
             }
         }
@@ -121,7 +128,9 @@ namespace WizardGrenade2
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            _marker.Draw(spriteBatch);
+            if (StateMachine.Instance.GameState == StateMachine.GameStates.PlayerTurn ||
+                StateMachine.Instance.GameState == StateMachine.GameStates.ShotTaken)
+                _marker.Draw(spriteBatch);
 
             foreach (var team in _teams)
                 team.Draw(spriteBatch);
