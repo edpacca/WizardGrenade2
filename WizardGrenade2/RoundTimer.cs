@@ -32,13 +32,11 @@ namespace WizardGrenade2
 
             if (!IsRunning)
             {
-                StateMachine.Instance.TimerRanOut();
+                StateMachine.Instance.ForceTurnEnd();
                 ResetTimer(_roundTime);
             }
             if (StateMachine.Instance.NewTurn())
                 ResetTimer(_roundTime);
-
-            base.Update(gameTime);
         }
 
         public void Draw(SpriteBatch spriteBatch)
