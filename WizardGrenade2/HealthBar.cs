@@ -12,19 +12,19 @@ namespace WizardGrenade2
         private int _displayedTeamHealth;
         private Vector2 _healthBarPosition;
         private int _framesH = 1;
-        private int _framesV = 6;
+        private int _framesV = 7;
         private readonly string _teamName;
         private Vector2 _teamNameOffset = new Vector2(-45, -2);
         private SpriteFont _spriteFont;
 
         private Dictionary<string, int[]> _animationState = new Dictionary<string, int[]>
         {
-            ["bar"] = new int[] { 0, 1, 2, 3, 4, 5, 4, 3, 2, 1 }
+            ["bar"] = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5 }
         };
 
         public HealthBar(int teamNumber, int startTeamHealth, string teamName)
         {
-            _fileName = "HealthBar";
+            _fileName = "HealthBar" + teamNumber;
             _teamName = teamName;
             _startTeamHealth = startTeamHealth;
             _displayedTeamHealth = _startTeamHealth;
@@ -41,7 +41,7 @@ namespace WizardGrenade2
 
         public void Update(GameTime gameTime, int actualTeamHealth)
         {
-            UpdateAnimationSequence("bar", 5, gameTime);
+            UpdateAnimationSequence("bar", 10, gameTime);
             SmoothUpdateHealthBar(gameTime, actualTeamHealth);
             float healthPercentage = 1 - ((float)_displayedTeamHealth / (float)_startTeamHealth);
             MaskSpriteRectangleWidth(healthPercentage);
