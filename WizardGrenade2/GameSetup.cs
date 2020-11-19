@@ -72,8 +72,8 @@ namespace WizardGrenade2
             Vector2 optionPosition = _isOptionsSet ? _mapTextPosition - (fontWidth / 2) : GameOptions.OptionsLayout[_selectedOption];
 
             optionPosition.Y += fontWidth.Y / 2;
-            optionPosition.X -= 20;
-            _arrows.SetPositions(optionPosition, fontWidth.X + 37);
+            optionPosition.X -= 25;
+            _arrows.SetPositions(optionPosition, fontWidth.X + 47);
         }
 
         public void LoadContent(ContentManager contentManager)
@@ -90,7 +90,7 @@ namespace WizardGrenade2
                 _maps[i].SpriteScale = 0.5f;
             }
 
-            _optionsFont = contentManager.Load<SpriteFont>("TimerFont");
+            _optionsFont = contentManager.Load<SpriteFont>("OptionFont");
             _arrows.LoadContent(contentManager);
             SetArrowPositions();
 
