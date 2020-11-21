@@ -56,7 +56,10 @@
     <Compile Include="GameScreen.cs" />
     <Compile Include="GameSetup.cs" />
     <Compile Include="OptionArrows.cs" />
+    <Compile Include="PauseMenu.cs" />
     <Compile Include="RoundTimer.cs" />
+    <Compile Include="Scenery.cs" />
+    <Compile Include="SceneryClouds.cs" />
     <Compile Include="StateMachine.cs" />
     <Compile Include="HealthBar.cs" />
     <Compile Include="IceBomb.cs" />
