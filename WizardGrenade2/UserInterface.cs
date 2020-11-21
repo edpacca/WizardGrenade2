@@ -18,7 +18,6 @@ namespace WizardGrenade2
         private DetonationTimer _detonationTimer;
         private Vector2 _weaponSymbolPosition = new Vector2(40, 40);
 
-
         public UserInterface(GameOptions gameOptions)
         {
             _numberOfTeams = gameOptions.NumberOfTeams;
@@ -54,7 +53,7 @@ namespace WizardGrenade2
                 _timer.Update(gameTime);
             if (!_timer.IsRunning)
             {
-                StateMachine.Instance.TimerRanOut();
+                StateMachine.Instance.ForceTurnEnd();
                 _timer.ResetTimer(ROUND_TIME);
             }
 

@@ -16,6 +16,8 @@ namespace WizardGrenade2
         private readonly string _teamName;
         private Vector2 _teamNameOffset = new Vector2(-45, -2);
         private SpriteFont _spriteFont;
+        public bool IsTeamOut { get; private set; }
+        private Color _teamTextColour;
 
         private Dictionary<string, int[]> _animationState = new Dictionary<string, int[]>
         {
@@ -51,14 +53,20 @@ namespace WizardGrenade2
         {
             if (_displayedTeamHealth > actualTeamHealth)
                 _displayedTeamHealth -= (int)(gameTime.ElapsedGameTime.TotalSeconds * 100);
+            else if (actualTeamHealth <= 0)
+                IsTeamOut = true;
             else
                 _displayedTeamHealth = actualTeamHealth;
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
+            _teamTextColour = IsTeamOut ? Color.Red : Color.White;
+
             DrawSprite(spriteBatch, _healthBarPosition);
-            spriteBatch.DrawString(_spriteFont, _teamName, _healthBarPosition + _teamNameOffset, Color.White);
+            spriteBatch.DrawString(_spriteFont, _teamName, _healthBarPosition + _teamNameOffset, _teamTextColour);
+
+            spriteBatch.DrawString(_spriteFont, StateMachine.Instance.GameState.ToString(), new Vector2(40, 40), Color.White);
         }
     }
 }
