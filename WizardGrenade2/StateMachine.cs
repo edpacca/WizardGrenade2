@@ -59,8 +59,7 @@ namespace WizardGrenade2
 
         public void ShotLanded()
         {
-            if (GameState == GameStates.ShotTaken)
-                GameState = GameStates.BetweenTurns;
+            GameState = GameStates.BetweenTurns;
         }
 
         public bool NewTurn()
@@ -70,10 +69,9 @@ namespace WizardGrenade2
                 _previousGameState != GameStates.PlaceWizards;
         }
 
-        public void TimerRanOut()
+        public void ForceTurnEnd()
         {
-            if (GameState == GameStates.PlayerTurn)
-                GameState = GameStates.BetweenTurns;
+            GameState = GameStates.BetweenTurns;
         }
     }
 }
