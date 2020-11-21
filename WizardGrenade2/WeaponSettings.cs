@@ -7,14 +7,14 @@
         // Fireball settings
         private const string FIREBALL_FILENAME = "Fireball";
         private const int FIREBALL_MASS = 35;
-        private const int FIREBALL_COLLISION_POINTS = 6;
+        private const int FIREBALL_COLLISION_POINTS = 12;
         private const float FIREBALL_BOUNCE_FACTOR = 0.6f;
 
         public const float FIREBALL_DETONATION_TIME = 4f;
         public const int FIREBALL_EXPLOSION_RADIUS = 40;
         public const int FIREBALL_CHARGE_POWER = 400;
         public const float FIREBALL_MAX_CHARGE_TIME = 2f;
-        public const float FIREBALL_EXPLOSION_DAMPING = 0.4f;
+        public const float FIREBALL_EXPLOSION_DAMPING = 0.6f;
 
         public static GameObjectParameters FIREBALL_GAMEOBJECT = new GameObjectParameters
             (FIREBALL_FILENAME, FIREBALL_MASS, ROTATION, FIREBALL_COLLISION_POINTS, FIREBALL_BOUNCE_FACTOR);
@@ -36,7 +36,7 @@
         // Icebomb Settings
         private const string ICEBOMB_FILENAME = "IceBomb";
         private const int ICEBOMB_MASS = 80;
-        private const int ICEBOMB_COLLISION_POINTS = 6;
+        private const int ICEBOMB_COLLISION_POINTS = 12;
         private const float ICEBOMB_BOUNCE_FACTOR = 0.1f;
 
         public const int ICEBOMB_CHARGE_POWER = 400;

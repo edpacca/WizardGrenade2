@@ -51,7 +51,7 @@ namespace WizardGrenade2
         public void Update(GameTime gameTime, Vector2 activeWizardPosition, int activeDirection)
         {
             _crosshair.UpdateCrosshair(gameTime, activeWizardPosition, activeDirection);
-            CycleWeapons(Keys.Q);
+            CycleWeapons(Keys.Tab);
 
             if (_isLoaded)
                 ChargeWeapon(gameTime, activeWizardPosition, activeDirection);
@@ -63,7 +63,7 @@ namespace WizardGrenade2
             UpdateGrenadeTimer();
             ResetTimer();
 
-            if (Vector2.Distance(_initialPosition, Weapons[ActiveWeapon].Position) > ScreenSettings.TARGET_WIDTH + 200)
+            if (!_isLoaded && Vector2.Distance(_initialPosition, Weapons[ActiveWeapon].Position) > ScreenSettings.TARGET_WIDTH + 200)
                 Weapons[ActiveWeapon].KillProjectile();
         }
 
