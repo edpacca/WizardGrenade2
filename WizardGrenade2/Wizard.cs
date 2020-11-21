@@ -43,10 +43,9 @@ namespace WizardGrenade2
 
         public void Update(GameTime gameTime)
         {
-            //if (StateMachine.Instance.GameState == StateMachine.GameStates.ShotTaken)
-            //    _wizard.UpdateAnimationFrame("Idle", 0);
+            if (!(Position.Y > ScreenSettings.TARGET_HEIGHT))
+                _wizard.Update(gameTime);
 
-            _wizard.Update(gameTime);
             Die();
         }
 
@@ -89,7 +88,7 @@ namespace WizardGrenade2
             if (InputManager.IsKeyDown(Keys.Enter))
                 _wizard.UpdateAnimationSequence("Jumping", 10f, gameTime);
 
-            if (InputManager.WasKeyReleased(Keys.Enter))
+            if (InputManager.WasKeyReleased(Keys.Enter) && State != States.Jumping)
             {
                 State = States.Jumping;
                 _wizard.ModifyVelocityY(- WizardSettings.JUMP_HEIGHT);
@@ -154,6 +153,9 @@ namespace WizardGrenade2
 
         private void Die()
         {
+            if (Position.Y > ScreenSettings.TARGET_HEIGHT)
+                entity.Kill();
+
             if (entity.IsDead)
             {
                 _wizard.SpriteColour = Color.Red;
@@ -163,14 +165,18 @@ namespace WizardGrenade2
 
         public bool CheckPlacement()
         {
-            return CollisionManager.Instance.CheckObjectPlacement(_wizard.GetTransformedPolyPoints(Position));
+            bool isValidPlacement = CollisionManager.Instance.CheckObjectPlacement(_wizard.GetTransformedPolyPoints(Position));
+            if (!isValidPlacement)
+                _wizard.SpriteColour = Color.Black;
+            else
+                _wizard.SpriteColour = Color.White;
+
+            return isValidPlacement;
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
             _wizard.Draw(spriteBatch);
         }
-
-
     }
 }

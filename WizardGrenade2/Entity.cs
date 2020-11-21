@@ -19,6 +19,7 @@
 
         public void Kill()
         {
+            Health = 0;
             IsDead = true;
         }
     }
