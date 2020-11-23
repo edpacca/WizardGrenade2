@@ -18,7 +18,11 @@ namespace WizardGrenade2
         private Rectangle _backgroundRectangle;
         private Color _backgroundColour = new Color(0, 0, 0, 150);
 
+        private Scroll _scroll;
+
         public bool IsPaused { get; set; }
+        private bool _previousPauseState;
+        private bool _currentPauseState;
 
         public PauseMenu(GraphicsDevice graphics)
         {
@@ -29,12 +33,15 @@ namespace WizardGrenade2
         {
             _optionsFont = contentManager.Load<SpriteFont>("OptionFont");
             _textPosition -= _optionsFont.MeasureString(_pausedText) / 2;
-            _textPosition.Y -= 200;
+            _textPosition.Y -= 180;
             _exitTextPosition.X -= _optionsFont.MeasureString(_exitText).X;
 
             _backgroundRectangle = new Rectangle(0, 0, (int)ScreenSettings.TARGET_WIDTH, (int)ScreenSettings.TARGET_HEIGHT);
             _background = new Texture2D(_graphics, 1, 1);
             _background.SetData(new Color[] { _backgroundColour });
+
+            _scroll = new Scroll(new Vector2(ScreenSettings.CentreScreenWidth, ScreenSettings.CentreScreenHeight));
+            _scroll.LoadContent(contentManager);
         }
 
         public void PauseGame(Keys key)
@@ -43,15 +50,28 @@ namespace WizardGrenade2
                 IsPaused = IsPaused ? false : true;
         }
 
+        public void Update(GameTime gameTime)
+        {
+            _previousPauseState = _currentPauseState;
+            _currentPauseState = IsPaused;
+
+            if (IsPaused)
+                _scroll.Update(gameTime);
+            else if (_currentPauseState != _previousPauseState)
+            {
+                _scroll.ResetPauseMenu();
+            }
+        }
+
         public void Draw(SpriteBatch spriteBatch)
         {
             if (IsPaused)
             {
                 spriteBatch.Draw(_background, _backgroundRectangle, _backgroundColour);
-                spriteBatch.DrawString(_optionsFont, _pausedText, _textPosition, Color.White);
+                _scroll.Draw(spriteBatch);
+                spriteBatch.DrawString(_optionsFont, _pausedText, _textPosition, Color.Black);
                 spriteBatch.DrawString(_optionsFont, _exitText, _exitTextPosition, Color.Yellow);
             }
-
         }
     }
 }
