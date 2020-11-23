@@ -46,7 +46,7 @@ namespace WizardGrenade2
             UpdateAnimationSequence("bar", 10, gameTime);
             SmoothUpdateHealthBar(gameTime, actualTeamHealth);
             float healthPercentage = 1 - ((float)_displayedTeamHealth / (float)_startTeamHealth);
-            MaskSpriteRectangleWidth(healthPercentage);
+            MaskSpriteRectangleWidth(1 - healthPercentage);
         }
 
         private void SmoothUpdateHealthBar(GameTime gameTime, int actualTeamHealth)
@@ -65,8 +65,6 @@ namespace WizardGrenade2
 
             DrawSprite(spriteBatch, _healthBarPosition);
             spriteBatch.DrawString(_spriteFont, _teamName, _healthBarPosition + _teamNameOffset, _teamTextColour);
-
-            spriteBatch.DrawString(_spriteFont, StateMachine.Instance.GameState.ToString(), new Vector2(40, 40), Color.White);
         }
     }
 }
