@@ -60,6 +60,7 @@
     <Compile Include="RoundTimer.cs" />
     <Compile Include="Scenery.cs" />
     <Compile Include="SceneryClouds.cs" />
+    <Compile Include="Scroll.cs" />
     <Compile Include="StateMachine.cs" />
     <Compile Include="HealthBar.cs" />
     <Compile Include="IceBomb.cs" />

@@ -14,7 +14,6 @@ namespace WizardGrenade2
         private UserInterface _userInterface;
         private GameSetup _gameSetup = new GameSetup();
         private PauseMenu _pauseMenu;
-
         private Scenery _scenery = new Scenery();
 
         private bool _isGameSetup;
@@ -56,7 +55,11 @@ namespace WizardGrenade2
 
         protected override void Update(GameTime gameTime)
         {
-            _pauseMenu.PauseGame(Keys.Escape);
+            if (_isGameSetup)
+            {
+                _pauseMenu.PauseGame(Keys.Escape);
+                _pauseMenu.Update(gameTime);
+            }
 
             if (InputManager.WasKeyPressed(Keys.Delete))
                 Exit();
