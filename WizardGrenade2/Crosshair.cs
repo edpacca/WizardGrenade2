@@ -14,6 +14,7 @@ namespace WizardGrenade2
         private const int START_ANGLE = 120;
         private const float RAD = (float)Math.PI / 180;
         public float CrosshairAngle { get; private set; }
+        private float _rotation = 0f;
 
         private Vector2 _position;
         private int _previousDirection = 1;
@@ -41,6 +42,7 @@ namespace WizardGrenade2
                 CrosshairAngle -= Utility.DifferentialGameTimeValue(gameTime, AIM_SPEED, direciontCoefficient);
 
             UpdateCrosshairPosition(parentPosition);
+            _rotation = CrosshairAngle * -1;
         }
 
         private void UpdateCrosshairPosition(Vector2 parentPosition)
@@ -70,7 +72,7 @@ namespace WizardGrenade2
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            DrawSprite(spriteBatch, _position - GetSpriteOrigin());
+            DrawSprite(spriteBatch, _position, _rotation);
         }
     }
 }
