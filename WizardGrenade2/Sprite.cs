@@ -113,16 +113,28 @@ namespace WizardGrenade2
                 _spriteRectangle.X = frameNumber * _frameSize;
         }
 
-        public void MaskSpriteRectangleWidth(float maskPercentage)
+        public void MaskSpriteRectangleX(float maskPercentage)
         {
             float percentage = maskPercentage <= 1 && maskPercentage >= 0 ? maskPercentage : 1;
             _spriteRectangle.X = (int)(_spriteTexture.Width * percentage);
         }
 
+        public void MaskSpriteRectangleY(float maskPercentage)
+        {
+            float percentage = maskPercentage <= 1 && maskPercentage >= 0 ? maskPercentage : 1;
+            _spriteRectangle.Y = (int)(_spriteTexture.Height * percentage);
+        }
+
+        public void MaskSpriteRectangleWidth(float maskPercentage)
+        {
+            float percentage = maskPercentage <= 1 && maskPercentage >= 0 ? maskPercentage : 1;
+            _spriteRectangle.Width = (int)(_spriteTexture.Width * percentage);
+        }
+
         public void MaskSpriteRectangleHeight(float maskPercentage)
         {
             float percentage = maskPercentage <= 1 && maskPercentage >= 0 ? maskPercentage : 1;
-            _spriteRectangle.Y = (int)(_spriteTexture.Width * percentage);
+            _spriteRectangle.Height = (int)(_spriteTexture.Height * percentage);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
 
 namespace WizardGrenade2
 {
@@ -7,6 +8,11 @@ namespace WizardGrenade2
         public static float DifferentialGameTimeValue(GameTime gameTime, int rateFactor, int magnitude)
         {
             return (float)gameTime.ElapsedGameTime.TotalSeconds * rateFactor * magnitude;
+        }
+
+        public static bool Approximate(float float1, float float2)
+        {
+            return Math.Abs(float1 - float2) < 0.00001f;
         }
 
         public static int WrapAroundCounter(int number, int listLength) => (number + 1) % listLength;
