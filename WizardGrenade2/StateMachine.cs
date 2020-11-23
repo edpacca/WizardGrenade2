@@ -59,7 +59,8 @@ namespace WizardGrenade2
 
         public void ShotLanded()
         {
-            GameState = GameStates.BetweenTurns;
+            if (GameState == GameStates.ShotTaken)
+                GameState = GameStates.BetweenTurns;
         }
 
         public bool NewTurn()
