@@ -31,6 +31,18 @@ namespace WizardGrenade2
         {
             Zoom();
             CameraPosition(gameTime);
+
+            if (InputManager.WasKeyPressed(Keys.LeftShift))
+                ResetView();
+        }
+
+        public void ResetView()
+        {
+            _scaleFactor = 1;
+            _scaleMatrix.M11 = _mainScaleX;
+            _scaleMatrix.M22 = _mainScaleY;
+
+            _camera = Vector2.Zero;
         }
 
         private void Zoom()
