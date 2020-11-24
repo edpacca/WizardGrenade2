@@ -69,7 +69,7 @@ namespace WizardGrenade2
             {
                 spriteBatch.Draw(_background, _backgroundRectangle, _backgroundColour);
                 _scroll.Draw(spriteBatch);
-                spriteBatch.DrawString(_optionsFont, _pausedText, _textPosition, Color.Black);
+                spriteBatch.DrawString(_optionsFont, _pausedText, _textPosition, Colours.Ink);
                 spriteBatch.DrawString(_optionsFont, _exitText, _exitTextPosition, Color.Yellow);
             }
         }
