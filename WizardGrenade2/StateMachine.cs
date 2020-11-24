@@ -74,5 +74,10 @@ namespace WizardGrenade2
         {
             GameState = GameStates.BetweenTurns;
         }
+
+        public void EndCurrentGame()
+        {
+            GameState = GameStates.GameOver;
+        }
     }
 }
