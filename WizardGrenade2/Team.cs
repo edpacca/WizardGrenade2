@@ -9,41 +9,53 @@ namespace WizardGrenade2
 {
     class Team
     {
-        public string TeamName { get; private set; }
-        public List<Wizard> _wizards = new List<Wizard>();
+        public List<Wizard> wizards = new List<Wizard>();
+        public bool IsTeamOut { get; private set; }
+        public int ActiveWizard { get; private set; }
+        public int TeamSize { get; }
         private Vector2 _healthTextOffset = new Vector2(10, 36);
         private SpriteFont _spriteFont;
-        public bool IsTeamOut { get; private set; }
 
-        public Team(int teamNumber, string teamName, int teamSize, int wizardHealth)
+        public Team(int teamNumber, int teamSize, int wizardHealth)
         {
-            TeamName = teamName;
+            TeamSize = teamSize;
 
-            for (int i = 0; i < teamSize; i++)
-            {
-                 _wizards.Add(new Wizard(teamNumber, new Vector2(teamNumber * 100, 0), wizardHealth));
-            }
+            for (int i = 0; i < TeamSize; i++)
+                wizards.Add(new Wizard(teamNumber, new Vector2(teamNumber * 100, 0), wizardHealth));
+
+            ActiveWizard = 0;
         }
 
         public void LoadContent(ContentManager contentManager)
         {
             _spriteFont = contentManager.Load<SpriteFont>("WizardHealthFont");
 
-            foreach (var wizard in _wizards)
+            foreach (var wizard in wizards)
                 wizard.LoadContent(contentManager);
         }
 
         public void Update(GameTime gameTime)
         {
-            foreach (var wizard in _wizards)
+            foreach (var wizard in wizards)
                 wizard.Update(gameTime);
+        }
+
+        public void NextActiveWizard()
+        {
+            if (IsTeamOut)
+                return;
+
+            ActiveWizard = Utility.WrapAroundCounter(ActiveWizard, TeamSize);
+
+            if (wizards[ActiveWizard].IsDead)
+                NextActiveWizard();
         }
 
         public int GetTeamHealth()
         {
             int teamHealth = 0;
 
-            foreach (var wizard in _wizards)
+            foreach (var wizard in wizards)
                 teamHealth += wizard.Health;
 
             if (teamHealth == 0)
@@ -59,7 +71,7 @@ namespace WizardGrenade2
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            foreach (var wizard in _wizards)
+            foreach (var wizard in wizards)
             {
                 if (!wizard.IsActive && !wizard.IsDead)
                     DrawHealth(spriteBatch, wizard);
