@@ -84,10 +84,11 @@ namespace WizardGrenade2
                     CrosshairAngle;
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch, bool isCharging)
         {
             _crosshair.DrawSprite(spriteBatch, _crosshairPosition, _rotation);
-            _chargeBar.DrawSprite(spriteBatch, _chargeBarPosition, _rotation);
+            if (isCharging)
+                _chargeBar.DrawSprite(spriteBatch, _chargeBarPosition, _rotation);
         }
     }
 }
