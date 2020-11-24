@@ -50,7 +50,7 @@ namespace WizardGrenade2
 
         public void Update(GameTime gameTime, Vector2 activeWizardPosition, int activeDirection)
         {
-            _crosshair.UpdateCrosshair(gameTime, activeWizardPosition, activeDirection);
+            _crosshair.Update(gameTime, activeWizardPosition, activeDirection, ChargePower, Weapons[ActiveWeapon].MaxChargeTime);
             CycleWeapons(Keys.Tab);
 
             if (_isLoaded)

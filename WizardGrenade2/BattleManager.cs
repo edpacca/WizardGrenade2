@@ -10,7 +10,6 @@ namespace WizardGrenade2
         private readonly string _mapFileName;
         private Map _map = Map.Instance;
         private WeaponManager _weaponManager = WeaponManager.Instance;
-        private StateMachine _stateMachine = StateMachine.Instance;
 
         private Teams _wizardTeams;
         private List<Wizard> _allWizards;
@@ -53,8 +52,8 @@ namespace WizardGrenade2
         public void Draw(SpriteBatch spriteBatch)
         {
             _map.Draw(spriteBatch);
-            _wizardTeams.Draw(spriteBatch);
             _weaponManager.Draw(spriteBatch);
+            _wizardTeams.Draw(spriteBatch);
         }
     }
 }
