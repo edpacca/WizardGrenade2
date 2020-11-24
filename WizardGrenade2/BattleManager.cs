@@ -52,8 +52,8 @@ namespace WizardGrenade2
         public void Draw(SpriteBatch spriteBatch)
         {
             _map.Draw(spriteBatch);
-            _weaponManager.Draw(spriteBatch);
             _wizardTeams.Draw(spriteBatch);
+            _weaponManager.Draw(spriteBatch);
         }
     }
 }
