@@ -6,73 +6,88 @@ using Microsoft.Xna.Framework.Input;
 
 namespace WizardGrenade2
 {
-    class Crosshair : Sprite
+    class Crosshair
     {
-        private readonly string _fileName = "Crosshair";
+        private readonly string _crosshairFileName = "Crosshair";
+        private Sprite _crosshair;
         private const int AIM_SPEED = 2;
         private const int CROSSHAIR_RADIUS = 50;
-        private const int START_ANGLE = 120;
-        private const float RAD = (float)Math.PI / 180;
+        private const int START_ANGLE = (int)(120f * Mechanics.PI / 180f);
         public float CrosshairAngle { get; private set; }
         private float _rotation = 0f;
 
-        private Vector2 _position;
+        private Vector2 _crosshairPosition;
         private int _previousDirection = 1;
         private int _currentDirection = 1;
 
+        private Sprite _chargeBar;
+        private readonly string _chargebarFileName = "ChargeBar";
+        private Vector2 _chargeBarPosition;
+        private float _chargePercentage;
+
         public void LoadContent(ContentManager contentManager)
         {
-            LoadContent(contentManager, _fileName);
-            CrosshairAngle = START_ANGLE * RAD;
+
+            _crosshair = new Sprite(contentManager, _crosshairFileName);
+            _chargeBar = new Sprite(contentManager, _chargebarFileName);
         }
 
-        public void UpdateCrosshair(GameTime gameTime, Vector2 parentPosition, int direciontCoefficient)
+        public void Update(GameTime gameTime, Vector2 parentPosition, int directionCoefficient, float currentCharge, float maxCharge)
+        {
+            UpdateCrosshair(gameTime, parentPosition, directionCoefficient);
+            UpdateChargeBar(parentPosition, currentCharge, maxCharge);
+            _rotation = CrosshairAngle * -1;
+        }
+
+        private void UpdateCrosshair(GameTime gameTime, Vector2 parentPosition, int directionCoefficient)
         {
             _previousDirection = _currentDirection;
-            _currentDirection = direciontCoefficient;
+            _currentDirection = directionCoefficient;
 
             if (_currentDirection != _previousDirection)
                 CrosshairAngle = MathsExt.FlipAngle(CrosshairAngle);
 
-            RestrictAngle(direciontCoefficient);
+            RestrictAngle(directionCoefficient);
             
             if (InputManager.IsKeyDown(Keys.Up))
-                CrosshairAngle += Utility.DifferentialGameTimeValue(gameTime, AIM_SPEED, direciontCoefficient);
+                CrosshairAngle += Utility.DifferentialGameTimeValue(gameTime, AIM_SPEED, directionCoefficient);
             else if (InputManager.IsKeyDown(Keys.Down))
-                CrosshairAngle -= Utility.DifferentialGameTimeValue(gameTime, AIM_SPEED, direciontCoefficient);
+                CrosshairAngle -= Utility.DifferentialGameTimeValue(gameTime, AIM_SPEED, directionCoefficient);
 
-            UpdateCrosshairPosition(parentPosition);
-            _rotation = CrosshairAngle * -1;
+            _crosshairPosition = CalculatePosition(parentPosition, CROSSHAIR_RADIUS);
         }
 
-        private void UpdateCrosshairPosition(Vector2 parentPosition)
+        private void UpdateChargeBar(Vector2 parentPosition, float currentCharge, float maxCharge)
         {
-            _position.X = parentPosition.X + ((float)Math.Sin(CrosshairAngle) * CROSSHAIR_RADIUS);
-            _position.Y = parentPosition.Y + ((float)Math.Cos(CrosshairAngle) * CROSSHAIR_RADIUS);
+            _chargePercentage = currentCharge / maxCharge;
+            _chargeBarPosition = CalculatePosition(parentPosition, _chargePercentage * CROSSHAIR_RADIUS);
+        }
+
+        private Vector2 CalculatePosition(Vector2 parentPosition, float radius)
+        {
+            Vector2 newPosition = new Vector2();
+            newPosition.X = parentPosition.X + ((float)Math.Sin(CrosshairAngle) * radius);
+            newPosition.Y = parentPosition.Y + ((float)Math.Cos(CrosshairAngle) * radius);
+            return newPosition;
         }
 
         private void RestrictAngle(int directionCoeff)
         {
             if (directionCoeff == 1)
-            {
-                if (CrosshairAngle > Mechanics.PI)
-                    CrosshairAngle = Mechanics.PI;
-                if (CrosshairAngle < 0)
-                    CrosshairAngle = 0;
-            }
+                CrosshairAngle = CrosshairAngle > Mechanics.PI ? Mechanics.PI : 
+                    CrosshairAngle < 0 ? 0 :
+                    CrosshairAngle;
 
             if (directionCoeff == -1)
-            {
-                if (CrosshairAngle < Mechanics.PI)
-                    CrosshairAngle = Mechanics.PI;
-                if (CrosshairAngle > Mechanics.TAO)
-                    CrosshairAngle = Mechanics.TAO;
-            }
+                CrosshairAngle = CrosshairAngle < Mechanics.PI ? Mechanics.PI :
+                    CrosshairAngle > Mechanics.TAO ? Mechanics.TAO :
+                    CrosshairAngle;
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            DrawSprite(spriteBatch, _position, _rotation);
+            _crosshair.DrawSprite(spriteBatch, _crosshairPosition, _rotation);
+            _chargeBar.DrawSprite(spriteBatch, _chargeBarPosition, _rotation);
         }
     }
 }
