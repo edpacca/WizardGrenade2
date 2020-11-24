@@ -44,9 +44,9 @@ namespace WizardGrenade2
 
             bool[,] boolArray = new bool[texture.Width, texture.Height];
 
-            for (int x = 0; x < texture.Width; x++)
+            for (int x = 0; x < texture.Width; ++x)
             {
-                for (int y = 0; y < texture.Height; y++)
+                for (int y = 0; y < texture.Height; ++y)
                 {
                     if (mapData[x + y * texture.Width] != 0)
                         boolArray[x, y] = true;
@@ -59,9 +59,9 @@ namespace WizardGrenade2
         {
             int diameter = 2 * radius;
 
-            for (int x = 0; x < diameter; x++)
+            for (int x = 0; x < diameter; ++x)
             {
-                for (int y = 0; y < diameter; y++)
+                for (int y = 0; y < diameter; ++y)
                 {
                     if (IsPointInBlastArea(radius, position, x, y))
                     {
