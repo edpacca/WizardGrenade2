@@ -33,6 +33,7 @@ namespace WizardGrenade2
             GameObjectParameters parameters = WizardSettings.GetWizardParameters(skinNumber);
             entity = new Entity(startHealth);
             _wizard = new GameObject(parameters, position);
+            _wizard.SpriteColour = Colours.Transparent;
         }
 
         public void LoadContent(ContentManager contentManager)
@@ -158,7 +159,7 @@ namespace WizardGrenade2
 
             if (entity.IsDead)
             {
-                _wizard.SpriteColour = Color.Red;
+                _wizard.SpriteColour = Colours.WizardIsDeadColor;
                 _wizard.AddRotation(Mechanics.PI / 2);
             }
         }
@@ -169,9 +170,16 @@ namespace WizardGrenade2
             if (!isValidPlacement)
                 _wizard.SpriteColour = Color.Black;
             else
-                _wizard.SpriteColour = Color.White;
+                _wizard.SpriteColour = Colours.WizardPlacementColour;
 
             return isValidPlacement;
+        }
+
+        public void PlaceWizard(Vector2 position)
+        {
+            Position = position;
+            IsPlaced = true;
+            _wizard.SpriteColour = Color.White;
         }
 
         public void Draw(SpriteBatch spriteBatch)

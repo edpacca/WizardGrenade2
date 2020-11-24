@@ -18,8 +18,6 @@ namespace WizardGrenade2
 
         private bool _isGameSetup;
 
-        Color backgroundColour = new Color(40, 40, 45);
-
         public WGGame()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -92,7 +90,7 @@ namespace WizardGrenade2
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(backgroundColour);
+            GraphicsDevice.Clear(Colours.BackgroundColour);
 
             if (_isGameSetup)
                 DrawGame();
