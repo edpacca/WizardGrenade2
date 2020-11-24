@@ -56,8 +56,7 @@ namespace WizardGrenade2
             if (_isLoaded)
                 ChargeWeapon(gameTime, activeWizardPosition, activeDirection);
 
-            if (!Weapons[ActiveWeapon].IsMoving)
-                ResetCharge();
+            ResetCharge();
 
             Weapons[ActiveWeapon].Update(gameTime, _allWizards);
             UpdateGrenadeTimer();
@@ -85,7 +84,8 @@ namespace WizardGrenade2
 
         private void ChargeWeapon(GameTime gameTime, Vector2 activePlayerPosition, int activeDirection)
         {
-            if (InputManager.IsKeyDown(Keys.Space) && StateMachine.Instance.GameState == StateMachine.GameStates.PlayerTurn)
+            if (InputManager.IsKeyDown(Keys.Space) && 
+                StateMachine.Instance.GameState == StateMachine.GameStates.PlayerTurn)
             {
                 IsCharging = true;
                 Weapons[ActiveWeapon].KillProjectile();
@@ -106,8 +106,8 @@ namespace WizardGrenade2
 
         private void ResetCharge()
         {
-            if (InputManager.IsKeyUp(Keys.Space))
-            _isLoaded = true;
+            if (!Weapons[ActiveWeapon].IsMoving && StateMachine.Instance.GameState == StateMachine.GameStates.PlayerTurn)
+                _isLoaded = true;
         }
 
         private void UpdateGrenadeTimer()
@@ -147,7 +147,7 @@ namespace WizardGrenade2
             Weapons[ActiveWeapon].Draw(spriteBatch);
 
             if (StateMachine.Instance.GameState == StateMachine.GameStates.PlayerTurn)
-                _crosshair.Draw(spriteBatch);
+            _crosshair.Draw(spriteBatch, IsCharging);
         }
     }
 }
