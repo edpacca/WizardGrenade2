@@ -14,8 +14,9 @@ namespace WizardGrenade2
         public List<string> TeamNames { get; private set; }
         public int[] TeamHealthValues { get; private set; }
         public bool AreTeamsPlaced { get; private set; }
-        public bool AreAllTeamsDead { get; private set; }
-        public bool HasOneTeamWon { get; private set; }
+        public bool IsGameOver { get; private set; }
+        public string WinningTeam { get; private set; }
+
         private int _activeWizard;
         private int _activeTeam;
         private int _numberOfTeams;
@@ -31,7 +32,7 @@ namespace WizardGrenade2
             for (int i = 0; i < _numberOfTeams; i++)
             {
                 _teams.Add(new Team(i, _teamSize, gameOptions.WizardHealth));
-                TeamNames.Add("Team " + i);
+                TeamNames.Add("Team " + (i + 1));
             }
 
             foreach (var team in _teams)
@@ -52,21 +53,6 @@ namespace WizardGrenade2
             _marker.LoadContent(contentManager);
         }
 
-        public void ChangeTeam()
-        {
-            _teams[_activeTeam].wizards[_activeWizard].IsActive = false;
-            _activeTeam = Utility.WrapAroundCounter(_activeTeam, _numberOfTeams);
-
-            if (_teams[_activeTeam].IsTeamOut)
-                ChangeTeam();
-            else
-            {
-                _teams[_activeTeam].NextActiveWizard();
-                _activeWizard = _teams[_activeTeam].ActiveWizard;
-                _teams[_activeTeam].wizards[_activeWizard].IsActive = true;
-            }
-        }
-
         public void Update(GameTime gameTime)
         {
             for (int i = 0; i < _numberOfTeams; i++)
@@ -75,13 +61,14 @@ namespace WizardGrenade2
                 TeamHealthValues[i] = _teams[i].GetTeamHealth();
             }
 
-            if (StateMachine.Instance.NewTurn() && !AreAllTeamsDead)
+            if (StateMachine.Instance.NewTurn() && !IsGameOver)
                 ChangeTeam();
 
             if (StateMachine.Instance.GameState == StateMachine.GameStates.PlayerTurn ||
                 StateMachine.Instance.GameState == StateMachine.GameStates.ShotTaken)
                 _teams[_activeTeam].wizards[_activeWizard].UpdateControl(gameTime);
 
+            CheckGameOverStatus();
             _marker.Update(gameTime, ActiveWizardPosition);
         }
 
@@ -94,9 +81,7 @@ namespace WizardGrenade2
         public void PlaceTeams()
         {
             Vector2 position = InputManager.CursorPosition();
-
             _teams[_activeTeam].wizards[_activeWizard].Position = position;
-            
             bool isValidPlacement = _teams[_activeTeam].wizards[_activeWizard].CheckPlacement();
 
             if (InputManager.WasLeftMousePressed() && isValidPlacement)
@@ -113,10 +98,53 @@ namespace WizardGrenade2
             }
         }
 
+        public void ChangeTeam()
+        {
+            _teams[_activeTeam].wizards[_activeWizard].IsActive = false;
+            _activeTeam = Utility.WrapAroundCounter(_activeTeam, _numberOfTeams);
+
+            if (_teams[_activeTeam].IsTeamOut)
+                ChangeTeam();
+            else
+            {
+                _teams[_activeTeam].NextActiveWizard();
+                _activeWizard = _teams[_activeTeam].ActiveWizard;
+                _teams[_activeTeam].wizards[_activeWizard].IsActive = true;
+            }
+        }
+
+        private void CheckGameOverStatus()
+        {
+            int remainingTeams = 0;
+
+            foreach (var team in _teams)
+            {
+                if (!team.IsTeamOut)
+                    remainingTeams++;
+            }
+
+            IsGameOver = remainingTeams < 2 ? true : false;
+            
+            if (IsGameOver)
+            {
+                for (int i = 0; i < _numberOfTeams; i++)
+                {
+                    if (!_teams[i].IsTeamOut)
+                    {
+                        WinningTeam = TeamNames[i];
+                        StateMachine.Instance.EndCurrentGame(WinningTeam);
+                        return;
+                    }
+                }
+
+                StateMachine.Instance.EndCurrentGame("");
+            }
+        }
+
         public void Draw(SpriteBatch spriteBatch)
         {
-            if (StateMachine.Instance.GameState == StateMachine.GameStates.PlayerTurn ||
-                StateMachine.Instance.GameState == StateMachine.GameStates.ShotTaken)
+            if ((StateMachine.Instance.GameState == StateMachine.GameStates.PlayerTurn ||
+                StateMachine.Instance.GameState == StateMachine.GameStates.ShotTaken) && !IsGameOver)
                 _marker.Draw(spriteBatch);
 
             foreach (var team in _teams)

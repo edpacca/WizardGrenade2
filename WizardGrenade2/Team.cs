@@ -21,7 +21,7 @@ namespace WizardGrenade2
             TeamSize = teamSize;
 
             for (int i = 0; i < TeamSize; i++)
-                wizards.Add(new Wizard(teamNumber, new Vector2(teamNumber * 100, 0), wizardHealth));
+                wizards.Add(new Wizard(teamNumber, new Vector2(0, -100), wizardHealth));
 
             ActiveWizard = 0;
         }
