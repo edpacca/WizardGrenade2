@@ -47,7 +47,7 @@ namespace WizardGrenade2
             if (!(Position.Y > ScreenSettings.TARGET_HEIGHT))
                 _wizard.Update(gameTime);
 
-            Die();
+            CheckForDeath();
         }
 
         public void UpdateControl(GameTime gameTime)
@@ -152,7 +152,7 @@ namespace WizardGrenade2
             }
         }
 
-        private void Die()
+        private void CheckForDeath()
         {
             if (Position.Y > ScreenSettings.TARGET_HEIGHT)
                 entity.Kill();
