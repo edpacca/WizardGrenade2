@@ -10,5 +10,6 @@ namespace WizardGrenade2
         public static Color Transparent = new Color(0, 0, 0, 0);
         public static Color GreyedOut = new Color(35, 35, 35);
         public static Color Ink = new Color(100, 40, 0);
+        public static Color Gold = new Color(255, 215, 0);
     }
 }
