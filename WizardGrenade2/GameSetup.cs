@@ -10,6 +10,7 @@ namespace WizardGrenade2
     {
         public GameOptions GameOptions { get; private set; }
         private SpriteFont _optionsFont;
+        private SpriteFont _infoFont;
         private OptionArrows _arrows;
 
         private Sprite _title;
@@ -19,10 +20,11 @@ namespace WizardGrenade2
         private Vector2 _mapTextPosition;
         private Vector2 _mapPosition;
         private List<Sprite> _maps;
+        private string _info = "Go back: 'backspace'";
+        private Vector2 _infoTextPosition;
 
         private List<Sprite> _wizards;
         Vector2 _wizardPosition;
-        private Color _greyedOut = new Color(35, 35, 35);
 
         private const int HEALTH_INTERVAL = 25;
         private Vector2 _healthTextPosition;
@@ -61,6 +63,7 @@ namespace WizardGrenade2
             _mapPosition = ScreenSettings.ScreenCentre * MAP_SCALE + new Vector2(0, ScreenSettings.TARGET_HEIGHT / 10);
             _wizardPosition = new Vector2(ScreenSettings.TARGET_WIDTH / 2.3f, GameOptions.OptionsLayout[1].Y);
             _healthTextPosition = new Vector2(ScreenSettings.TARGET_WIDTH / 2.3f, GameOptions.OptionsLayout[2].Y);
+            _infoTextPosition = new Vector2(ScreenSettings.TARGET_WIDTH, 0);
         }
 
         private void SetArrowPositions()
@@ -91,6 +94,8 @@ namespace WizardGrenade2
             }
 
             _optionsFont = contentManager.Load<SpriteFont>("OptionFont");
+            _infoFont = contentManager.Load<SpriteFont>("InfoFont");
+            _infoTextPosition.X -= _infoFont.MeasureString(_info).X;
             _arrows.LoadContent(contentManager);
             SetArrowPositions();
 
@@ -115,7 +120,7 @@ namespace WizardGrenade2
         private void UpdateOptionsMenu()
         {
             int optionChange = InputManager.WasKeyPressed(Keys.Down) ? 1 : InputManager.WasKeyPressed(Keys.Up) ? -1 : 0;
-            _selectedOption = ChangeValue(_selectedOption + optionChange, 0, _optionSettings.Length);
+            _selectedOption = ChangeValue(_selectedOption + optionChange, 0, _optionSettings.GetLength(0) - 1);
 
             _isNewOptionSelected = InputManager.WasKeyPressed(Keys.Down) || InputManager.WasKeyPressed(Keys.Up) ? true : false;
 
@@ -166,6 +171,12 @@ namespace WizardGrenade2
             GameOptions.WizardHealth = _optionSettings[2, 0] * HEALTH_INTERVAL;
         }
 
+        public void ResetGame()
+        {
+            _isMapSet = false;
+            _isOptionsSet = false;
+        }
+
         public void Draw(SpriteBatch spriteBatch)
         {
             _title.DrawSpriteAtScale(spriteBatch, _titlePosition, 0.4f);
@@ -191,7 +202,7 @@ namespace WizardGrenade2
 
             for (int i = 0; i < 4; i++)
             {
-                _wizards[i].SpriteColour = _optionSettings[0, 0] <= i ? _greyedOut : Color.White;
+                _wizards[i].SpriteColour = _optionSettings[0, 0] <= i ? Colours.GreyedOut : Color.White;
                 _wizards[i].DrawSprite(spriteBatch, _wizardPosition + new Vector2(i * 80, 0));
             }
 
@@ -211,6 +222,7 @@ namespace WizardGrenade2
             Vector2 textLength = _optionsFont.MeasureString(GameOptions.mapNames[_selectedMap]);
             _maps[_selectedMap].DrawSprite(spriteBatch, _mapPosition);
             spriteBatch.DrawString(_optionsFont, GameOptions.mapNames[_selectedMap], _mapTextPosition - (textLength / 2), Color.Yellow);
+            spriteBatch.DrawString(_infoFont, _info, _infoTextPosition, Color.Yellow);
         }
     }
 }

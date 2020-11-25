@@ -10,12 +10,16 @@ namespace WizardGrenade2
         public int NumberOfTeams { get; set; }
         public int TeamSize { get; set; }
         public string MapFile { get; set; }
-        public readonly List<string> options = new List<string> { "Teams", "Wizards", "Health" };
+        public readonly List<string> options = new List<string> { "Players", "Wizards", "Health" };
         public readonly List<string> mapNames = new List<string> { "Castle", "Two-Towers", "City", "Clouds", "Arena" };
         public List<Vector2> OptionsLayout { get; private set; }
 
-        public GameOptions()
+        public List<string> Options { get; set; }
+
+        // To be done, make new class
+        public GameOptions(/*List<string> options*/)
         {
+            Options = options;
             OptionsLayout = new List<Vector2>();
             SetUpOptions();
         }
