@@ -45,6 +45,7 @@
     <Compile Include="Arrow.cs" />
     <Compile Include="BattleManager.cs" />
     <Compile Include="CollisionManager.cs" />
+    <Compile Include="Colours.cs" />
     <Compile Include="Crosshair.cs" />
     <Compile Include="DetonationTimer.cs" />
     <Compile Include="Entity.cs" />
@@ -54,12 +55,15 @@
     <Compile Include="GameObjectParameters.cs" />
     <Compile Include="GameOptions.cs" />
     <Compile Include="GameScreen.cs" />
+    <Compile Include="MainMenu.cs" />
     <Compile Include="GameSetup.cs" />
     <Compile Include="OptionArrows.cs" />
+    <Compile Include="Options.cs" />
     <Compile Include="PauseMenu.cs" />
     <Compile Include="RoundTimer.cs" />
     <Compile Include="Scenery.cs" />
     <Compile Include="SceneryClouds.cs" />
+    <Compile Include="ScreenText.cs" />
     <Compile Include="Scroll.cs" />
     <Compile Include="StateMachine.cs" />
     <Compile Include="HealthBar.cs" />
