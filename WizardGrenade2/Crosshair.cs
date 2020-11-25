@@ -27,9 +27,9 @@ namespace WizardGrenade2
 
         public void LoadContent(ContentManager contentManager)
         {
-
             _crosshair = new Sprite(contentManager, _crosshairFileName);
             _chargeBar = new Sprite(contentManager, _chargebarFileName);
+            CrosshairAngle = START_ANGLE;
         }
 
         public void Update(GameTime gameTime, Vector2 parentPosition, int directionCoefficient, float currentCharge, float maxCharge)
