@@ -49,6 +49,7 @@ namespace WizardGrenade2
             _scenery.LoadContent(Content);
             _userInterface.LoadContent(Content);
             _pauseMenu.LoadContent(Content);
+            StateMachine.Instance.LoadContent(Content);
         }
 
         protected override void Update(GameTime gameTime)
@@ -85,7 +86,17 @@ namespace WizardGrenade2
         {
             _interfaceManager.Update(gameTime);
             _userInterface.Update(gameTime, _gameScreen.TeamHealths);
+            StateMachine.Instance.UpdateStateMachine(gameTime);
             _gameScreen.Update(gameTime);
+            //if (StateMachine.Instance.GameState == StateMachine.GameStates.GameOver)
+            //{
+            //    if(InputManager.WasKeyPressed(Keys.End))
+            //    {
+            //        _gameSetup.ResetGame();
+            //        LoadContent();
+            //        _isGameSetup = false;
+            //    }
+            //}
         }
 
         protected override void Draw(GameTime gameTime)
@@ -109,8 +120,9 @@ namespace WizardGrenade2
             _spriteBatch.End();
 
             _spriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.PointClamp, null, null, null, _interfaceManager.GetOriginMatrix());
-            if (StateMachine.Instance.GameState != StateMachine.GameStates.PlaceWizards && !_pauseMenu.IsPaused)
+            if (!_pauseMenu.IsPaused && StateMachine.Instance.GameState != StateMachine.GameStates.PlaceWizards && StateMachine.Instance.GameState != StateMachine.GameStates.GameOver)
                 _userInterface.Draw(_spriteBatch);
+            StateMachine.Instance.Draw(_spriteBatch);
             _pauseMenu.Draw(_spriteBatch);
             _spriteBatch.End();
         }
