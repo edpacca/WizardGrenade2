@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using System.Security.Permissions;
 
 namespace WizardGrenade2
 {
@@ -38,14 +37,14 @@ namespace WizardGrenade2
         }
 
         // LoadContent for single sprite
-        protected void LoadContent(ContentManager contentManager, string fileName)
+        protected internal void LoadContent(ContentManager contentManager, string fileName)
         {
             _spriteTexture = contentManager.Load<Texture2D>(fileName);
             _spriteRectangle = new Rectangle(0, 0, _spriteTexture.Width, _spriteTexture.Height);
         }
 
         // LoadContent from animation spriteSheet
-        protected void LoadContent(ContentManager contentManager, string fileName, int framesH, int framesV)
+        protected internal void LoadContent(ContentManager contentManager, string fileName, int framesH, int framesV)
         {
             _spriteTexture = contentManager.Load<Texture2D>(fileName);
             _spriteRectangle = new Rectangle(0, 0, _spriteTexture.Width / framesH, _spriteTexture.Height / framesV);
