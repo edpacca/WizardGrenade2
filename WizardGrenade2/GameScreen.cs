@@ -22,11 +22,6 @@ namespace WizardGrenade2
             _battleManager.LoadContent(contentManager);
         }
 
-        public void StartGame()
-        {
-
-        }
-
         public void Update(GameTime gameTime)
         {
             _battleManager.Update(gameTime);
