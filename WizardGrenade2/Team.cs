@@ -13,7 +13,7 @@ namespace WizardGrenade2
         public bool IsTeamOut { get; private set; }
         public int ActiveWizard { get; private set; }
         public int TeamSize { get; }
-        private Vector2 _healthTextOffset = new Vector2(10, 36);
+        private Vector2 _healthTextOffset = new Vector2(0, 36);
         private SpriteFont _spriteFont;
 
         public Team(int teamNumber, int teamSize, int wizardHealth)
@@ -66,7 +66,8 @@ namespace WizardGrenade2
 
         public void DrawHealth(SpriteBatch spriteBatch, Wizard wizard)
         {
-           spriteBatch.DrawString(_spriteFont, wizard.Health.ToString(), wizard.Position - _healthTextOffset, Color.White);
+            Vector2 healthTextSize = _spriteFont.MeasureString(wizard.Health.ToString()) / 2;
+           spriteBatch.DrawString(_spriteFont, wizard.Health.ToString(), wizard.Position - _healthTextOffset - healthTextSize, Color.White);
         }
 
         public void Draw(SpriteBatch spriteBatch)
