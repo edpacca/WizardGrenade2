@@ -60,7 +60,7 @@ namespace WizardGrenade2
                 _pauseMenu.Update(gameTime);
             }
 
-            if (InputManager.WasKeyPressed(Keys.Delete))
+            if (InputManager.WasKeyPressed(Keys.Delete) || StateMachine.Instance.GameState == StateMachine.GameStates.ExitGame)
                 Exit();
 
             InputManager.Update();

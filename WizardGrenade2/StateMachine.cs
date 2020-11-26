@@ -32,6 +32,7 @@ namespace WizardGrenade2
             BetweenTurns,
             PlayerOut,
             GameOver,
+            ExitGame,
         }
 
         public GameStates GameState { get; private set; }
@@ -100,5 +101,15 @@ namespace WizardGrenade2
             _screenText.MainText = String.IsNullOrEmpty(winningTeam) ? "It's a Draw!" : winningTeam + " wins!";
             _screenText.InfoText = "Press 'delete' to exit game";
         }
-            }
+
+        public void ExitGame()
+        {
+            GameState = GameStates.ExitGame;
+        }
+
+        public bool IsInGameState(GameStates gameState)
+        {
+            return GameState == gameState;
+        }
+    }
 }
