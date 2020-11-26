@@ -12,6 +12,12 @@ namespace WizardGrenade2
         private const float OSCILLATION_AMPLITUDE = 0.2f;
         private Vector2 _positionL = Vector2.Zero;
         private Vector2 _positionR = Vector2.Zero;
+        bool _doubleArrow;
+
+        public OptionArrows(bool doubleArrow)
+        {
+            _doubleArrow = doubleArrow;
+        }
 
         public void LoadContent(ContentManager contentManager)
         {
@@ -27,16 +33,47 @@ namespace WizardGrenade2
             _positionR.X = position.X + distance;
         }
 
+        public void SetPosition(Vector2 position)
+        {
+            _positionL = position;
+        }
+
         public void Update(GameTime gameTime)
+        {
+            if (_doubleArrow)
+                Update2(gameTime);
+            else
+                Update1(gameTime);
+        }
+
+        public void Update2(GameTime gameTime)
         {
             _positionL.X += ((float)Math.Sin(gameTime.TotalGameTime.TotalSeconds * OSCILLATION_RATE)) * OSCILLATION_AMPLITUDE;
             _positionR.X -= ((float)Math.Sin(gameTime.TotalGameTime.TotalSeconds * OSCILLATION_RATE)) * OSCILLATION_AMPLITUDE;
         }
 
+        public void Update1(GameTime gameTime)
+        {
+            _positionL.X += ((float)Math.Sin(gameTime.TotalGameTime.TotalSeconds * OSCILLATION_RATE)) * OSCILLATION_AMPLITUDE;
+        }
+
         public void Draw(SpriteBatch spriteBatch)
+        {
+            if (_doubleArrow)
+                Draw2(spriteBatch);
+            else
+                Draw1(spriteBatch);
+        }
+
+        public void Draw2(SpriteBatch spriteBatch)
         {
             DrawSprite(spriteBatch, _positionR, 3 * Mechanics.PI / 2);
             DrawSprite(spriteBatch, _positionL, Mechanics.PI / 2);
+        }
+
+        public void Draw1(SpriteBatch spriteBatch)
+        {
+            DrawSprite(spriteBatch, _positionL, 3 * Mechanics.PI / 2);
         }
     }
 }
