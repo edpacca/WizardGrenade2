@@ -15,7 +15,8 @@ namespace WizardGrenade2
         private SceneryClouds _backgroundClouds;
         private Sprite _mainCloud;
         private Vector2 _mainCloudPosition;
-
+        private Sprite _sky;
+        private float _rotation = 0f;
         private const int NUMBER_FOREGROUND_CLOUDS = 5;
         private const int FOREGROUND_CLOUD_SPEED = 30;
         private const int NUMBER_BACKGROUND_CLOUDS = 15;
@@ -36,7 +37,7 @@ namespace WizardGrenade2
         {
 
             _mainCloud = new Sprite(contentManager, "MainCloud");
-
+            _sky = new Sprite(contentManager, "Sky");
             float mainCloudX = ScreenSettings.CentreScreenWidth - (_mainCloud.GetSpriteRectangle().Width / 2);
             float mainCloudY = ScreenSettings.TARGET_HEIGHT - 100;
             _mainCloudPosition = new Vector2(mainCloudX, mainCloudY);
@@ -57,6 +58,8 @@ namespace WizardGrenade2
         {
             _foregroundClouds.Update(gameTime);
             _backgroundClouds.Update(gameTime);
+
+            _rotation += ((float)gameTime.ElapsedGameTime.TotalSeconds / 40);
         }
 
         public void DrawForeground(SpriteBatch spriteBatch)
@@ -67,6 +70,7 @@ namespace WizardGrenade2
 
         public void DrawBackground(SpriteBatch spriteBatch)
         {
+            _sky.DrawSprite(spriteBatch, ScreenSettings.ScreenCentre, _rotation);
             _backgroundClouds.Draw(spriteBatch);
         }
     }
