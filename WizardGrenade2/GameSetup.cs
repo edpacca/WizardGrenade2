@@ -45,7 +45,7 @@ namespace WizardGrenade2
         public GameSetup()
         {
             GameOptions = new GameOptions();
-            _arrows = new OptionArrows();
+            _arrows = new OptionArrows(true);
             _maps = new List<Sprite>();
             _wizards = new List<Sprite>();
             SetMenuPositions();
@@ -114,19 +114,19 @@ namespace WizardGrenade2
                 SetArrowPositions();
                 _isNewOptionSelected = false;
             }
-            _arrows.Update(gameTime);
+            _arrows.Update2(gameTime);
         }
 
         private void UpdateOptionsMenu()
         {
             int optionChange = InputManager.WasKeyPressed(Keys.Down) ? 1 : InputManager.WasKeyPressed(Keys.Up) ? -1 : 0;
-            _selectedOption = ChangeValue(_selectedOption + optionChange, 0, _optionSettings.GetLength(0) - 1);
+            _selectedOption = Utility.ChangeValueInLimits(_selectedOption + optionChange, 0, _optionSettings.GetLength(0) - 1);
 
             _isNewOptionSelected = InputManager.WasKeyPressed(Keys.Down) || InputManager.WasKeyPressed(Keys.Up) ? true : false;
 
             int valueChange = InputManager.WasKeyPressed(Keys.Right) ? 1 : InputManager.WasKeyPressed(Keys.Left) ? -1 : 0 ;
 
-            _optionSettings[_selectedOption, 0] = ChangeValue(_optionSettings[_selectedOption, 0] + valueChange,
+            _optionSettings[_selectedOption, 0] = Utility.ChangeValueInLimits(_optionSettings[_selectedOption, 0] + valueChange,
                 _optionSettings[_selectedOption, 1],
                 _optionSettings[_selectedOption, 2]);
 
@@ -159,11 +159,6 @@ namespace WizardGrenade2
             }
         }
 
-        private int ChangeValue(int nextValue, int minValue, int maxValue)
-        {
-            return nextValue < minValue ? minValue : nextValue > maxValue ? maxValue : nextValue;
-        }
-
         private void StoreSettings()
         {
             GameOptions.NumberOfTeams = _optionSettings[0, 0];
@@ -186,7 +181,7 @@ namespace WizardGrenade2
             else
                 DrawGameOptions(spriteBatch);
 
-            _arrows.Draw(spriteBatch);
+            _arrows.Draw2(spriteBatch);
         }
 
         public void DrawGameOptions(SpriteBatch spriteBatch)
