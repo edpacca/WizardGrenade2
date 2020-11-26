@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 
 namespace WizardGrenade2
@@ -10,16 +11,22 @@ namespace WizardGrenade2
     {
         private SpriteFont _optionsFont;
         private Vector2 _textPosition = ScreenSettings.ScreenCentre;
-        private Vector2 _exitTextPosition = new Vector2(ScreenSettings.TARGET_WIDTH - 10, 10);
         private readonly string _pausedText = "Paused";
-        private readonly string _exitText = "Exit = 'del'";
         private GraphicsDevice _graphics;
         private Texture2D _background;
         private Rectangle _backgroundRectangle;
         private Color _backgroundColour = new Color(0, 0, 0, 150);
 
-        private Scroll _scroll;
+        private Options _pauseMenuOptions;
+        private List<string> _pauseMenuOptionNames = new List<string>()
+        { 
+          "Resume",
+          "Settings",
+          "Quit",
+          "Fireball"
+        };
 
+        private Scroll _scroll;
         public bool IsPaused { get; set; }
         private bool _previousPauseState;
         private bool _currentPauseState;
@@ -27,21 +34,25 @@ namespace WizardGrenade2
         public PauseMenu(GraphicsDevice graphics)
         {
             _graphics = graphics;
+            _pauseMenuOptions = new Options(_pauseMenuOptionNames, false);
         }
 
         public void LoadContent(ContentManager contentManager)
         {
-            _optionsFont = contentManager.Load<SpriteFont>("OptionFont");
+            _optionsFont = contentManager.Load<SpriteFont>("ScreenFont");
             _textPosition -= _optionsFont.MeasureString(_pausedText) / 2;
-            _textPosition.Y -= 180;
-            _exitTextPosition.X -= _optionsFont.MeasureString(_exitText).X;
+            _textPosition.Y -= 170;
 
             _backgroundRectangle = new Rectangle(0, 0, (int)ScreenSettings.TARGET_WIDTH, (int)ScreenSettings.TARGET_HEIGHT);
             _background = new Texture2D(_graphics, 1, 1);
             _background.SetData(new Color[] { _backgroundColour });
 
-            _scroll = new Scroll(new Vector2(ScreenSettings.CentreScreenWidth, ScreenSettings.CentreScreenHeight));
+            _scroll = new Scroll(ScreenSettings.ScreenCentre);
             _scroll.LoadContent(contentManager);
+
+            _pauseMenuOptions.SetOptionLayout(new Vector2(_textPosition.X, _textPosition.Y + 100), ScreenSettings.TARGET_HEIGHT - 210);
+            _pauseMenuOptions.SetOptionColours(Colours.Ink, Colours.FadedInk);
+            _pauseMenuOptions.LoadContent(contentManager);
         }
 
         public void PauseGame(Keys key)
@@ -56,11 +67,26 @@ namespace WizardGrenade2
             _currentPauseState = IsPaused;
 
             if (IsPaused)
-                _scroll.Update(gameTime);
-            else if (_currentPauseState != _previousPauseState)
             {
-                _scroll.ResetPauseMenu();
+                _scroll.Update(gameTime);
+                _pauseMenuOptions.Update(gameTime);
+
+                if (InputManager.WasKeyPressed(Keys.Enter))
+                    OptionFunctions(_pauseMenuOptions.SelectedOption);
             }
+
+            else if (_currentPauseState != _previousPauseState)
+                _scroll.ResetPauseMenu();
+        }
+
+        private void OptionFunctions(int selectedIndex)
+        {
+            if (selectedIndex == _pauseMenuOptionNames.IndexOf("Resume"))
+                IsPaused = false;
+
+            if (selectedIndex == _pauseMenuOptionNames.IndexOf("Quit"))
+                StateMachine.Instance.ExitGame();
+                
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -69,8 +95,9 @@ namespace WizardGrenade2
             {
                 spriteBatch.Draw(_background, _backgroundRectangle, _backgroundColour);
                 _scroll.Draw(spriteBatch);
+                if (_scroll.IsUnrolled)
+                    _pauseMenuOptions.DrawOptions(spriteBatch);
                 spriteBatch.DrawString(_optionsFont, _pausedText, _textPosition, Colours.Ink);
-                spriteBatch.DrawString(_optionsFont, _exitText, _exitTextPosition, Color.Yellow);
             }
         }
     }

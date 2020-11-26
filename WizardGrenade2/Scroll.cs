@@ -17,9 +17,10 @@ namespace WizardGrenade2
         private Vector2 _topPosition;
         private Vector2 _bottomPosition;
         private float _yOffset;
-        private float _weeOffset = 10f;
+        private float _positionOffset = 10f;
         private float _percentage;
         private const float ANIMATION_SPEED = 800;
+        public bool IsUnrolled { get; private set; }
 
         public Scroll(Vector2 position)
         {
@@ -45,15 +46,18 @@ namespace WizardGrenade2
 
         public void Update(GameTime gameTime)
         {
-            if (_bottomPosition.Y < _topPosition.Y - _weeOffset)
+            if (_bottomPosition.Y < _topPosition.Y - _positionOffset)
             {
+                IsUnrolled = false;
                 _bottomPosition.Y += (float)gameTime.ElapsedGameTime.TotalSeconds * ANIMATION_SPEED;
                 _percentage = 1 - ((_topPosition.Y - _bottomPosition.Y + 80) / _yOffset);
                 _scrollTop.MaskSpriteRectangleHeight(_percentage);
             }
             else
+            {
                 _scrollTop.MaskSpriteRectangleHeight(1);
-
+                IsUnrolled = true;
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)
