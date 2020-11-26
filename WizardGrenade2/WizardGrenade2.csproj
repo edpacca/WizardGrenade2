@@ -48,6 +48,7 @@
     <Compile Include="Colours.cs" />
     <Compile Include="Crosshair.cs" />
     <Compile Include="DetonationTimer.cs" />
+    <Compile Include="Dictionary.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Explosion.cs" />
     <Compile Include="Fireball.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="OptionArrows.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="PauseMenu.cs" />
+    <Compile Include="Potion.cs" />
     <Compile Include="RoundTimer.cs" />
     <Compile Include="Scenery.cs" />
     <Compile Include="SceneryClouds.cs" />
