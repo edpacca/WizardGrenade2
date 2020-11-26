@@ -16,7 +16,7 @@ namespace WizardGrenade2
         public bool IsDead { get => entity.IsDead; }
         public int Health { get => entity.Health; }
         public bool IsPlaced { get; set; }
-
+        private int _jumpCounter = 0;
         public Vector2 Position { get => _wizard.GetPosition(); set => _wizard.SetPosition(value); }
         public Rectangle GetSpriteRectangle() => _wizard.GetSpriteRectangle();
         public int DirectionCoefficient { get => Direction == Directions.Left ? -1 : 1; }
@@ -58,7 +58,7 @@ namespace WizardGrenade2
             {
                 UpdateMovement(gameTime);
 
-                if (State != States.Walking && State != States.Jumping)
+                if (State != States.Walking)
                     Jump(gameTime);
             }
         }
@@ -71,7 +71,7 @@ namespace WizardGrenade2
             else if (InputManager.IsKeyDown(Keys.Right) && State != States.Jumping)
                 Walk(Directions.Right, 1, SpriteEffects.FlipHorizontally, gameTime);
 
-            else
+            else if (_wizard.GetVelocity() == Vector2.Zero)
                 Idle(gameTime);
         }
 
@@ -89,9 +89,10 @@ namespace WizardGrenade2
             if (InputManager.IsKeyDown(Keys.Enter))
                 _wizard.UpdateAnimationSequence("Jumping", 10f, gameTime);
 
-            if (InputManager.WasKeyReleased(Keys.Enter) && State != States.Jumping)
+            if (InputManager.WasKeyReleased(Keys.Enter) && _jumpCounter < 5)
             {
                 State = States.Jumping;
+                _jumpCounter++;
                 _wizard.ModifyVelocityY(- WizardSettings.JUMP_HEIGHT);
             }
         }
@@ -103,12 +104,13 @@ namespace WizardGrenade2
                 _wizard.UpdateAnimationSequence("Charging", 4, gameTime);
                 State = States.Charging;
             }
-            else
+            else if (_wizard.GetVelocity() == Vector2.Zero)
                 State = States.Idle;
         }
 
         private void Idle(GameTime gameTime)
         {
+            _jumpCounter = 0;
             _animationTimer.Update(gameTime);
 
             // Periodically shows looking around animation
