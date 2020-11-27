@@ -12,6 +12,7 @@ namespace WizardGrenade2
         private GameScreen _gameScreen = new GameScreen();
         private InterfaceManager _interfaceManager;
         private UserInterface _userInterface;
+        private MainMenu _mainMenu = new MainMenu();
         private GameSetup _gameSetup = new GameSetup();
         private PauseMenu _pauseMenu;
         private Scenery _scenery = new Scenery();
@@ -38,6 +39,7 @@ namespace WizardGrenade2
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _pauseMenu = new PauseMenu(GraphicsDevice);
+            _mainMenu.LoadContent(Content);
             _gameSetup.LoadContent(Content);
         }
 
@@ -67,7 +69,11 @@ namespace WizardGrenade2
 
             if (!_isGameSetup)
             {
-                _gameSetup.Update(gameTime);
+                if (_mainMenu.PlayGame)
+                    _gameSetup.Update(gameTime);
+                else
+                    _mainMenu.Update(gameTime);
+
                 if (_gameSetup.isGameSetup())
                 {
                     LoadGameContent();
@@ -130,7 +136,10 @@ namespace WizardGrenade2
         protected void DrawGameSetup()
         {
             _spriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.PointClamp, null, null, null, _interfaceManager.GetOriginMatrix());
-            _gameSetup.Draw(_spriteBatch);
+            if (_mainMenu.PlayGame)
+                _gameSetup.Draw(_spriteBatch);
+            else
+                _mainMenu.Draw(_spriteBatch);
             _spriteBatch.End();
         }
     }
