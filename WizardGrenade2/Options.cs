@@ -10,27 +10,40 @@ namespace WizardGrenade2
     {
         public List<Vector2> OptionsLayout { get; private set; }
         public List<string> OptionNames { get; private set; }
-        private OptionArrows _arrows;
-        private int _numberOfOptions;
         public int SelectedOption { get; private set; }
         private SpriteFont _optionFont;
+        private OptionArrows _arrows;
+        private int _numberOfOptions;
+
+        private bool _isLayoutVertical;
         private Vector2 _firstOptionPosition = Vector2.Zero;
         private float _lastOptionPositionY = ScreenSettings.TARGET_HEIGHT;
+
         private Color _selectedColour = Colours.Gold;
         private Color _unselectedColour = Color.DimGray;
 
-        public Options(List<string> optionNames, bool _doubleArrow)
+        public Options(List<string> optionNames, bool doubleArrow, bool verticalLayout)
         {
             OptionNames = optionNames;
             _numberOfOptions = OptionNames.Count;
+            _isLayoutVertical = verticalLayout;
             OptionsLayout = new List<Vector2>();
-            ApplyOptionLayout();
-            _arrows = new OptionArrows(false);
+
+            if (_isLayoutVertical)
+                ApplyVerticalOptionLayout();
+
+            _arrows = new OptionArrows(doubleArrow);
         }
 
         public void LoadContent(ContentManager contentManager)
         {
             _optionFont = contentManager.Load<SpriteFont>("OptionFont");
+
+            if (_isLayoutVertical)
+                ApplyVerticalOptionLayout();
+            else
+                ApplySingleOptionLayout();
+
             _arrows.LoadContent(contentManager);
             SetArrowPositions();
         }
@@ -39,8 +52,11 @@ namespace WizardGrenade2
         {
             _firstOptionPosition = firstOptionPosition;
             _lastOptionPositionY = lastOptionY;
-            ApplyOptionLayout();
+            ApplyVerticalOptionLayout();
         }
+
+        public void SetSinglePosition(Vector2 centre) => _firstOptionPosition = centre;
+        public void SetOptionColours(Color selected) => _selectedColour = selected;
 
         public void SetOptionColours(Color selected, Color unselected)
         {
@@ -48,13 +64,23 @@ namespace WizardGrenade2
             _unselectedColour = unselected;
         }
 
-        private void ApplyOptionLayout()
+        private void ApplyVerticalOptionLayout()
         {
             OptionsLayout.Clear();
             float verticalInterval = (_lastOptionPositionY - _firstOptionPosition.Y) / (_numberOfOptions - 1);
 
             for (int i = 0; i < _numberOfOptions; i++)
                 OptionsLayout.Add(new Vector2(_firstOptionPosition.X, _firstOptionPosition.Y + (verticalInterval * i)));
+        }
+
+        private void ApplySingleOptionLayout()
+        {
+            OptionsLayout.Clear();
+            for (int i = 0; i < _numberOfOptions; i++)
+            {
+                Vector2 textSize = _optionFont.MeasureString(OptionNames[i]) / 2;
+                OptionsLayout.Add(_firstOptionPosition - textSize);
+            }
         }
 
         private void SetArrowPositions()
@@ -66,11 +92,15 @@ namespace WizardGrenade2
 
         public void Update(GameTime gameTime)
         {
-            ChangeOption();
-            _arrows.Update1(gameTime);
+            if (_isLayoutVertical)
+                ChangeVerticalOption();
+            else
+                CycleInPlaceOption();
+
+            _arrows.Update(gameTime);
         }
 
-        public void ChangeOption()
+        private void ChangeVerticalOption()
         {
             int difference = InputManager.WasKeyPressed(Keys.Down) ? 1 : InputManager.WasKeyPressed(Keys.Up) ? -1 : 0;
             SelectedOption = Utility.ChangeValueInLimits(SelectedOption + difference, 0, _numberOfOptions - 1);
@@ -79,15 +109,44 @@ namespace WizardGrenade2
                 SetArrowPositions();
         }
 
+        private void CycleInPlaceOption()
+        {
+            if (InputManager.WasKeyPressed(Keys.Right))
+            {
+                SelectedOption = Utility.WrapAroundCounter(SelectedOption, _numberOfOptions);
+                SetArrowPositions();
+            }
+            else if (InputManager.WasKeyPressed(Keys.Left))
+            {
+                SelectedOption = Utility.WrapAroundCounter(SelectedOption, _numberOfOptions);
+                SetArrowPositions();
+            }
+        }
+
         public void DrawOptions(SpriteBatch spriteBatch)
         {
             _arrows.Draw(spriteBatch);
 
+            if (_isLayoutVertical)
+                DrawVertical(spriteBatch);
+            else
+                DrawSinglePosition(spriteBatch);
+
+        }
+
+        private void DrawVertical(SpriteBatch spriteBatch)
+        {
             for (int i = 0; i < _numberOfOptions; i++)
             {
                 Color colour = i == SelectedOption ? _selectedColour : _unselectedColour;
                 spriteBatch.DrawString(_optionFont, OptionNames[i], OptionsLayout[i], colour);
             }
+        }
+
+        private void DrawSinglePosition(SpriteBatch spriteBatch)
+        {
+            Vector2 textSize = _optionFont.MeasureString(OptionNames[SelectedOption]) / 2;
+            spriteBatch.DrawString(_optionFont, OptionNames[SelectedOption], _firstOptionPosition - textSize, _selectedColour);
         }
     }
 }
