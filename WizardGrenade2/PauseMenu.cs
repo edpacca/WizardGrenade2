@@ -34,7 +34,7 @@ namespace WizardGrenade2
         public PauseMenu(GraphicsDevice graphics)
         {
             _graphics = graphics;
-            _pauseMenuOptions = new Options(_pauseMenuOptionNames, false);
+            _pauseMenuOptions = new Options(_pauseMenuOptionNames, false, true);
         }
 
         public void LoadContent(ContentManager contentManager)
