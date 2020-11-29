@@ -18,6 +18,7 @@ namespace WizardGrenade2
         private Scenery _scenery = new Scenery();
 
         private bool _isGameSetup;
+        private bool _setupGame;
 
         public WGGame()
         {
@@ -69,10 +70,18 @@ namespace WizardGrenade2
 
             if (!_isGameSetup)
             {
-                if (_mainMenu.PlayGame)
+                if (_setupGame)
+                {
+                    _setupGame = _gameSetup.SettingUpGame;
+                    _mainMenu.SettingUpGame = _setupGame ? true : false;
                     _gameSetup.Update(gameTime);
+                }
                 else
+                {
+                    _setupGame = _mainMenu.SettingUpGame;
+                    _gameSetup.SettingUpGame = _setupGame ? true : false;
                     _mainMenu.Update(gameTime);
+                }
 
                 if (_gameSetup.isGameSetup())
                 {
@@ -136,7 +145,7 @@ namespace WizardGrenade2
         protected void DrawGameSetup()
         {
             _spriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.PointClamp, null, null, null, _interfaceManager.GetOriginMatrix());
-            if (_mainMenu.PlayGame)
+            if (_mainMenu.SettingUpGame)
                 _gameSetup.Draw(_spriteBatch);
             else
                 _mainMenu.Draw(_spriteBatch);
