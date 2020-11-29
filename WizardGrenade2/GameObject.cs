@@ -77,14 +77,6 @@ namespace WizardGrenade2
                 UpdateRealSpace(gameTime);
                 // Update collision points from potential position to real position
                 _collisionPoints.UpdateCollisionPoints(_realSpace.position, _realSpace.rotation);
-
-                // Perform second check to see if still colliding in real space
-                if (Collider.CheckCollision(_collisionPoints.transformedPolyPoints).Count != 0)
-                {
-                    // If still colliding update position along reflection vector without damping
-                    _realSpace.velocity = reflectionVector;
-                    UpdateRealSpace(gameTime);
-                }
             }
             else
             {
