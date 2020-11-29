@@ -9,6 +9,7 @@ namespace WizardGrenade2
     class GameSetup
     {
         public GameOptions GameOptions { get; private set; }
+        public bool SettingUpGame { get; set; }
         private SpriteFont _optionsFont;
         private SpriteFont _infoFont;
         private Sprite _title;
@@ -28,8 +29,11 @@ namespace WizardGrenade2
         private Options _mapOptions;
         private bool _AreBattleOptionsSet;
         private bool _isMapSet;
-        public readonly List<string> BattleOptionNames = new List<string> { "Players", "Wizards", "Health" };
-        public readonly List<string> MapNames = new List<string> { "Castle", "Two-Towers", "City", "Clouds", "Arena" };
+        private readonly List<string> _battleOptionNames = new List<string> { "Players", "Wizards", "Health" };
+        private readonly List<string> _mapNames = new List<string> { "Castle", "Two-Towers", "City", "Clouds", "Arena" };
+
+        private BattleSettings _battleSettings = new BattleSettings();
+
         private int[,] _battleOptionValues = new int[3, 3]
         {
             {2, 2, 4 },
@@ -42,8 +46,8 @@ namespace WizardGrenade2
             GameOptions = new GameOptions();
             _maps = new List<Sprite>();
             _wizards = new List<Sprite>();
-            _battleOptions = new Options(BattleOptionNames, true, true);
-            _mapOptions = new Options(MapNames, true, false);
+            _battleOptions = new Options(_battleOptionNames, true, true);
+            _mapOptions = new Options(_mapNames, true, false);
             SetMenuPositions();
         }
 
@@ -103,6 +107,9 @@ namespace WizardGrenade2
 
         private void UpdateOptionsMenu()
         {
+            if (InputManager.WasKeyPressed(Keys.Back))
+                SettingUpGame = false;
+
             int valueChange = InputManager.WasKeyPressed(Keys.Right) ? 1 : InputManager.WasKeyPressed(Keys.Left) ? -1 : 0 ;
 
             _battleOptionValues[_battleOptions.SelectedOption, 0] = Utility.ChangeValueInLimits(
