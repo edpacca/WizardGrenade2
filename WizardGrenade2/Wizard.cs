@@ -27,6 +27,9 @@ namespace WizardGrenade2
         private enum Directions { None, Left, Right, }
         private States State;
         private Directions Direction;
+        private Directions _previousDirection;
+        private Directions _currentDirection;
+
 
         public Wizard(int skinNumber, Vector2 position, int startHealth)
         {
@@ -47,7 +50,8 @@ namespace WizardGrenade2
             if (!(Position.Y > ScreenSettings.TARGET_HEIGHT))
                 _wizard.Update(gameTime);
 
-            CheckForDeath();
+            if (!IsDead)
+                CheckForDeath();
         }
 
         public void UpdateControl(GameTime gameTime)
@@ -56,10 +60,10 @@ namespace WizardGrenade2
 
             if (State != States.Charging)
             {
+                DirectionChange();
                 UpdateMovement(gameTime);
 
-                if (State != States.Walking)
-                    Jump(gameTime);
+                Jump(gameTime);
             }
         }
 
@@ -77,12 +81,22 @@ namespace WizardGrenade2
 
         private void Walk(Directions direction, int directionCoefficient, SpriteEffects effect, GameTime gameTime)
         {
-            _wizard.ModifyVelocityX(directionCoefficient * WizardSettings.WALK_SPEED);
             State = States.Walking;
-            _wizard.UpdateAnimationSequence("Walking", 10f, gameTime);
             Direction = direction;
+
+            _wizard.ModifyVelocityX(directionCoefficient * WizardSettings.WALK_SPEED);
+
+            _wizard.UpdateAnimationSequence("Walking", 10f, gameTime);
             _wizard.SpriteVisualEffect = effect;
         }
+
+        private void DirectionChange()
+        {
+            _previousDirection = _currentDirection;
+            _currentDirection = Direction;
+
+        }
+        private bool WasDirectionChanged { get => _previousDirection != _currentDirection; }
 
         private void Jump(GameTime gameTime)
         {
