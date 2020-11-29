@@ -14,7 +14,7 @@ namespace WizardGrenade2
         public bool IsMoving { get; set; }
         public bool IsActive { get; set; }
         public bool HasCollided { get => _weapon.Collided; set => _weapon.Collided = value; }
-        public virtual void SetToPlayerPosition(Vector2 newPosition, int activeDirection) => _weapon.SetPosition(newPosition);
+        public virtual void SetToPlayerPosition(Vector2 newPosition, int activeDirection, float angle) => _weapon.SetPosition(newPosition);
         public virtual void WizardInteraction(List<Wizard> gameObjects) {}
         public Vector2 Position => _weapon.GetPosition();
         public Vector2 Velocity => _weapon.GetVelocity();

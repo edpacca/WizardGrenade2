@@ -27,7 +27,7 @@ namespace WizardGrenade2
             {
                 Explode(gameTime, gameObjects);
                 KillProjectile();
-                HasCollided = false; 
+                HasCollided = false;
             }
 
             _explosion.UpdateExplosion(gameTime);

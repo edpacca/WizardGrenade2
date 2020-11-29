@@ -44,9 +44,10 @@ namespace WizardGrenade2
             }
         }
 
-        public override void SetToPlayerPosition(Vector2 newPosition, int activeDirection)
+        public override void SetToPlayerPosition(Vector2 newPosition, int activeDirection, float crosshairAngle)
         {
-            base.SetToPlayerPosition(newPosition + new Vector2(_arrowOffset * activeDirection, 0), 0);
+            Vector2 offset = Mechanics.VectorComponents(_arrowOffset, crosshairAngle);
+            base.SetToPlayerPosition(newPosition + offset, 0, crosshairAngle);
         }
     }
 }

@@ -89,7 +89,7 @@ namespace WizardGrenade2
             {
                 IsCharging = true;
                 Weapons[ActiveWeapon].KillProjectile();
-                Weapons[ActiveWeapon].SetToPlayerPosition(activePlayerPosition, activeDirection);
+                Weapons[ActiveWeapon].SetToPlayerPosition(activePlayerPosition, activeDirection, _crosshair.CrosshairAngle);
                 ChargePower += (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
 
