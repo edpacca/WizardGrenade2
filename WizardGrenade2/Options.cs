@@ -118,7 +118,7 @@ namespace WizardGrenade2
             }
             else if (InputManager.WasKeyPressed(Keys.Left))
             {
-                SelectedOption = Utility.WrapAroundCounter(SelectedOption, _numberOfOptions);
+                SelectedOption = Utility.WrapAroundNegativeCounter(SelectedOption, _numberOfOptions);
                 SetArrowPositions();
             }
         }
