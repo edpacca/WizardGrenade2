@@ -10,9 +10,9 @@ namespace WizardGrenade2
     class MainMenu
     {
         private Sprite _title;
-        private Sprite _wizard;
         private Vector2 _titlePosition;
         private Vector2 _wizardPosition;
+        private MenuWizard _wizard;
         private Vector2 _optionsFirstPosition = new Vector2(ScreenSettings.TARGET_WIDTH / 2.5f, ScreenSettings.TARGET_HEIGHT * 0.4f);
         private float _optionsLastYPosition = ScreenSettings.TARGET_HEIGHT * 0.8f;
         private Sprite _arrow;
@@ -48,7 +48,7 @@ namespace WizardGrenade2
         public void SetMenuPositions()
         {
             _titlePosition = new Vector2(ScreenSettings.CentreScreenWidth, ScreenSettings.TARGET_HEIGHT / 6);
-            _wizardPosition = new Vector2();
+            _wizardPosition = new Vector2(100, ScreenSettings.CentreScreenHeight);
             _menuOptions.SetOptionLayout(_optionsFirstPosition, _optionsLastYPosition);
             _settings = new Settings(new Vector2(ScreenSettings.TARGET_WIDTH / 4f, _optionsFirstPosition.Y) , _optionsLastYPosition);
             _arrowLPosition = new Vector2(20, 20);
@@ -57,7 +57,7 @@ namespace WizardGrenade2
 
         public void LoadContent(ContentManager contentManager)
         {
-            _wizard = new Sprite(contentManager, "Wizard0");
+            _wizard = new MenuWizard(2, contentManager);
             _title = new Sprite(contentManager, "Title");
             _menuOptions.LoadContent(contentManager);
             _settings.LoadContent(contentManager);
@@ -71,11 +71,6 @@ namespace WizardGrenade2
 
         public void Update(GameTime gameTime)
         {
-            //if (_settings.InSettings)
-            //    _settings.Update(gameTime);
-            //else
-            //    _menuOptions.Update(gameTime);
-
             if (_settings.InSettings)
                 UpdateSettingsMenu(gameTime);
             else if (_instructions.InInstructions)
@@ -84,6 +79,7 @@ namespace WizardGrenade2
                 UpdateCredits();
             else
             {
+                _wizard.Update(gameTime);
                 _menuOptions.Update(gameTime);
                 UpdateMainMenu();
             }
@@ -151,6 +147,7 @@ namespace WizardGrenade2
         public void DrawMainMenu(SpriteBatch spriteBatch)
         {
             _menuOptions.DrawOptions(spriteBatch);
+            _wizard.Draw(spriteBatch, _wizardPosition);
         }
 
         private void DrawSettings(SpriteBatch spriteBatch)
