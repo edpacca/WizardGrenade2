@@ -21,13 +21,13 @@
 
         // Arrow settings
         private const string ARROW_FILENAME = "MelfsAcidArrow";
-        private const int ARROW_MASS = 15;
+        private const int ARROW_MASS = 25;
         private const int ARROW_COLLISION_POINTS = 0;
         private const float ARROW_BOUNCE_FACTOR = 0f;
 
         public const int ARROW_POWER = 1500;
         public const float ARROW_MAX_CHARGE_TIME = 0.6f;
-        public const float ARROW_KNOCKBACK_FACTOR = 0.96f;
+        public const float ARROW_KNOCKBACK_FACTOR = 1.2f;
         public const float ARROW_DAMAGE_FACTOR = 0.028f;
 
         public static GameObjectParameters ARROW_GAMEOBJECT = new GameObjectParameters
@@ -35,7 +35,7 @@
 
         // Icebomb Settings
         private const string ICEBOMB_FILENAME = "IceBomb";
-        private const int ICEBOMB_MASS = 80;
+        private const int ICEBOMB_MASS = 70;
         private const int ICEBOMB_COLLISION_POINTS = 12;
         private const float ICEBOMB_BOUNCE_FACTOR = 0.1f;
 

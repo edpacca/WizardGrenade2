@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+
 namespace WizardGrenade2
 {
     public class WizardSettings
@@ -26,7 +27,7 @@ namespace WizardGrenade2
         private const float BOUNCE_FACTOR = 0.3f;
 
         public const int WALK_SPEED = 100;
-        public const int JUMP_HEIGHT = 200;
+        public const int JUMP_HEIGHT = 300;
 
         public static GameObjectParameters GetWizardParameters(int skinNumber)
         {
