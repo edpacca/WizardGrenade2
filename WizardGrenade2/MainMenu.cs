@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace WizardGrenade2
 {
@@ -14,14 +15,24 @@ namespace WizardGrenade2
         private Vector2 _wizardPosition;
         private Vector2 _optionsFirstPosition = new Vector2(ScreenSettings.TARGET_WIDTH / 2.5f, ScreenSettings.TARGET_HEIGHT * 0.4f);
         private float _optionsLastYPosition = ScreenSettings.TARGET_HEIGHT * 0.8f;
+        private Sprite _arrow;
+        private Vector2 _arrowLPosition;
+        private Vector2 _arrowRPosition;
+        private const float ARROW_SCALE = 6f;
+        private SpriteFont _infoFont;
 
         private Options _menuOptions;
-        public bool PlayGame { get; private set; }
+        public bool SettingUpGame { get; set; }
+
+        public Settings _settings { get; private set; }
+        private Instructions _instructions;
+        private Credits _credits;
 
         public readonly List<string> _menuOptionNames = new List<string>()
         {
             "Play",
             "Settings",
+            "How to Play",
             "Credits",
             "Quit"
         };
@@ -29,6 +40,8 @@ namespace WizardGrenade2
         public MainMenu()
         {
             _menuOptions = new Options(_menuOptionNames, false, true);
+            _instructions = new Instructions();
+            _credits = new Credits();
             SetMenuPositions();
         }
 
@@ -37,6 +50,9 @@ namespace WizardGrenade2
             _titlePosition = new Vector2(ScreenSettings.CentreScreenWidth, ScreenSettings.TARGET_HEIGHT / 6);
             _wizardPosition = new Vector2();
             _menuOptions.SetOptionLayout(_optionsFirstPosition, _optionsLastYPosition);
+            _settings = new Settings(new Vector2(ScreenSettings.TARGET_WIDTH / 4f, _optionsFirstPosition.Y) , _optionsLastYPosition);
+            _arrowLPosition = new Vector2(20, 20);
+            _arrowRPosition = new Vector2(ScreenSettings.TARGET_WIDTH - 20, 20);
         }
 
         public void LoadContent(ContentManager contentManager)
@@ -44,12 +60,33 @@ namespace WizardGrenade2
             _wizard = new Sprite(contentManager, "Wizard0");
             _title = new Sprite(contentManager, "Title");
             _menuOptions.LoadContent(contentManager);
+            _settings.LoadContent(contentManager);
+            _infoFont = contentManager.Load<SpriteFont>("InfoFont2");
+            _arrow = new Sprite(contentManager, "MelfsAcidArrow");
+            _arrow.SpriteScale = ARROW_SCALE;
+            _arrowRPosition.X -= _arrow.GetSpriteRectangle().Width * ARROW_SCALE;
+            _instructions.LoadContent(contentManager);
+            _credits.LoadContent(contentManager);
         }
 
         public void Update(GameTime gameTime)
         {
-            _menuOptions.Update(gameTime);
-            UpdateMainMenu();
+            //if (_settings.InSettings)
+            //    _settings.Update(gameTime);
+            //else
+            //    _menuOptions.Update(gameTime);
+
+            if (_settings.InSettings)
+                UpdateSettingsMenu(gameTime);
+            else if (_instructions.InInstructions)
+                UpdateInstructions(gameTime);
+            else if (_credits.InCredits)
+                UpdateCredits();
+            else
+            {
+                _menuOptions.Update(gameTime);
+                UpdateMainMenu();
+            }
 
         }
 
@@ -58,20 +95,31 @@ namespace WizardGrenade2
             if (InputManager.WasKeyPressed(Keys.Enter))
             {
                 if (_menuOptions.SelectedOption == _menuOptionNames.IndexOf("Play"))
-                    PlayGame = true;
+                    SettingUpGame = true;
                 else if (_menuOptions.SelectedOption == _menuOptionNames.IndexOf("Quit"))
                     StateMachine.Instance.ExitGame();
+                else if (_menuOptions.SelectedOption == _menuOptionNames.IndexOf("Settings"))
+                    _settings.InSettings = true;
+                else if (_menuOptions.SelectedOption == _menuOptionNames.IndexOf("How to Play"))
+                    _instructions.InInstructions = true;
+                else if (_menuOptions.SelectedOption == _menuOptionNames.IndexOf("Credits"))
+                    _credits.InCredits = true;
             }
         }
 
-        private void UpdateSettingsMenu()
+        private void UpdateSettingsMenu(GameTime gameTime)
         {
+            _settings.Update(gameTime);
+        }
 
+        private void UpdateInstructions(GameTime gameTime)
+        {
+            _instructions.Update(gameTime);
         }
 
         private void UpdateCredits()
         {
-
+            _credits.Update();
         }
 
         private void StoreSettings()
@@ -82,7 +130,22 @@ namespace WizardGrenade2
         public void Draw(SpriteBatch spriteBatch)
         {
             _title.DrawSpriteAtScale(spriteBatch, _titlePosition, 0.4f);
-            DrawMainMenu(spriteBatch);
+            if (_settings.InSettings || _instructions.InInstructions || _credits.InCredits)
+            {
+                _arrow.DrawSprite(spriteBatch, _arrowLPosition + _arrow.GetSpriteOrigin(), Mechanics.PI);
+                spriteBatch.DrawString(_infoFont, "BACKSPACE", new Vector2(_arrowLPosition.X - 7, _arrowLPosition.Y + 40), Colours.LightGrey);
+            }
+            _arrow.DrawSprite(spriteBatch, _arrowRPosition);
+            spriteBatch.DrawString(_infoFont, "ENTER", new Vector2(_arrowRPosition.X + 5, _arrowRPosition.Y + 40), Colours.LightGrey);
+
+            if (_settings.InSettings)
+                DrawSettings(spriteBatch);
+            else if (_instructions.InInstructions)
+                DrawInstructions(spriteBatch);
+            else if (_credits.InCredits)
+                DrawCredits(spriteBatch);
+            else
+                DrawMainMenu(spriteBatch);
         }
 
         public void DrawMainMenu(SpriteBatch spriteBatch)
@@ -92,6 +155,18 @@ namespace WizardGrenade2
 
         private void DrawSettings(SpriteBatch spriteBatch)
         {
+            _settings.Draw(spriteBatch);
+        }
+
+        private void DrawInstructions(SpriteBatch spriteBatch)
+        {
+            _instructions.Draw(spriteBatch);
+        }
+
+
+        private void DrawCredits(SpriteBatch spriteBatch)
+        {
+            _credits.Draw(spriteBatch);
         }
     }
 }
