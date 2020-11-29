@@ -8,7 +8,7 @@
         private const string FIREBALL_FILENAME = "Fireball";
         private const int FIREBALL_MASS = 35;
         private const int FIREBALL_COLLISION_POINTS = 12;
-        private const float FIREBALL_BOUNCE_FACTOR = 0.6f;
+        private const float FIREBALL_BOUNCE_FACTOR = 0.5f;
 
         public const float FIREBALL_DETONATION_TIME = 4f;
         public const int FIREBALL_EXPLOSION_RADIUS = 40;
@@ -41,9 +41,9 @@
 
         public const int ICEBOMB_CHARGE_POWER = 400;
         public const float ICEBOMB_MAX_CHARGE_TIME = 3f;
-        public const int ICEBOMB_EXPLOSION_RADIUS = 35;
-        public const int ICEBOMB_EFFECT_RADIUS = 80;
-        public const float ICEBOMB_PUSHBACK_FACTOR = 0.8f;
+        public const int ICEBOMB_EXPLOSION_RADIUS = 60;
+        public const int ICEBOMB_EFFECT_RADIUS = 100;
+        public const float ICEBOMB_PUSHBACK_FACTOR = 1.2f;
 
         public static GameObjectParameters ICEBOMB_GAMEOBJECT = new GameObjectParameters
             (ICEBOMB_FILENAME, ICEBOMB_MASS, ROTATION, ICEBOMB_COLLISION_POINTS, ICEBOMB_BOUNCE_FACTOR);

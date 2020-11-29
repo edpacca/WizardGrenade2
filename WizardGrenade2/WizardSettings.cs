@@ -6,8 +6,8 @@ namespace WizardGrenade2
     {
         private const string BASE_FILENAME = "WizardSpritesheet";
 
-        private const int FRAMES_V = 1;
-        private const int FRAMES_H = 15;
+        public const int FRAMES_V = 1;
+        public const int FRAMES_H = 15;
         public const int BLINK_CYCLES = 4;
 
         public static Dictionary<string, int[]> animationStates = new Dictionary<string, int[]>()
