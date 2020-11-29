@@ -44,11 +44,12 @@
     <Compile Include="Animator.cs" />
     <Compile Include="Arrow.cs" />
     <Compile Include="BattleManager.cs" />
+    <Compile Include="BattleSettings.cs" />
     <Compile Include="CollisionManager.cs" />
     <Compile Include="Colours.cs" />
+    <Compile Include="Credits.cs" />
     <Compile Include="Crosshair.cs" />
     <Compile Include="DetonationTimer.cs" />
-    <Compile Include="Dictionary.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Explosion.cs" />
     <Compile Include="Fireball.cs" />
@@ -56,6 +57,8 @@
     <Compile Include="GameObjectParameters.cs" />
     <Compile Include="GameOptions.cs" />
     <Compile Include="GameScreen.cs" />
+    <Compile Include="GameSettings.cs" />
+    <Compile Include="Instructions.cs" />
     <Compile Include="MainMenu.cs" />
     <Compile Include="GameSetup.cs" />
     <Compile Include="OptionArrows.cs" />
@@ -67,6 +70,7 @@
     <Compile Include="SceneryClouds.cs" />
     <Compile Include="ScreenText.cs" />
     <Compile Include="Scroll.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="StateMachine.cs" />
     <Compile Include="HealthBar.cs" />
     <Compile Include="IceBomb.cs" />
@@ -85,6 +89,7 @@
     <Compile Include="Timer.cs" />
     <Compile Include="UserInterface.cs" />
     <Compile Include="Utility.cs" />
+    <Compile Include="ValueMinMax.cs" />
     <Compile Include="Weapon.cs" />
     <Compile Include="WeaponManager.cs" />
     <Compile Include="WeaponSettings.cs" />
