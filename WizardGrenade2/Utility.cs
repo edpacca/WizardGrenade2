@@ -20,6 +20,11 @@ namespace WizardGrenade2
             return nextValue < minValue ? minValue : nextValue > maxValue ? maxValue : nextValue;
         }
 
+        public static Rectangle ShiftRectangle(Rectangle rectangle, Vector2 offset)
+        {
+            return new Rectangle(rectangle.X + (int)offset.X, rectangle.Y + (int)offset.Y, rectangle.Width, rectangle.Height);
+        }
+
         public static int WrapAroundCounter(int number, int listLength) => (number + 1) % listLength;
         public static int WrapAroundNegativeCounter(int number, int listLength) => number - 1 < 0 ? listLength - number - 1 : number - 1;
     }
