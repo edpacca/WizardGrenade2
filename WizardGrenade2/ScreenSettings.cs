@@ -12,5 +12,6 @@ namespace WizardGrenade2
         public static int CentreScreenWidth => (int)(TARGET_WIDTH / 2);
         public static int CentreScreenHeight => (int)(TARGET_HEIGHT / 2);
         public static Vector2 ScreenCentre => new Vector2(TARGET_WIDTH / 2, TARGET_HEIGHT / 2);
+        public static Vector2 ScreenResolutionCentre => new Vector2(RESOLUTION_WIDTH / 2, RESOLUTION_HEIGHT / 2);
     }
 }
