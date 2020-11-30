@@ -30,8 +30,7 @@ namespace WizardGrenade2
 
             foreach (var point in transformedCollisionPoints)
             {
-                if (IsPointWithinMap(point))
-                    if (HasCollided(point))
+                if (IsPointWithinMap(point) && HasCollided(point))
                         collidingPoints.Add(point);
             }
 
