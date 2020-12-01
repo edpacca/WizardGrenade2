@@ -20,9 +20,9 @@ namespace WizardGrenade2
             return nextValue < minValue ? minValue : nextValue > maxValue ? maxValue : nextValue;
         }
 
-        public static Rectangle ShiftRectangle(Rectangle rectangle, Vector2 offset)
+        public static Rectangle ShiftRectangle(Rectangle rectangle, Vector2 offset, float scaleFactor)
         {
-            return new Rectangle(rectangle.X + (int)offset.X, rectangle.Y + (int)offset.Y, rectangle.Width, rectangle.Height);
+            return new Rectangle((int)((rectangle.X + offset.X) / scaleFactor), (int)((rectangle.Y + offset.Y) / scaleFactor), (int)(rectangle.Width / scaleFactor), (int)(rectangle.Height / scaleFactor));
         }
 
         public static int WrapAroundCounter(int number, int listLength) => (number + 1) % listLength;
