@@ -9,62 +9,81 @@ namespace WizardGrenade2
     {
         private const int ZOOM_RATE = 5;
         private const int CAMERA_SPEED = 200;
-        private float _mainScaleX;
-        private float _mainScaleY;
-        private const float DEFAULT_SCALE = 0.8f;
-        private float _scaleFactor = DEFAULT_SCALE;
-        private Vector2 _cameraPosition = ScreenSettings.ScreenResolutionCentre;
-        private Vector2 _cameraTransform { get => new Vector2(_cameraPosition.X / _mainScaleX, _cameraPosition.Y / _mainScaleY); }
-        private SpriteFont _spriteFont;
-        private Rectangle _screenBounds;
-        private Vector2 _cursor;
         private const int BORDER_WIDTH = 10;
+        private const float DEFAULT_SCALE = 0.9f;
+        private const float MAX_SCALE = 1.5f;
+        private const float MIN_SCALE = 0.7f;
         private readonly Vector2 CAMERA_MIN_POSITION;
         private readonly Vector2 CAMERA_MAX_POSITION;
-        private const float MAX_SCALE = 1.5f;
-        private const float MIN_SCALE = 0.6f;
+        private const float CAMERA_TIMER = 1f;
 
-        private Matrix _originMatrix;
-
-        private Camera _camera;
-
-        public Matrix GetScaleMatrix() => _originMatrix * _camera.Transform;
-        public Matrix GetOriginMatrix() => _originMatrix;
-
-
+        private float _originScale;
+        private float _scaleFactor = DEFAULT_SCALE;
         private float _previousScrollWheelValue;
         private float _currentScrollWheelValue;
 
+        private Vector2 _cursor;
+        private Vector2 _cameraPosition = ScreenSettings.ScreenResolutionCentre;
+        private Vector2 _cameraOffset { get => (_cameraPosition / _originScale) - ScreenSettings.ScreenCentre; }
+
+        private Rectangle _screenBounds;
+        private Vector2 _newCameraPosition;
+        private Vector2 _oldCameraPosition;
+        private bool _movingCamera;
+        private Timer _cameraTimer;
+
+        private Camera _camera;
+        private Matrix _originMatrix;
+        public Matrix TransformMatrix { get => _originMatrix * _camera.Transform; }
+        public Matrix OriginMatrix { get => _originMatrix; }
+
         public CameraManager()
         {
-            _mainScaleX = ScreenSettings.RESOLUTION_WIDTH / ScreenSettings.TARGET_WIDTH;
-            _mainScaleY = ScreenSettings.RESOLUTION_HEIGHT / ScreenSettings.TARGET_HEIGHT;
             _camera = new Camera();
-            _originMatrix = Matrix.CreateScale(new Vector3(_mainScaleX, _mainScaleY, 1));
-
+            _cameraTimer = new Timer(CAMERA_TIMER);
+            _originScale = ScreenSettings.RESOLUTION_WIDTH / ScreenSettings.TARGET_WIDTH;
+            _originMatrix = Matrix.CreateScale(new Vector3(_originScale, _originScale, 1));
             _screenBounds = new Rectangle(BORDER_WIDTH, BORDER_WIDTH, (int)ScreenSettings.TARGET_WIDTH - BORDER_WIDTH, (int)ScreenSettings.TARGET_HEIGHT - BORDER_WIDTH);
-            float xMin = ScreenSettings.RESOLUTION_WIDTH / 6;
-            float yMin = ScreenSettings.RESOLUTION_HEIGHT / 6;
-            float xMax = ScreenSettings.ScreenResolutionCentre.X + xMin;
-            float yMax = ScreenSettings.ScreenResolutionCentre.Y + yMin;
-            CAMERA_MIN_POSITION = new Vector2(xMin, yMin);
-            CAMERA_MAX_POSITION = new Vector2(xMax, yMax);
+            CAMERA_MIN_POSITION = new Vector2(ScreenSettings.RESOLUTION_WIDTH * 0.25f, ScreenSettings.RESOLUTION_HEIGHT * 0.25f);
+            CAMERA_MAX_POSITION = new Vector2(ScreenSettings.RESOLUTION_WIDTH * 0.75f, ScreenSettings.RESOLUTION_HEIGHT * 0.75f);
         }
 
         public void Update(GameTime gameTime)
         {
             _cursor = InputManager.CursorPosition();
+            
             Zoom(gameTime);
-            CameraPosition(gameTime);
+            CameraMouseControl(gameTime);
+            MoveToNextPlayer(gameTime);
+            SetCamera();
 
             if (InputManager.WasKeyPressed(Keys.LeftShift))
                 ResetView();
         }
 
-        public void ResetView()
+        private void SetCamera()
+        {
+            ApplyCameraLimits();
+            _camera.Zoom = _scaleFactor;
+            _camera.Position = _cameraPosition;
+        }
+
+        private void ResetView()
         {
             _scaleFactor = DEFAULT_SCALE;
             _cameraPosition = ScreenSettings.ScreenResolutionCentre;
+        }
+
+        private void MoveCamera(GameTime gameTime, int CameraSpeed, Vector2 vector)
+        {
+            _cameraPosition += vector * (float)gameTime.ElapsedGameTime.TotalSeconds * CameraSpeed;
+            _camera.Position = _cameraPosition;
+        }
+
+        private void ApplyCameraLimits()
+        {
+            _scaleFactor = _scaleFactor > MAX_SCALE ? MAX_SCALE : _scaleFactor < MIN_SCALE ? MIN_SCALE : _scaleFactor;
+            _cameraPosition = Vector2.Clamp(_cameraPosition, CAMERA_MIN_POSITION, CAMERA_MAX_POSITION);
         }
 
         private void Zoom(GameTime gameTime)
@@ -76,52 +95,66 @@ namespace WizardGrenade2
                 _previousScrollWheelValue > _currentScrollWheelValue ? -1 : 0;
 
             _scaleFactor += (float)gameTime.ElapsedGameTime.TotalSeconds * direction * ZOOM_RATE;
-            _scaleFactor = _scaleFactor > MAX_SCALE ? MAX_SCALE : _scaleFactor < MIN_SCALE ? MIN_SCALE : _scaleFactor;
-            _camera.Zoom = _scaleFactor;
         }
 
-        private void CameraPosition(GameTime gameTime)
+        private void CameraMouseControl(GameTime gameTime)
         {
-            if (!IsCursorInsideWindow())
-                _cameraPosition += Mechanics.NormaliseVector(Vector2.Subtract(_cursor, ScreenSettings.ScreenCentre)) * (float)gameTime.ElapsedGameTime.TotalSeconds * CAMERA_SPEED;
-
-            _cameraPosition = Vector2.Clamp(_cameraPosition, CAMERA_MIN_POSITION, CAMERA_MAX_POSITION);
-            _camera.Position = _cameraPosition;
+            if (!IsCursorInsideScreenBounds() && !_movingCamera)
+            {
+                Vector2 vector = Mechanics.NormalisedDifferenceVector(_cursor, ScreenSettings.ScreenCentre);
+                MoveCamera(gameTime, CAMERA_SPEED, vector);
+            }
         }
 
-        private Vector2 TransformPoint(Vector2 point)
+        private void MoveToNextPlayer(GameTime gameTime)
         {
-            return Vector2.Transform(point, Matrix.Invert(_camera.Transform));
+            if (StateMachine.Instance.NewTurn())
+            {
+                _oldCameraPosition = _cameraPosition;
+                _newCameraPosition = ConvertToScreenResolution(WeaponManager.Instance.ActiveWizardPosition);
+                _movingCamera = true;
+            }
+
+            if (_movingCamera)
+            {
+                _cameraTimer.Update(gameTime);
+                if (_cameraTimer.IsRunning)
+                {
+                    Vector2 vector = Mechanics.NormalisedDifferenceVector(_newCameraPosition, _oldCameraPosition);
+                    MoveCamera(gameTime, CAMERA_SPEED * 2, vector);
+                }
+
+                else
+                {
+                    _movingCamera = false;
+                    _cameraTimer.ResetTimer(CAMERA_TIMER);
+                }
+            }
         }
 
-        private Rectangle TransformRectangle(Rectangle rectangle)
+        private void SetCameraScale(GameTime gameTime, float newScale)
         {
-            Vector2 transformOrigin = TransformPoint(new Vector2(rectangle.X, rectangle.Y));
-            Vector2 transformSize = TransformPoint(new Vector2(rectangle.Width, rectangle.Height));
-            return new Rectangle((int)transformOrigin.X, (int)transformOrigin.Y, (int)transformSize.X, (int)transformSize.Y);
+            if (_scaleFactor < newScale)
+                _scaleFactor += (float)gameTime.ElapsedGameTime.TotalSeconds * ZOOM_RATE;
+            else if (_scaleFactor > newScale)
+                _scaleFactor -= (float)gameTime.ElapsedGameTime.TotalSeconds * ZOOM_RATE;
         }
 
-        private bool IsCursorInsideWindow()
+        private bool IsCursorInsideScreenBounds()
         {
-            Point cursor = new Point((int)_cursor.X, (int)_cursor.Y);
-            Rectangle screen = Utility.ShiftRectangle(_screenBounds, _cameraTransform - ScreenSettings.ScreenCentre);
+            Vector2 scaledCursor = _cursor / _scaleFactor;
+            Point cursor = new Point((int)scaledCursor.X, (int)scaledCursor.Y);
+            Rectangle screen = Utility.ShiftRectangle(_screenBounds, _cameraOffset, _scaleFactor);
             return screen.Contains(cursor);
         }
 
-        //public void Draw(SpriteBatch spriteBatch)
-        //{
-        //    Rectangle rect = Utility.ShiftRectangle(_screenBounds, _cameraTransform - ScreenSettings.ScreenCentre);
-        //    Vector2 transformCursor = TransformPoint(InputManager.CursorPosition());
-        //    spriteBatch.DrawString(_spriteFont, "cursor: "+ InputManager.CursorPosition().X.ToString() + ", " + InputManager.CursorPosition().Y.ToString(), new Vector2(30, 80), Color.White);
-        //    spriteBatch.DrawString(_spriteFont, "cursor trans: " + transformCursor.X.ToString("0") + ", " + transformCursor.Y.ToString("0"), new Vector2(30, 90), Color.White);
-        //    spriteBatch.DrawString(_spriteFont, "camera: " + _cameraPosition.X.ToString() + ", " + _cameraPosition.Y.ToString(), new Vector2(30, 100), Color.White);
-        //    spriteBatch.DrawString(_spriteFont, "rect x: " + rect.X.ToString() + ", " + rect.Y.ToString() + ", " + rect.Width.ToString() + ", " + rect.Height.ToString(), new Vector2(30, 110), Color.White);
+        private Vector2 TransformPointToWorldSpace(Vector2 point)
+        {
+            Matrix matrix = TransformMatrix * Matrix.Invert(OriginMatrix);
+            return Vector2.Transform(point, matrix);
+        }
 
-        //}
-
-        //public void LoadContent(ContentManager contentManager)
-        //{
-        //    _spriteFont = contentManager.Load<SpriteFont>("WizardHealthFont");
-        //}
+        private Vector2 ConvertToTargetResolution(Vector2 screenResolutionPoint) => screenResolutionPoint / _originScale;
+        private Vector2 ConvertToScreenResolution(Vector2 targetResolutionPoint) => targetResolutionPoint * _originScale;
     }
 }
