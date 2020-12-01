@@ -16,7 +16,8 @@ namespace WizardGrenade2
         public static float VectorMagnitude(Vector2 vector) => (float)Math.Sqrt(Math.Pow(vector.X, 2) + Math.Pow(vector.Y, 2));
         public static float DotProduct(Vector2 vector1, Vector2 vector2) => vector1.X * vector2.X + vector1.Y * vector2.Y;
         public static float CalculateRotation(Vector2 velocity) => (float)Math.Atan2(velocity.Y, velocity.X);
-
+        public static Vector2 NormalisedDifferenceVector(Vector2 position1, Vector2 position2) => NormaliseVector(Vector2.Subtract(position1, position2));
+      
         public static float CrossProduct(Vector2 vector1, Vector2 vector2)
         {
             Vector3 vector1z = new Vector3(vector1.X, vector1.Y, 0);
