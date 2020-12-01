@@ -6,6 +6,7 @@ namespace WizardGrenade2
     {
         public float Zoom { get; set; }
         public Matrix Transform { get => Transformation(); }
+        public Matrix Invert { get => Inverted();  }
         public Vector2 Position { get; set; }
 
         public Camera()
@@ -16,10 +17,18 @@ namespace WizardGrenade2
 
         private Matrix Transformation()
         {
-            return 
+            return
                 Matrix.CreateTranslation(new Vector3(-Position, 0)) *
                 Matrix.CreateScale(Zoom) *
-                Matrix.CreateTranslation(ScreenSettings.RESOLUTION_WIDTH / 2, ScreenSettings.RESOLUTION_HEIGHT / 2, 1);
+                Matrix.CreateTranslation(ScreenSettings.RESOLUTION_WIDTH / 2, ScreenSettings.RESOLUTION_HEIGHT / 2, 0);
+        }
+
+        private Matrix Inverted()
+        {
+            return
+                Matrix.CreateTranslation(-ScreenSettings.RESOLUTION_WIDTH / 2, -ScreenSettings.RESOLUTION_HEIGHT / 2, 0) *
+                Matrix.CreateScale(-Zoom) *
+                Matrix.CreateTranslation(new Vector3(Position, 0));
         }
     }
 }
