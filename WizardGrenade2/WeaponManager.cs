@@ -29,6 +29,7 @@ namespace WizardGrenade2
         public List<Weapon> Weapons { get; private set; }
         public Rectangle WizardSpriteRectangle { get; private set; }
         private Vector2 _initialPosition;
+        public Vector2 ActiveWizardPosition;
 
         private readonly int[] _detonationTimes = new int[] { 1, 2, 3, 4, 5 };
         
@@ -50,6 +51,7 @@ namespace WizardGrenade2
 
         public void Update(GameTime gameTime, Vector2 activeWizardPosition, int activeDirection)
         {
+            ActiveWizardPosition = activeWizardPosition;
             _crosshair.Update(gameTime, activeWizardPosition, activeDirection, ChargePower, Weapons[ActiveWeapon].MaxChargeTime);
             CycleWeapons(Keys.Tab);
 
