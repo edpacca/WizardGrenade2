@@ -42,7 +42,6 @@ namespace WizardGrenade2
             _pauseMenu = new PauseMenu(GraphicsDevice);
             _mainMenu.LoadContent(Content);
             _gameSetup.LoadContent(Content);
-            _cameraManager.LoadContent(Content);
         }
 
         protected void LoadGameContent()
@@ -129,24 +128,23 @@ namespace WizardGrenade2
 
         protected void DrawGame()
         {
-            _spriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.PointClamp, null, null, null, _cameraManager.GetScaleMatrix());
+            _spriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.PointClamp, null, null, null, _cameraManager.TransformMatrix);
             _scenery.DrawBackground(_spriteBatch);
             _gameScreen.Draw(_spriteBatch);
             _scenery.DrawForeground(_spriteBatch);
             _spriteBatch.End();
 
-            _spriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.PointClamp, null, null, null, _cameraManager.GetOriginMatrix());
+            _spriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.PointClamp, null, null, null, _cameraManager.OriginMatrix);
             if (!_pauseMenu.IsPaused && StateMachine.Instance.GameState != StateMachine.GameStates.PlaceWizards && StateMachine.Instance.GameState != StateMachine.GameStates.GameOver)
                 _userInterface.Draw(_spriteBatch);
             StateMachine.Instance.Draw(_spriteBatch);
             _pauseMenu.Draw(_spriteBatch);
-            _cameraManager.Draw(_spriteBatch);
             _spriteBatch.End();
         }
 
         protected void DrawGameSetup()
         {
-            _spriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.PointClamp, null, null, null, _cameraManager.GetOriginMatrix());
+            _spriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.PointClamp, null, null, null, _cameraManager.OriginMatrix);
             if (_mainMenu.SettingUpGame)
                 _gameSetup.Draw(_spriteBatch);
             else
