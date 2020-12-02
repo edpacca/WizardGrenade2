@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
+using System;
 
 namespace WizardGrenade2
 {
@@ -9,13 +10,12 @@ namespace WizardGrenade2
     {
         private const int ZOOM_RATE = 5;
         private const int CAMERA_SPEED = 200;
-        private const int BORDER_WIDTH = 10;
+        private const int BORDER_WIDTH = 150;
         private const float DEFAULT_SCALE = 0.9f;
         private const float MAX_SCALE = 1.5f;
         private const float MIN_SCALE = 0.7f;
         private readonly Vector2 CAMERA_MIN_POSITION;
         private readonly Vector2 CAMERA_MAX_POSITION;
-        private const float CAMERA_TIMER = 1f;
 
         private float _originScale;
         private float _scaleFactor = DEFAULT_SCALE;
@@ -30,7 +30,6 @@ namespace WizardGrenade2
         private Vector2 _newCameraPosition;
         private Vector2 _oldCameraPosition;
         private bool _movingCamera;
-        private Timer _cameraTimer;
 
         private Camera _camera;
         private Matrix _originMatrix;
@@ -40,7 +39,6 @@ namespace WizardGrenade2
         public CameraManager()
         {
             _camera = new Camera();
-            _cameraTimer = new Timer(CAMERA_TIMER);
             _originScale = ScreenSettings.RESOLUTION_WIDTH / ScreenSettings.TARGET_WIDTH;
             _originMatrix = Matrix.CreateScale(new Vector3(_originScale, _originScale, 1));
             _screenBounds = new Rectangle(BORDER_WIDTH, BORDER_WIDTH, (int)ScreenSettings.TARGET_WIDTH - BORDER_WIDTH, (int)ScreenSettings.TARGET_HEIGHT - BORDER_WIDTH);
@@ -117,18 +115,14 @@ namespace WizardGrenade2
 
             if (_movingCamera)
             {
-                _cameraTimer.Update(gameTime);
-                if (_cameraTimer.IsRunning)
+                if (Math.Abs(Mechanics.VectorMagnitude(_cameraPosition - _newCameraPosition)) > 300)
                 {
                     Vector2 vector = Mechanics.NormalisedDifferenceVector(_newCameraPosition, _oldCameraPosition);
                     MoveCamera(gameTime, CAMERA_SPEED * 2, vector);
                 }
 
                 else
-                {
                     _movingCamera = false;
-                    _cameraTimer.ResetTimer(CAMERA_TIMER);
-                }
             }
         }
 
