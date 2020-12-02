@@ -12,14 +12,18 @@ namespace WizardGrenade2
         private Rectangle _pixelRectangle = new Rectangle(0, 0, 1, 1);
         private Texture2D _pixelTexture;
         
-        public Polygon(Rectangle spriteRectangle, int numberOfCollisionPoints)
+        public Polygon(Rectangle spriteRectangle, int numberOfCollisionPoints, bool canRotate)
         {
             polyPoints = (numberOfCollisionPoints == 0) ?
                 CalcRectanglePoints(spriteRectangle.Width, spriteRectangle.Height) :
                 CalcCircleCollisionPoints((spriteRectangle.Width + spriteRectangle.Height) / 4, numberOfCollisionPoints);
 
-            foreach (var point in polyPoints)
-                transformedPolyPoints.Add(point);
+            int points = canRotate ? (numberOfCollisionPoints / 2) + 1 : polyPoints.Count;
+
+            for (int i = 0; i < points; i++)
+            {
+                transformedPolyPoints.Add(polyPoints[i]);
+            }
         }
 
         public void LoadPolyContent(ContentManager contentManager)

@@ -35,7 +35,7 @@ namespace WizardGrenade2
             else
                 LoadContent(contentManager, _parameters.fileName, _parameters.framesH, _parameters.framesV);
 
-            _collisionPoints = new Polygon(GetSpriteRectangle(), _parameters.numberOfCollisionPoints);
+            _collisionPoints = new Polygon(GetSpriteRectangle(), _parameters.numberOfCollisionPoints, _parameters.CanRotate);
             _collisionPoints.LoadPolyContent(contentManager);
         }
 
@@ -115,6 +115,7 @@ namespace WizardGrenade2
 
         public void Draw(SpriteBatch spriteBatch)
         {
+            float drawRotation = _parameters.CanRotate ? _realSpace.rotation : 0f;
             DrawSprite(spriteBatch, _realSpace.position, _realSpace.rotation);
             //_collisionPoints.DrawCollisionPoints(spriteBatch, _realSpace.position);
         }
