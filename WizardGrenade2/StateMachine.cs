@@ -11,7 +11,7 @@ namespace WizardGrenade2
     {
         private StateMachine()
         {
-            StartGame();
+            PlaceWizards();
         }
         private static readonly Lazy<StateMachine> lazyStateMachine = new Lazy<StateMachine>(() => new StateMachine());
         public static StateMachine Instance { get => lazyStateMachine.Value; }
@@ -27,6 +27,7 @@ namespace WizardGrenade2
         {
             GameSetup,
             PlaceWizards,
+            GameStarted,
             PlayerTurn,
             ShotTaken,
             BetweenTurns,
@@ -55,7 +56,7 @@ namespace WizardGrenade2
             }
         }
 
-        public void StartGame()
+        public void PlaceWizards()
         {
             GameState = GameStates.PlaceWizards;
             _screenText.IsDisplaying = true;

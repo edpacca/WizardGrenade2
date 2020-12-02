@@ -38,6 +38,9 @@ namespace WizardGrenade2
         {
             foreach (var wizard in wizards)
                 wizard.Update(gameTime);
+
+            if (wizards[ActiveWizard].JustDied)
+                StateMachine.Instance.ForceTurnEnd();
         }
 
         public void NextActiveWizard()

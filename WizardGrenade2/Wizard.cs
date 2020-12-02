@@ -14,6 +14,7 @@ namespace WizardGrenade2
         private int _animationCounter = 0;
         public bool IsActive { get; set; }
         public bool IsDead { get => entity.IsDead; }
+        public bool JustDied { get => entity.JustDied; }
         public int Health { get => entity.Health; }
         public bool IsPlaced { get; set; }
         private int _jumpCounter = 0;
@@ -50,8 +51,8 @@ namespace WizardGrenade2
             if (!(Position.Y > ScreenSettings.TARGET_HEIGHT))
                 _wizard.Update(gameTime);
 
-            if (!IsDead)
-                CheckForDeath();
+            entity.Update();
+            CheckForDeath();
         }
 
         public void UpdateControl(GameTime gameTime)
@@ -173,7 +174,7 @@ namespace WizardGrenade2
             if (Position.Y > ScreenSettings.TARGET_HEIGHT)
                 entity.Kill();
 
-            if (entity.IsDead)
+            if (entity.JustDied)
             {
                 _wizard.SpriteColour = Colours.WizardIsDeadColor;
                 _wizard.AddRotation(Mechanics.PI / 2);
