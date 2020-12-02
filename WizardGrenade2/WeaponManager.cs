@@ -140,7 +140,7 @@ namespace WizardGrenade2
 
         private void ResetTimer()
         {
-            if ((!IsTimerNull()) && Weapons[ActiveWeapon].DetonationTimer.Time < 0)
+            if (!IsTimerNull() && StateMachine.Instance.NewTurn())
                 Weapons[ActiveWeapon].DetonationTimer.ResetTimer(_timer);
         }
 
