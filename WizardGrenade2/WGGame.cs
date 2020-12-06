@@ -1,7 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System.Linq.Expressions;
+using Microsoft.Xna.Framework.Media;
+using System;
 
 namespace WizardGrenade2
 {
@@ -16,9 +18,16 @@ namespace WizardGrenade2
         private GameSetup _gameSetup = new GameSetup();
         private PauseMenu _pauseMenu;
         private Scenery _scenery = new Scenery();
-
+        private MenuSky _sky = new MenuSky();
+        private SpriteFont _betaFont;
+        private string _betaText = "Beta!";
+        private Vector2 _betaPosition = new Vector2(710f, 0f);
+        private float _betaRotation = Mechanics.PI / 5;
         private bool _isGameSetup;
         private bool _setupGame;
+        private BrightnessManager _brightnessManager;
+        private float _globalBrightness = 0.5f;
+        private bool _isGameContentLoaded;
 
         public WGGame()
         {
@@ -40,8 +49,15 @@ namespace WizardGrenade2
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _pauseMenu = new PauseMenu(GraphicsDevice);
+            _brightnessManager = new BrightnessManager(GraphicsDevice);
             _mainMenu.LoadContent(Content);
+            _sky.LoadContent(Content);
             _gameSetup.LoadContent(Content);
+            _betaFont = Content.Load<SpriteFont>("BetaFont");
+            MediaPlayer.Volume = 0.5f;
+            SoundEffect.MasterVolume = 0.5f;
+            SoundManager.Instance.LoadContent(Content);
+            SoundManager.Instance.PlaySong(0);
         }
 
         protected void LoadGameContent()
@@ -70,6 +86,9 @@ namespace WizardGrenade2
 
             if (!_isGameSetup)
             {
+                _sky.Update(gameTime);
+                _betaPosition.Y += (float)(Math.Sin(gameTime.TotalGameTime.TotalSeconds * 4)) * 0.2f;
+
                 if (_setupGame)
                 {
                     _setupGame = _gameSetup.SettingUpGame;
@@ -85,7 +104,13 @@ namespace WizardGrenade2
 
                 if (_gameSetup.isGameSetup())
                 {
-                    LoadGameContent();
+                    if (!_isGameContentLoaded)
+                    {
+                        LoadGameContent();
+                        _isGameContentLoaded = true;
+                    }
+
+                    _pauseMenu.ApplySettings(_mainMenu.GetSettings(), gameTime);
                     _isGameSetup = true;
                 }
             }
@@ -94,6 +119,8 @@ namespace WizardGrenade2
                 UpdateGame(gameTime);
 
             _scenery.Update(gameTime);
+            _globalBrightness = _isGameSetup ? _pauseMenu.GetBrightness() : _mainMenu.GetBrightness();
+            _brightnessManager.SetBrightness(_globalBrightness);
             base.Update(gameTime);
         }
 
@@ -103,15 +130,23 @@ namespace WizardGrenade2
             _userInterface.Update(gameTime, _gameScreen.TeamHealths);
             StateMachine.Instance.UpdateStateMachine(gameTime);
             _gameScreen.Update(gameTime);
+
             //if (StateMachine.Instance.GameState == StateMachine.GameStates.GameOver)
             //{
-            //    if(InputManager.WasKeyPressed(Keys.End))
+            //    if (InputManager.WasKeyPressed(Keys.Enter))
             //    {
-            //        _gameSetup.ResetGame();
-            //        LoadContent();
-            //        _isGameSetup = false;
+            //        ResetGame();
             //    }
             //}
+
+            //if (StateMachine.Instance.GameState == StateMachine.GameStates.Reset)
+            //    ResetGame();
+        }
+
+        private void ResetGame()
+        {
+            _gameSetup.ResetGame();
+            _isGameSetup = false;
         }
 
         protected override void Draw(GameTime gameTime)
@@ -123,7 +158,12 @@ namespace WizardGrenade2
             else
                 DrawGameSetup();
 
+            _spriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.PointClamp, null, null, null, _cameraManager.OriginMatrix);
+            _brightnessManager.Draw(_spriteBatch);
+            _spriteBatch.End();
+
             base.Draw(gameTime);
+
         }
 
         protected void DrawGame()
@@ -135,20 +175,30 @@ namespace WizardGrenade2
             _spriteBatch.End();
 
             _spriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.PointClamp, null, null, null, _cameraManager.OriginMatrix);
+
             if (!_pauseMenu.IsPaused && StateMachine.Instance.GameState != StateMachine.GameStates.PlaceWizards && StateMachine.Instance.GameState != StateMachine.GameStates.GameOver)
                 _userInterface.Draw(_spriteBatch);
+
             StateMachine.Instance.Draw(_spriteBatch);
             _pauseMenu.Draw(_spriteBatch);
+
             _spriteBatch.End();
         }
 
         protected void DrawGameSetup()
         {
             _spriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.PointClamp, null, null, null, _cameraManager.OriginMatrix);
+
+            _sky.Draw(_spriteBatch);
+
             if (_mainMenu.SettingUpGame)
                 _gameSetup.Draw(_spriteBatch);
             else
+            {
                 _mainMenu.Draw(_spriteBatch);
+                _spriteBatch.DrawString(_betaFont, _betaText, _betaPosition, Colours.Gold, _betaRotation, Vector2.Zero, 1f, SpriteEffects.None, 0f);;
+            }
+
             _spriteBatch.End();
         }
     }
