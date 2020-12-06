@@ -18,7 +18,8 @@ namespace WizardGrenade2
                 CalcRectanglePoints(spriteRectangle.Width, spriteRectangle.Height) :
                 CalcCircleCollisionPoints((spriteRectangle.Width + spriteRectangle.Height) / 4, numberOfCollisionPoints);
 
-            int points = canRotate ? (numberOfCollisionPoints / 2) + 1 : polyPoints.Count;
+            //int points = canRotate ? (numberOfCollisionPoints / 2) + 1 : polyPoints.Count;
+            int points = (numberOfCollisionPoints / 2) + 1;
 
             for (int i = 0; i < points; i++)
             {
@@ -64,8 +65,8 @@ namespace WizardGrenade2
         public void DrawCollisionPoints(SpriteBatch spriteBatch, Vector2 position)
         {
             // Draw collision points as single pixel
-            foreach (var point in polyPoints)
-                spriteBatch.Draw(_pixelTexture, point + position, _pixelRectangle, Color.White);
+            //foreach (var point in polyPoints)
+                //spriteBatch.Draw(_pixelTexture, point + position, _pixelRectangle, Color.White);
 
             foreach (var point in transformedPolyPoints)
                 spriteBatch.Draw(_pixelTexture, point, _pixelRectangle, Color.Aqua);

@@ -14,6 +14,7 @@ namespace WizardGrenade2
         private Polygon _collisionPoints;
         private CollisionManager Collider = CollisionManager.Instance;
         public bool Collided { get; set; }
+        public float DrawRotation { get; set; }
 
         public GameObject(GameObjectParameters inputParameters)
         {
@@ -51,14 +52,14 @@ namespace WizardGrenade2
         private void UpdatePotentialSpace(GameTime gameTime)
         {
             _potentialSpace.position = _realSpace.position + _realSpace.velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            _potentialSpace.rotation = CalculateRotation(_realSpace.velocity);
+            _potentialSpace.rotation = Mechanics.CalculateRotation(_realSpace.velocity);
             _collisionPoints.UpdateCollisionPoints(_potentialSpace.position, _potentialSpace.rotation);
         }
 
         private void UpdateRealSpace(GameTime gameTime)
         {
             _realSpace.position += _realSpace.velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            _realSpace.rotation = CalculateRotation(_realSpace.velocity);
+            _realSpace.rotation = Mechanics.CalculateRotation(_realSpace.velocity);
         }
 
         private void ResolveCollisions(GameTime gameTime)
@@ -75,6 +76,7 @@ namespace WizardGrenade2
                 // If colliding in potential space then update position with damped reflection vector
                 _realSpace.velocity = ApplyDamping(reflectionVector, _parameters.dampingFactor);
                 UpdateRealSpace(gameTime);
+
                 // Update collision points from potential position to real position
                 _collisionPoints.UpdateCollisionPoints(_realSpace.position, _realSpace.rotation);
             }
@@ -103,7 +105,6 @@ namespace WizardGrenade2
             return _collisionPoints.transformedPolyPoints;
         }
 
-        private float CalculateRotation(Vector2 velocity) => _parameters.CanRotate ? Mechanics.CalculateRotation(velocity) : 0f;
         public void AddVelocity(Vector2 deltaVelocity) => _realSpace.velocity += deltaVelocity;
         public void AddRotation(float rotation) => _realSpace.rotation += rotation;
         public Vector2 GetVelocity() => _realSpace.velocity;
@@ -115,8 +116,8 @@ namespace WizardGrenade2
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            float drawRotation = _parameters.CanRotate ? _realSpace.rotation : 0f;
-            DrawSprite(spriteBatch, _realSpace.position, _realSpace.rotation);
+            float rotation = _parameters.CanRotate ? _realSpace.rotation : DrawRotation;
+            DrawSprite(spriteBatch, _realSpace.position, rotation);
             //_collisionPoints.DrawCollisionPoints(spriteBatch, _realSpace.position);
         }
     }
