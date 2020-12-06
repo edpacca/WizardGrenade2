@@ -62,7 +62,11 @@ namespace WizardGrenade2
             }
 
             if (StateMachine.Instance.NewTurn() && !IsGameOver)
+            {
                 ChangeTeam();
+                SoundManager.Instance.PlaySound("wizardOh1");
+            }
+
 
             if (StateMachine.Instance.GameState == StateMachine.GameStates.PlayerTurn ||
                 StateMachine.Instance.GameState == StateMachine.GameStates.ShotTaken)
@@ -86,6 +90,7 @@ namespace WizardGrenade2
 
             if (InputManager.WasLeftMousePressed() && isValidPlacement)
             {
+                SoundManager.Instance.PlaySound("wizardCast");
                 _teams[_activeTeam].wizards[_activeWizard].PlaceWizard(position);
                 _activeTeam = Utility.WrapAroundCounter(_activeTeam, _numberOfTeams);
 
