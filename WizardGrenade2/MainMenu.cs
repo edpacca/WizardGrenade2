@@ -3,7 +3,9 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
-using System.Linq.Expressions;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
+
 
 namespace WizardGrenade2
 {
@@ -20,6 +22,7 @@ namespace WizardGrenade2
         private Vector2 _arrowRPosition;
         private const float ARROW_SCALE = 6f;
         private SpriteFont _infoFont;
+
 
         private Options _menuOptions;
         public bool SettingUpGame { get; set; }
@@ -57,20 +60,23 @@ namespace WizardGrenade2
 
         public void LoadContent(ContentManager contentManager)
         {
-            _wizard = new MenuWizard(2, contentManager);
+            _wizard = new MenuWizard(contentManager);
             _title = new Sprite(contentManager, "Title");
             _menuOptions.LoadContent(contentManager);
             _settings.LoadContent(contentManager);
             _infoFont = contentManager.Load<SpriteFont>("InfoFont2");
             _arrow = new Sprite(contentManager, "MelfsAcidArrow");
             _arrow.SpriteScale = ARROW_SCALE;
-            _arrowRPosition.X -= _arrow.GetSpriteRectangle().Width * ARROW_SCALE;
+            _arrowRPosition.X -= _arrow.GetSpriteRectangle().Width;
             _instructions.LoadContent(contentManager);
             _credits.LoadContent(contentManager);
         }
 
         public void Update(GameTime gameTime)
         {
+            if (InputManager.WasKeyPressed(Keys.Back) || InputManager.WasKeyPressed(Keys.Enter))
+                SoundManager.Instance.PlaySound("stone0");
+
             if (_settings.InSettings)
                 UpdateSettingsMenu(gameTime);
             else if (_instructions.InInstructions)
@@ -83,7 +89,6 @@ namespace WizardGrenade2
                 _menuOptions.Update(gameTime);
                 UpdateMainMenu();
             }
-
         }
 
         private void UpdateMainMenu()
@@ -118,9 +123,14 @@ namespace WizardGrenade2
             _credits.Update();
         }
 
-        private void StoreSettings()
+        public float GetBrightness()
         {
+            return _settings.GetBrightness();
+        }
 
+        public int[] GetSettings()
+        {
+            return _settings.GetSettings();
         }
 
         public void Draw(SpriteBatch spriteBatch)
