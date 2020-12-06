@@ -32,7 +32,7 @@ namespace WizardGrenade2
         public void LoadContent(ContentManager contentManager)
         {
 
-            _cursor = new Sprite(contentManager, "Cursor");
+            _cursor = new Sprite(contentManager, "cursor");
             _timer = new RoundTimer(ROUND_TIME);
             _detonationTimer = new DetonationTimer(contentManager);
             _timer.LoadContent(contentManager);
@@ -49,13 +49,13 @@ namespace WizardGrenade2
 
         public void Update(GameTime gameTime, int[] teamHealths)
         {
-            if (StateMachine.Instance.GameState == StateMachine.GameStates.PlayerTurn)
-                _timer.Update(gameTime);
-            if (!_timer.IsRunning)
-            {
-                StateMachine.Instance.ForceTurnEnd();
-                _timer.ResetTimer(ROUND_TIME);
-            }
+            //if (StateMachine.Instance.GameState == StateMachine.GameStates.PlayerTurn)
+            _timer.Update(gameTime);
+            //if (!_timer.IsRunning)
+            //{
+            //    StateMachine.Instance.ForceTurnEnd();
+            //    _timer.ResetTimer(ROUND_TIME);
+            //}
 
             _detonationTimer.SetTimer((int)WeaponManager.Instance.GetDetonationTime());
 
@@ -68,11 +68,11 @@ namespace WizardGrenade2
             foreach (var healthBar in _healthBars)
                 healthBar.Draw(spriteBatch);
 
-            if (StateMachine.Instance.GameState == StateMachine.GameStates.PlayerTurn)
-                _timer.Draw(spriteBatch);
+            //if (StateMachine.Instance.GameState == StateMachine.GameStates.PlayerTurn)
+            _timer.Draw(spriteBatch);
 
             _cursor.DrawSprite(spriteBatch, InputManager.CursorPosition());
-            _weaponList[WeaponManager.Instance.ActiveWeapon].DrawSymbol(spriteBatch, _weaponSymbolPosition, 4f);
+            _weaponList[WeaponManager.Instance.ActiveWeapon].DrawSymbol(spriteBatch, _weaponSymbolPosition, 6f);
             _detonationTimer.Draw(spriteBatch, _weaponSymbolPosition);
         }
     }
