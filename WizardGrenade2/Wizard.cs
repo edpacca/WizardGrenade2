@@ -70,10 +70,10 @@ namespace WizardGrenade2
 
         public void UpdateMovement(GameTime gameTime)
         {
-            if (InputManager.IsKeyDown(Keys.Left) && State != States.Jumping)
+            if (InputManager.IsKeyDown(Keys.Left))
                 Walk(Directions.Left, -1, SpriteEffects.None, gameTime);
 
-            else if (InputManager.IsKeyDown(Keys.Right) && State != States.Jumping)
+            else if (InputManager.IsKeyDown(Keys.Right))
                 Walk(Directions.Right, 1, SpriteEffects.FlipHorizontally, gameTime);
 
             else if (_wizard.GetVelocity() == Vector2.Zero)
@@ -85,7 +85,8 @@ namespace WizardGrenade2
             State = States.Walking;
             Direction = direction;
 
-            _wizard.ModifyVelocityX(directionCoefficient * WizardSettings.WALK_SPEED);
+            if (!WasDirectionChanged)
+                _wizard.ModifyVelocityX(directionCoefficient * WizardSettings.WALK_SPEED);
 
             _wizard.UpdateAnimationSequence("Walking", 10f, gameTime);
             _wizard.SpriteVisualEffect = effect;
@@ -174,10 +175,12 @@ namespace WizardGrenade2
             if (Position.Y > ScreenSettings.TARGET_HEIGHT)
                 entity.Kill();
 
+
             if (entity.JustDied)
             {
+                SoundManager.Instance.PlaySound("wizardSad");
                 _wizard.SpriteColour = Colours.WizardIsDeadColor;
-                _wizard.AddRotation(Mechanics.PI / 2);
+                _wizard.DrawRotation = (Mechanics.PI / 2);
             }
         }
 
