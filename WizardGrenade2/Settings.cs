@@ -3,6 +3,10 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Media;
+using System.Media;
+using Microsoft.Xna.Framework.Audio;
+using System;
 
 namespace WizardGrenade2
 {
@@ -33,6 +37,11 @@ namespace WizardGrenade2
             _gameSettings.LoadContent(contentManager);
         }
 
+        public void SetOptionColours(Color selected, Color unselected)
+        {
+            _settings.SetOptionColours(selected, unselected);
+        }
+
         private void UpdateSettings()
         {
             if (InputManager.WasKeyPressed(Keys.Back))
@@ -41,10 +50,26 @@ namespace WizardGrenade2
             int valueChange = InputManager.WasKeyPressed(Keys.Right) ? 1 : InputManager.WasKeyPressed(Keys.Left) ? -1 : 0;
             _gameSettings.ChangeValue(_settings.SelectedOption, valueChange);
 
-            if (InputManager.WasKeyPressed(Keys.Enter))
-            {
+            MediaPlayer.Volume = _gameSettings.MusicVolume;
+            SoundEffect.MasterVolume = _gameSettings.AudioVolume;
+        }
 
-            }
+        public void ApplySettings(int musicVolume, int audioVolume, int brightness)
+        {
+            _gameSettings.SetValue(0, musicVolume);
+            _gameSettings.SetValue(1, audioVolume);
+            _gameSettings.SetValue(2, brightness);
+            _gameSettings.Brightness = brightness / _gameSettings._gameSettingsValueMinMax[2]._valueMinMax[2];
+        }
+
+        public int[] GetSettings()
+        {
+            int[] settings = new int[3];
+
+            for (int i = 0; i < 3; i++)
+                settings[i] = _gameSettings._gameSettingsValueMinMax[i]._valueMinMax[0];
+
+            return settings;
         }
 
         public void Update(GameTime gameTime)
@@ -53,21 +78,8 @@ namespace WizardGrenade2
             UpdateSettings();
         }
 
-        public int SetMusicVolume(int volume)
+        public float GetBrightness()
         {
-            _gameSettings.MusicVolume = volume;
-            return _gameSettings.MusicVolume;
-        }
-
-        public int SetAudioVolume(int volume)
-        {
-            _gameSettings.AudioVolume = volume;
-            return _gameSettings.AudioVolume;
-        }
-
-        public int SetBrightness(int brightness)
-        {
-            _gameSettings.Brightness = brightness;
             return _gameSettings.Brightness;
         }
 

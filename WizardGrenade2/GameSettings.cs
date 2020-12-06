@@ -11,12 +11,12 @@ namespace WizardGrenade2
 {
     public class GameSettings
     {
-        public int MusicVolume { get; set; }
+        public float MusicVolume { get; set; }
         private ValueMinMax _musicVolumeValueMinMax;
-        public int AudioVolume { get; set; }
+        public float AudioVolume { get; set; }
         private ValueMinMax _audioVolumeValueMinMax;
-        public int Brightness { get; set; }
-        private ValueMinMax _BrightnessValueMinMax;
+        public float Brightness { get; set; }
+        private ValueMinMax _brightnessValueMinMax;
 
         public List<ValueMinMax> _gameSettingsValueMinMax { get; private set; }
 
@@ -24,12 +24,16 @@ namespace WizardGrenade2
         {
             _gameSettingsValueMinMax = new List<ValueMinMax>();
 
-            _musicVolumeValueMinMax = new ValueMinMax(5, 0, 10, "Lute");
-            _audioVolumeValueMinMax = new ValueMinMax(5, 0, 10, "Bell");
-            _BrightnessValueMinMax = new ValueMinMax(5, 0, 10, "Fireball");
+            _musicVolumeValueMinMax = new ValueMinMax(3, 0, 6, "Lute");
+            _audioVolumeValueMinMax = new ValueMinMax(3, 0, 6, "Bell");
+            _brightnessValueMinMax = new ValueMinMax(3, 0, 6, "Fireball");
             _gameSettingsValueMinMax.Add(_musicVolumeValueMinMax);
             _gameSettingsValueMinMax.Add(_audioVolumeValueMinMax);
-            _gameSettingsValueMinMax.Add(_BrightnessValueMinMax);
+            _gameSettingsValueMinMax.Add(_brightnessValueMinMax);
+
+            MusicVolume = (float)_musicVolumeValueMinMax._valueMinMax[0] / (float)_musicVolumeValueMinMax._valueMinMax[2];
+            AudioVolume = (float)_audioVolumeValueMinMax._valueMinMax[0] / (float)_audioVolumeValueMinMax._valueMinMax[2];
+            Brightness = (float)_brightnessValueMinMax._valueMinMax[0] / (float)_brightnessValueMinMax._valueMinMax[2];
 
             Vector2 startPosition = firstPosition;
             float interval = CalculateYInterval(firstPosition, lastYPosition);
@@ -63,6 +67,15 @@ namespace WizardGrenade2
                 value + difference <= _gameSettingsValueMinMax[index]._valueMinMax[1] ? _gameSettingsValueMinMax[index]._valueMinMax[1] :
                 value + difference >= _gameSettingsValueMinMax[index]._valueMinMax[2] ? _gameSettingsValueMinMax[index]._valueMinMax[2] :
                 value + difference;
+
+            MusicVolume = (float)_musicVolumeValueMinMax._valueMinMax[0] / (float)_musicVolumeValueMinMax._valueMinMax[2];
+            AudioVolume = (float)_audioVolumeValueMinMax._valueMinMax[0] / (float)_audioVolumeValueMinMax._valueMinMax[2];
+            Brightness = (float)_brightnessValueMinMax._valueMinMax[0] / (float)_brightnessValueMinMax._valueMinMax[2];
+        }
+
+        public void SetValue(int index, int value)
+        {
+            _gameSettingsValueMinMax[index]._valueMinMax[0] = value;
         }
 
         public void DrawSettings(SpriteBatch spriteBatch)

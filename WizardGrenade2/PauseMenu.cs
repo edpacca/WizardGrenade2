@@ -16,20 +16,26 @@ namespace WizardGrenade2
         private Texture2D _background;
         private Rectangle _backgroundRectangle;
         private Color _backgroundColour = new Color(0, 0, 0, 150);
+        private Sprite _bigScroll;
+
+        private Settings _settings;
 
         private Options _pauseMenuOptions;
         private List<string> _pauseMenuOptionNames = new List<string>()
         { 
           "Resume",
           "Settings",
+          //"Restart",
           "Quit",
-          "Fireball"
+          "Fireball?"
         };
 
         private Scroll _scroll;
         public bool IsPaused { get; set; }
         private bool _previousPauseState;
         private bool _currentPauseState;
+        public bool InSettings { get; set; }
+        public bool Reset { get; set; }
 
         public PauseMenu(GraphicsDevice graphics)
         {
@@ -53,12 +59,21 @@ namespace WizardGrenade2
             _pauseMenuOptions.SetOptionLayout(new Vector2(_textPosition.X, _textPosition.Y + 100), ScreenSettings.TARGET_HEIGHT - 210);
             _pauseMenuOptions.SetOptionColours(Colours.Ink, Colours.FadedInk);
             _pauseMenuOptions.LoadContent(contentManager);
+            _settings = new Settings(new Vector2(_textPosition.X - 200, _textPosition.Y + 100), ScreenSettings.TARGET_HEIGHT - 210);
+            _settings.LoadContent(contentManager);
+            _bigScroll = new Sprite(contentManager, "bigScroll");
+            _settings.SetOptionColours(Colours.Ink, Colours.FadedInk);
         }
 
         public void PauseGame(Keys key)
         {
             if (InputManager.WasKeyPressed(key))
+            {
                 IsPaused = IsPaused ? false : true;
+
+                if (IsPaused)
+                    SoundManager.Instance.PlaySound("scroll");
+            }
         }
 
         public void Update(GameTime gameTime)
@@ -73,10 +88,30 @@ namespace WizardGrenade2
 
                 if (InputManager.WasKeyPressed(Keys.Enter))
                     OptionFunctions(_pauseMenuOptions.SelectedOption);
+
+                if (InSettings)
+                {
+                    _settings.Update(gameTime);
+                    if (InputManager.WasKeyPressed(Keys.Back))
+                        InSettings = false;
+                }
             }
 
             else if (_currentPauseState != _previousPauseState)
+            {
                 _scroll.ResetPauseMenu();
+            }
+        }
+
+        public void ApplySettings(int[] settings, GameTime gameTime)
+        {
+            _settings.ApplySettings(settings[0], settings[1], settings[2]);
+            _settings.Update(gameTime);
+        }
+
+        public float GetBrightness()
+        {
+            return _settings.GetBrightness();
         }
 
         private void OptionFunctions(int selectedIndex)
@@ -84,9 +119,23 @@ namespace WizardGrenade2
             if (selectedIndex == _pauseMenuOptionNames.IndexOf("Resume"))
                 IsPaused = false;
 
+            if (selectedIndex == _pauseMenuOptionNames.IndexOf("Settings"))
+                InSettings = true;
+
             if (selectedIndex == _pauseMenuOptionNames.IndexOf("Quit"))
                 StateMachine.Instance.ExitGame();
-                
+
+            //if (selectedIndex == _pauseMenuOptionNames.IndexOf("Restart"))
+            //{
+            //    StateMachine.Instance.ResetGame();
+            //    IsPaused = false;
+            //}
+
+            if (selectedIndex == _pauseMenuOptionNames.IndexOf("Fireball?"))
+            {
+                WeaponManager.Instance.SpawnHugeFireballs();
+                IsPaused = false;
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -95,8 +144,16 @@ namespace WizardGrenade2
             {
                 spriteBatch.Draw(_background, _backgroundRectangle, _backgroundColour);
                 _scroll.Draw(spriteBatch);
-                if (_scroll.IsUnrolled)
+
+                if (InSettings)
+                {
+                    _bigScroll.DrawSprite(spriteBatch, ScreenSettings.ScreenCentre - _bigScroll.GetSpriteOrigin());
+                    _settings.Draw(spriteBatch);
+                }
+
+                if (_scroll.IsUnrolled && !InSettings)
                     _pauseMenuOptions.DrawOptions(spriteBatch);
+
                 spriteBatch.DrawString(_optionsFont, _pausedText, _textPosition, Colours.Ink);
             }
         }

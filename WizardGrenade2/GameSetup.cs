@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using System.Collections.Generic;
 
 namespace WizardGrenade2
@@ -87,11 +88,14 @@ namespace WizardGrenade2
             _title = new Sprite(contentManager, "Title");
             _arrow = new Sprite(contentManager, "MelfsAcidArrow");
             _arrow.SpriteScale = ARROW_SCALE;
-            _arrowRPosition.X -= _arrow.GetSpriteRectangle().Width * ARROW_SCALE;
+            _arrowRPosition.X -= _arrow.GetSpriteRectangle().Width;
         }
 
         public void Update(GameTime gameTime)
         {
+            if (InputManager.WasKeyPressed(Keys.Back) || InputManager.WasKeyPressed(Keys.Enter))
+                SoundManager.Instance.PlaySound("stone0");
+
             if (_AreBattleOptionsSet)
             {
                 _mapOptions.Update(gameTime);
@@ -112,6 +116,26 @@ namespace WizardGrenade2
 
             int valueChange = InputManager.WasKeyPressed(Keys.Right) ? 1 : InputManager.WasKeyPressed(Keys.Left) ? -1 : 0 ;
 
+            if (valueChange != 0)
+            {
+                string soundEffect = "stone0";
+
+                if (_battleOptions.SelectedOption == 0)
+                {
+                    soundEffect = valueChange == 1 ? "wizardOh0" : "wizardOh1";
+                }
+                else if (_battleOptions.SelectedOption == 1)
+                {
+                    soundEffect = valueChange == 1 ? "wizardCast" : "wizardSad";
+                }
+                else if (_battleOptions.SelectedOption == 2)
+                {
+                    soundEffect = "potion";
+                }
+
+                SoundManager.Instance.PlaySound(soundEffect);
+            }
+
             _battleOptionValues[_battleOptions.SelectedOption, 0] = Utility.ChangeValueInLimits(
                 _battleOptionValues[_battleOptions.SelectedOption, 0] + valueChange,
                 _battleOptionValues[_battleOptions.SelectedOption, 1],
@@ -121,6 +145,7 @@ namespace WizardGrenade2
             {
                 StoreSettings();
                 _AreBattleOptionsSet = true;
+                SoundManager.Instance.PlaySound("magicChord");
             }
         }
 
@@ -133,6 +158,8 @@ namespace WizardGrenade2
             {
                 GameOptions.MapFile = "Map" + _mapOptions.SelectedOption;
                 _isMapSet = true;
+                SoundManager.Instance.StopMediaPlayer();
+                SoundManager.Instance.PlaySound("magic0");
             }
         }
 
@@ -147,6 +174,7 @@ namespace WizardGrenade2
         {
             _isMapSet = false;
             _AreBattleOptionsSet = false;
+            StateMachine.Instance.RestartGame();
         }
 
         public void Draw(SpriteBatch spriteBatch)

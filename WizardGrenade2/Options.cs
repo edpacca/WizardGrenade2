@@ -3,6 +3,8 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework.Media;
+using Microsoft.Xna.Framework.Audio;
 
 namespace WizardGrenade2
 {
@@ -20,7 +22,7 @@ namespace WizardGrenade2
         private float _lastOptionPositionY = ScreenSettings.TARGET_HEIGHT;
 
         private Color _selectedColour = Colours.Gold;
-        private Color _unselectedColour = Color.DimGray;
+        private Color _unselectedColour = Colours.LightGreenBlue;
 
         public Options(List<string> optionNames, bool doubleArrow, bool verticalLayout)
         {
@@ -106,7 +108,10 @@ namespace WizardGrenade2
             SelectedOption = Utility.ChangeValueInLimits(SelectedOption + difference, 0, _numberOfOptions - 1);
             
             if (difference != 0)
+            {
                 SetArrowPositions();
+                SoundManager.Instance.PlaySound("stone1");
+            }
         }
 
         private void CycleInPlaceOption()
@@ -115,11 +120,13 @@ namespace WizardGrenade2
             {
                 SelectedOption = Utility.WrapAroundCounter(SelectedOption, _numberOfOptions);
                 SetArrowPositions();
+                SoundManager.Instance.PlaySound("stone1");
             }
             else if (InputManager.WasKeyPressed(Keys.Left))
             {
                 SelectedOption = Utility.WrapAroundNegativeCounter(SelectedOption, _numberOfOptions);
                 SetArrowPositions();
+                SoundManager.Instance.PlaySound("stone1");
             }
         }
 
@@ -131,7 +138,6 @@ namespace WizardGrenade2
                 DrawVertical(spriteBatch);
             else
                 DrawSinglePosition(spriteBatch);
-
         }
 
         private void DrawVertical(SpriteBatch spriteBatch)
