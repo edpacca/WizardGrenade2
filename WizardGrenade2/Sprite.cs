@@ -20,7 +20,7 @@ namespace WizardGrenade2
         public float SpriteScale { get; set; }
  
         public Texture2D GetSpriteTexture() => _spriteTexture;
-        public Rectangle GetSpriteRectangle() => _spriteRectangle;
+        public Rectangle GetSpriteRectangle() => new Rectangle(_spriteRectangle.X, _spriteRectangle.Y, (int)(_spriteRectangle.Width * SpriteScale), (int)(_spriteRectangle.Height * SpriteScale));
 
         // Constructors
         public Sprite()
@@ -134,6 +134,19 @@ namespace WizardGrenade2
         {
             float percentage = maskPercentage <= 1 && maskPercentage >= 0 ? maskPercentage : 1;
             _spriteRectangle.Height = (int)(_spriteTexture.Height * percentage);
+        }
+
+        public void MaskSpriteFromBottom(float maskPercentage)
+        {
+            _spriteRectangle.Height = _spriteTexture.Height - (int)(_spriteTexture.Height * maskPercentage);
+            _spriteRectangle.Y = (int)(_spriteTexture.Height * maskPercentage);
+        }
+
+        public void MaskSpriteFromTop(float maskPercentage)
+        {
+            _spriteRectangle.Y = (int)(_spriteTexture.Height * maskPercentage);
+            _spriteRectangle.Height = (int)(_spriteTexture.Height * (1 - maskPercentage));
+            
         }
     }
 }

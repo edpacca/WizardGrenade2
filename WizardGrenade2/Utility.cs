@@ -27,5 +27,10 @@ namespace WizardGrenade2
 
         public static int WrapAroundCounter(int number, int listLength) => (number + 1) % listLength;
         public static int WrapAroundNegativeCounter(int number, int listLength) => number - 1 < 0 ? listLength - number - 1 : number - 1;
+
+        public static float FractionPercentage(float fraction, float percentage, int sign)
+        {
+            return fraction + (sign * fraction * percentage);
+        }
     }
 }
