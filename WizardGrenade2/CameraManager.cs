@@ -11,11 +11,13 @@ namespace WizardGrenade2
         private const int ZOOM_RATE = 5;
         private const int CAMERA_SPEED = 200;
         private const int BORDER_WIDTH = 150;
-        private const float DEFAULT_SCALE = 0.9f;
+        private const float DEFAULT_SCALE = 1.1f;
         private const float MAX_SCALE = 1.5f;
         private const float MIN_SCALE = 0.7f;
         private readonly Vector2 CAMERA_MIN_POSITION;
         private readonly Vector2 CAMERA_MAX_POSITION;
+        private Timer _cameraMoveTimer;
+        private const float _cameraTime = 1.5f;
 
         private float _originScale;
         private float _scaleFactor = DEFAULT_SCALE;
@@ -36,9 +38,12 @@ namespace WizardGrenade2
         public Matrix TransformMatrix { get => _originMatrix * _camera.Transform; }
         public Matrix OriginMatrix { get => _originMatrix; }
 
+        //private SpriteFont _font;
+
         public CameraManager()
         {
             _camera = new Camera();
+            _cameraMoveTimer = new Timer(_cameraTime);
             _originScale = ScreenSettings.RESOLUTION_WIDTH / ScreenSettings.TARGET_WIDTH;
             _originMatrix = Matrix.CreateScale(new Vector3(_originScale, _originScale, 1));
             _screenBounds = new Rectangle(BORDER_WIDTH, BORDER_WIDTH, (int)ScreenSettings.TARGET_WIDTH - BORDER_WIDTH, (int)ScreenSettings.TARGET_HEIGHT - BORDER_WIDTH);
@@ -97,7 +102,7 @@ namespace WizardGrenade2
 
         private void CameraMouseControl(GameTime gameTime)
         {
-            if (!IsCursorInsideScreenBounds() && !_movingCamera)
+            if (!IsCursorInsideScreenBounds())
             {
                 Vector2 vector = Mechanics.NormalisedDifferenceVector(_cursor, ScreenSettings.ScreenCentre);
                 MoveCamera(gameTime, CAMERA_SPEED, vector);
@@ -110,19 +115,24 @@ namespace WizardGrenade2
             {
                 _oldCameraPosition = _cameraPosition;
                 _newCameraPosition = ConvertToScreenResolution(WeaponManager.Instance.ActiveWizardPosition);
+                _cameraMoveTimer.ResetTimer(_cameraTime);
                 _movingCamera = true;
             }
 
             if (_movingCamera)
             {
-                if (Math.Abs(Mechanics.VectorMagnitude(_cameraPosition - _newCameraPosition)) > 300)
+                _cameraMoveTimer.Update(gameTime);
+
+                if (Math.Abs(Mechanics.VectorMagnitude(_cameraPosition - _newCameraPosition)) > 100 && _cameraMoveTimer.IsRunning)
                 {
                     Vector2 vector = Mechanics.NormalisedDifferenceVector(_newCameraPosition, _oldCameraPosition);
                     MoveCamera(gameTime, CAMERA_SPEED * 2, vector);
                 }
-
                 else
+                {
+                    _cameraMoveTimer.ResetTimer(_cameraTime);
                     _movingCamera = false;
+                }
             }
         }
 
@@ -150,5 +160,19 @@ namespace WizardGrenade2
 
         private Vector2 ConvertToTargetResolution(Vector2 screenResolutionPoint) => screenResolutionPoint / _originScale;
         private Vector2 ConvertToScreenResolution(Vector2 targetResolutionPoint) => targetResolutionPoint * _originScale;
+
+        //public void LoadContent(ContentManager contentManager)
+        //{
+        //    _font = contentManager.Load<SpriteFont>("InfoFont");
+        //}
+
+        //public void Draw(SpriteBatch spriteBatch)
+        //{
+        //    spriteBatch.DrawString(_font, "moving: " + _movingCamera.ToString(), new Vector2(60, 60), Color.White);
+        //    spriteBatch.DrawString(_font, "time: " + _cameraMoveTimer.Time.ToString("0.00"), new Vector2(60, 80), Color.White);
+        //    spriteBatch.DrawString(_font, "vec mag: " + Mechanics.VectorMagnitude(_cameraPosition - _newCameraPosition).ToString("0.0"), new Vector2(60, 100), Color.White);
+        //    //spriteBatch.DrawString(_font, _movingCamera.ToString(), new Vector2(60, 120), Color.White);
+        //    //spriteBatch.DrawString(_font, _movingCamera.ToString(), new Vector2(60, 140), Color.White);
+        //}
     }
 }
