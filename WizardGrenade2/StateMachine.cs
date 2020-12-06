@@ -1,9 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using System;
-
 
 namespace WizardGrenade2
 {
@@ -17,7 +15,6 @@ namespace WizardGrenade2
         public static StateMachine Instance { get => lazyStateMachine.Value; }
         private const float TIME_BETWEEN_TURNS = 3f;
         private Timer _timer = new Timer(TIME_BETWEEN_TURNS);
-
         private ScreenText _screenText = new ScreenText();
 
         public void LoadContent(ContentManager contentManager) => _screenText.LoadContent(contentManager);
@@ -33,6 +30,7 @@ namespace WizardGrenade2
             BetweenTurns,
             PlayerOut,
             GameOver,
+            Reset,
             ExitGame,
         }
 
@@ -90,6 +88,8 @@ namespace WizardGrenade2
                 _previousGameState != GameStates.PlaceWizards;
         }
 
+        public bool NewGameState() => _previousGameState != _currentGameState;
+
         public void ForceTurnEnd()
         {
             GameState = GameStates.BetweenTurns;
@@ -98,15 +98,32 @@ namespace WizardGrenade2
         public void EndCurrentGame(string winningTeam)
         {
             GameState = GameStates.GameOver;
-            _screenText.IsDisplaying = true;
-            _screenText.MainText = String.IsNullOrEmpty(winningTeam) ? "It's a Draw!" : winningTeam + " wins!";
-            _screenText.InfoText = "Press 'delete' to exit game";
+
+            if (NewGameState())
+            {
+                _screenText.IsDisplaying = true;
+                _screenText.MainText = String.IsNullOrEmpty(winningTeam) ? "It's a Draw!" : winningTeam + " wins!";
+                _screenText.InfoText = "Press 'Delete' to quit";
+
+                string gameEndSound = String.IsNullOrEmpty(winningTeam) ? "Draw" : "Win";
+                SoundManager.Instance.PlaySoundInstance(gameEndSound);
+            }
         }
 
         public void ExitGame()
         {
             GameState = GameStates.ExitGame;
         }
+
+        public void RestartGame()
+        {
+            GameState = GameStates.PlaceWizards;
+        }
+
+        //public void ResetGame()
+        //{
+        //    GameState = GameStates.Reset;
+        //}
 
         public bool IsInGameState(GameStates gameState)
         {

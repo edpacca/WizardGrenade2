@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 
 namespace WizardGrenade2
@@ -9,12 +8,24 @@ namespace WizardGrenade2
     class Fireball : Weapon
     {
         private Explosion _explosion;
+        private int _explosionRadius;
 
         public Fireball()
         {
             DetonationTimer = new Timer(WeaponSettings.FIREBALL_DETONATION_TIME);
             _explosion = new Explosion(WeaponSettings.FIREBALL_EXPLOSION_RADIUS);
             LoadWeaponObject(WeaponSettings.FIREBALL_GAMEOBJECT, WeaponSettings.FIREBALL_CHARGE_POWER, WeaponSettings.FIREBALL_MAX_CHARGE_TIME);
+            ChargingSoundFile = "fireCharge";
+            MovingSoundFile = "fireCast";
+            _explosionRadius = WeaponSettings.FIREBALL_EXPLOSION_RADIUS;
+        }
+
+        public Fireball(int blastRadius)
+        {
+            DetonationTimer = new Timer(WeaponSettings.FIREBALL_DETONATION_TIME);
+            _explosion = new Explosion(blastRadius);
+            LoadWeaponObject(WeaponSettings.FIREBALL_GAMEOBJECT, WeaponSettings.FIREBALL_CHARGE_POWER, WeaponSettings.FIREBALL_MAX_CHARGE_TIME);
+            _explosionRadius = blastRadius;
         }
 
         public override void LoadContent(ContentManager contentManager)
@@ -31,7 +42,7 @@ namespace WizardGrenade2
             if (!DetonationTimer.IsRunning)
             {
                 Explode(gameTime, gameObjects);
-                KillProjectile();
+                KillProjectile("fireHit");
                 DetonationTimer.ResetTimer(WeaponManager.Instance.GetDetonationTime());
             }
 
@@ -42,7 +53,7 @@ namespace WizardGrenade2
         private void Explode(GameTime gameTime, List<Wizard> gameObjects)
         {
             Vector2 position = Position;
-            Map.Instance.DeformLevel(WeaponSettings.FIREBALL_EXPLOSION_RADIUS, position);
+            Map.Instance.DeformLevel(_explosionRadius, position);
             _explosion.ShowExplosion(position);
             GameObjectInteraction(gameTime, gameObjects, position);
             IsMoving = false;
@@ -55,6 +66,7 @@ namespace WizardGrenade2
                 Vector2 explosionToObject = _explosion.ExplosionToObject(explosionPosition, gameObject.Position);
                 if (_explosion.IsWithinExplosionArea(explosionToObject, WeaponSettings.FIREBALL_EXPLOSION_RADIUS + 15))
                 {
+                    SoundManager.Instance.PlaySound("wizardHit0");
                     Vector2 pushBack = _explosion.ExplosionVector(explosionToObject) * WeaponSettings.FIREBALL_EXPLOSION_DAMPING;
                     gameObject.AddVelocity(pushBack);
                     gameObject.entity.ApplyDamage((int)Mechanics.VectorMagnitude(pushBack) / 3);

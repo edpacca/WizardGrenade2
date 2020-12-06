@@ -13,6 +13,8 @@ namespace WizardGrenade2
         {
             _explosion = new Explosion(WeaponSettings.ICEBOMB_EXPLOSION_RADIUS);
             LoadWeaponObject(WeaponSettings.ICEBOMB_GAMEOBJECT, WeaponSettings.ICEBOMB_CHARGE_POWER, WeaponSettings.ICEBOMB_MAX_CHARGE_TIME);
+            ChargingSoundFile = "frostCharge";
+            MovingSoundFile = "frost";
         }
 
         public override void LoadContent(ContentManager contentManager)
@@ -26,7 +28,8 @@ namespace WizardGrenade2
             if (HasCollided)
             {
                 Explode(gameTime, gameObjects);
-                KillProjectile();
+                KillProjectile("iceHit");
+                SoundManager.Instance.StopSoundInstance("frost");
                 HasCollided = false;
             }
 

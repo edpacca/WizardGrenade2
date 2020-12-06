@@ -19,7 +19,10 @@ namespace WizardGrenade2
         public Vector2 Position => _weapon.GetPosition();
         public Vector2 Velocity => _weapon.GetVelocity();
         public Texture2D Symbol => _weapon.GetSpriteTexture();
-
+        public string ChargingSoundFile { get; set; }
+        public string MovingSoundFile { get; set; }
+        public string ImpaceSoundFile { get; set; }
+  
         public void LoadWeaponObject(GameObjectParameters parameters)
         {
             _weapon = new GameObject(parameters);
@@ -56,6 +59,18 @@ namespace WizardGrenade2
             _weapon.SetVelocity(Vector2.Zero);
             IsMoving = false;
             StateMachine.Instance.ShotLanded();
+            //SoundManager.Instance.StopSoundInstance(MovingSoundFile);
+        }
+
+        public virtual void KillProjectile(string SoundEffect)
+        {
+            SoundManager.Instance.PlaySound(SoundEffect);
+            KillProjectile();
+        }
+
+        public void SetSpriteScale(float scale)
+        {
+            _weapon.SpriteScale = scale;
         }
 
         public virtual void Draw(SpriteBatch spriteBatch)

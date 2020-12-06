@@ -11,6 +11,8 @@ namespace WizardGrenade2
 
         public Arrow()
         {
+            ChargingSoundFile = "arrowDraw";
+            MovingSoundFile = "arrowShot";
             LoadWeaponObject(WeaponSettings.ARROW_GAMEOBJECT, WeaponSettings.ARROW_POWER, WeaponSettings.ARROW_MAX_CHARGE_TIME);
         }
 
@@ -24,8 +26,8 @@ namespace WizardGrenade2
         {
             WizardInteraction(gameObjects);
 
-            if (Velocity == Vector2.Zero)
-                KillProjectile();
+            if (IsMoving && Velocity == Vector2.Zero)
+                KillProjectile("stone1");
 
             base.Update(gameTime, gameObjects);
         }
@@ -35,11 +37,11 @@ namespace WizardGrenade2
             foreach (var wizard in wizards)
             {
                 float distance = Math.Abs(Mechanics.VectorMagnitude(Position - wizard.Position));
-                if (distance <= wizard.GetSpriteRectangle().Width / 2)
+                if (IsMoving && distance <= wizard.GetSpriteRectangle().Width / 2)
                 {
                     wizard.AddVelocity(Velocity * WeaponSettings.ARROW_KNOCKBACK_FACTOR);
                     wizard.entity.ApplyDamage((int)(Mechanics.VectorMagnitude(Velocity) * WeaponSettings.ARROW_DAMAGE_FACTOR));
-                    KillProjectile();
+                    KillProjectile("wizardHit1");
                 }
             }
         }
