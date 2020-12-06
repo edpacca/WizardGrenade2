@@ -19,6 +19,8 @@ namespace WizardGrenade2
         private Crosshair _crosshair = new Crosshair();
         private List<Wizard> _allWizards;
 
+        private HugeFireball _hugeFireball = new HugeFireball();
+
         private int _numberOfWeapons;
         private int _timer = 4;
         private bool _isLoaded;
@@ -30,6 +32,8 @@ namespace WizardGrenade2
         public Rectangle WizardSpriteRectangle { get; private set; }
         private Vector2 _initialPosition;
         public Vector2 ActiveWizardPosition;
+
+        private Random _random = new Random();
 
         private readonly int[] _detonationTimes = new int[] { 1, 2, 3, 4, 5 };
         
@@ -44,6 +48,8 @@ namespace WizardGrenade2
 
             foreach (var weapon in Weapons)
                 weapon.LoadContent(contentManager);
+
+            _hugeFireball.LoadContent(contentManager);
 
             _numberOfWeapons = Weapons.Count;
             _crosshair.LoadContent(contentManager);
@@ -66,6 +72,8 @@ namespace WizardGrenade2
 
             if (!_isLoaded && Vector2.Distance(_initialPosition, Weapons[ActiveWeapon].Position) > ScreenSettings.TARGET_WIDTH + 200)
                 Weapons[ActiveWeapon].KillProjectile();
+
+            _hugeFireball.Update(gameTime, _allWizards);
         }
 
         public void PopulateGameObjects(List<Wizard> allWizards)
@@ -78,6 +86,8 @@ namespace WizardGrenade2
         {
             if (InputManager.WasKeyPressed(key) && _isLoaded)
             {
+                int randomSound = _random.Next(1, 5);
+                SoundManager.Instance.PlaySound("magic" + randomSound);
                 Weapons[ActiveWeapon].IsMoving = false;
                 ActiveWeapon = Utility.WrapAroundCounter(ActiveWeapon, _numberOfWeapons);
                 Weapons[ActiveWeapon].IsActive = true;
@@ -89,6 +99,7 @@ namespace WizardGrenade2
             if (InputManager.IsKeyDown(Keys.Space) && 
                 StateMachine.Instance.GameState == StateMachine.GameStates.PlayerTurn)
             {
+                SoundManager.Instance.PlaySoundInstance(Weapons[ActiveWeapon].ChargingSoundFile);
                 IsCharging = true;
                 Weapons[ActiveWeapon].KillProjectile();
                 Weapons[ActiveWeapon].SetToPlayerPosition(activePlayerPosition, activeDirection, _crosshair.CrosshairAngle);
@@ -97,6 +108,8 @@ namespace WizardGrenade2
 
             if (InputManager.WasKeyReleased(Keys.Space) || ChargePower >= Weapons[ActiveWeapon].MaxChargeTime)
             {
+                SoundManager.Instance.StopSoundInstance(Weapons[ActiveWeapon].ChargingSoundFile);
+                SoundManager.Instance.PlaySoundInstance(Weapons[ActiveWeapon].MovingSoundFile);
                 _isLoaded = false;
                 IsCharging = false;
                 Weapons[ActiveWeapon].FireProjectile(ChargePower, _crosshair.CrosshairAngle);
@@ -150,6 +163,13 @@ namespace WizardGrenade2
 
             if (StateMachine.Instance.GameState == StateMachine.GameStates.PlayerTurn)
             _crosshair.Draw(spriteBatch, IsCharging);
+
+            _hugeFireball.Draw(spriteBatch);
+        }
+
+        public void SpawnHugeFireballs()
+        {
+            _hugeFireball.SpawnFireballs();
         }
     }
 }
