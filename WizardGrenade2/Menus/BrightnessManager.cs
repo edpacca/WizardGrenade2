@@ -33,7 +33,6 @@ namespace WizardGrenade2
             float dark = 0.5f - brightness;
 
             _brightnessColour.A = (byte)(bright * 255);
-            //_brightnessMask.SetData(new Color[] { _brightnessColour });
             _darknessColour.A = (byte)(dark * 255);
         }
 
