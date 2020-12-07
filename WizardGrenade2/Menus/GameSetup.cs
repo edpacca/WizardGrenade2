@@ -2,8 +2,8 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
 using System.Collections.Generic;
+using WizardGrenade2.Generics;
 
 namespace WizardGrenade2
 {
@@ -33,14 +33,10 @@ namespace WizardGrenade2
         private readonly List<string> _battleOptionNames = new List<string> { "Players", "Wizards", "Health" };
         private readonly List<string> _mapNames = new List<string> { "Castle", "Two-Towers", "City", "Clouds", "Arena" };
 
-        private BattleSettings _battleSettings = new BattleSettings();
-
-        private int[,] _battleOptionValues = new int[3, 3]
-        {
-            {2, 2, 4 },
-            {3, 1, 8 },
-            {4, 1, 10 }
-        };
+        private List<Setting> _battleSettings;
+        private Setting _players;
+        private Setting _teamSize;
+        private Setting _health;
 
         public GameSetup()
         {
@@ -49,6 +45,15 @@ namespace WizardGrenade2
             _wizards = new List<Sprite>();
             _battleOptions = new Options(_battleOptionNames, true, true);
             _mapOptions = new Options(_mapNames, true, false);
+
+            _players = new Setting(2, 2, 4);
+            _teamSize = new Setting(3, 1, 8);
+            _health = new Setting(4, 1, 10);
+            _battleSettings = new List<Setting>();
+            _battleSettings.Add(_players);
+            _battleSettings.Add(_teamSize);
+            _battleSettings.Add(_health);
+
             SetMenuPositions();
         }
 
@@ -70,23 +75,23 @@ namespace WizardGrenade2
         {
             for (int i = 0; i < 4; i++)
             {
-                _wizards.Add(new Sprite(contentManager, "Wizard" + i));
+                _wizards.Add(new Sprite(contentManager, @"Menu/Wizard" + i));
                 _wizards[i].SpriteScale = 2f;
             }
 
             for (int i = 0; i < 5; i++)
             {
-                _maps.Add(new Sprite(contentManager, "Map" + i));
+                _maps.Add(new Sprite(contentManager, @"Maps/Map" + i));
                 _maps[i].SpriteScale = 0.5f;
             }
 
             _battleOptions.LoadContent(contentManager);
             _mapOptions.LoadContent(contentManager);
 
-            _optionsFont = contentManager.Load<SpriteFont>("OptionFont");
-            _infoFont = contentManager.Load<SpriteFont>("InfoFont2");
-            _title = new Sprite(contentManager, "Title");
-            _arrow = new Sprite(contentManager, "MelfsAcidArrow");
+            _optionsFont = contentManager.Load<SpriteFont>(@"Fonts/OptionFont");
+            _infoFont = contentManager.Load<SpriteFont>(@"Fonts/InfoFont2");
+            _title = new Sprite(contentManager, @"Menu/Title");
+            _arrow = new Sprite(contentManager, @"GameObjects/MelfsAcidArrow");
             _arrow.SpriteScale = ARROW_SCALE;
             _arrowRPosition.X -= _arrow.GetSpriteRectangle().Width;
         }
@@ -101,7 +106,6 @@ namespace WizardGrenade2
                 _mapOptions.Update(gameTime);
                 UpdateMapMenu();
             }
-
             else
             {
                 _battleOptions.Update(gameTime);
@@ -114,32 +118,22 @@ namespace WizardGrenade2
             if (InputManager.WasKeyPressed(Keys.Back))
                 SettingUpGame = false;
 
-            int valueChange = InputManager.WasKeyPressed(Keys.Right) ? 1 : InputManager.WasKeyPressed(Keys.Left) ? -1 : 0 ;
+            int valueChange = InputManager.WasKeyPressed(Keys.Right) ? 1 : InputManager.WasKeyPressed(Keys.Left) ? -1 : 0;
+            _battleSettings[_battleOptions.SelectedOption].ChangeValue(valueChange);
 
             if (valueChange != 0)
             {
                 string soundEffect = "stone0";
 
                 if (_battleOptions.SelectedOption == 0)
-                {
                     soundEffect = valueChange == 1 ? "wizardOh0" : "wizardOh1";
-                }
                 else if (_battleOptions.SelectedOption == 1)
-                {
                     soundEffect = valueChange == 1 ? "wizardCast" : "wizardSad";
-                }
                 else if (_battleOptions.SelectedOption == 2)
-                {
                     soundEffect = "potion";
-                }
 
                 SoundManager.Instance.PlaySound(soundEffect);
             }
-
-            _battleOptionValues[_battleOptions.SelectedOption, 0] = Utility.ChangeValueInLimits(
-                _battleOptionValues[_battleOptions.SelectedOption, 0] + valueChange,
-                _battleOptionValues[_battleOptions.SelectedOption, 1],
-                _battleOptionValues[_battleOptions.SelectedOption, 2]);
 
             if (InputManager.WasKeyPressed(Keys.Enter))
             {
@@ -156,7 +150,7 @@ namespace WizardGrenade2
             
             else if (InputManager.WasKeyPressed(Keys.Enter))
             {
-                GameOptions.MapFile = "Map" + _mapOptions.SelectedOption;
+                GameOptions.MapFile = @"Maps/Map" + _mapOptions.SelectedOption;
                 _isMapSet = true;
                 SoundManager.Instance.StopMediaPlayer();
                 SoundManager.Instance.PlaySound("magic0");
@@ -165,9 +159,9 @@ namespace WizardGrenade2
 
         private void StoreSettings()
         {
-            GameOptions.NumberOfTeams = _battleOptionValues[0, 0];
-            GameOptions.TeamSize = _battleOptionValues[1, 0];
-            GameOptions.WizardHealth = _battleOptionValues[2, 0] * HEALTH_INTERVAL;
+            GameOptions.NumberOfTeams = _players.IntValue;
+            GameOptions.TeamSize = _teamSize.IntValue;
+            GameOptions.WizardHealth = _health.IntValue * HEALTH_INTERVAL;
         }
 
         public void ResetGame()
@@ -202,17 +196,17 @@ namespace WizardGrenade2
 
             for (int i = 0; i < 4; i++)
             {
-                _wizards[i].SpriteColour = _battleOptionValues[0, 0] <= i ? Colours.GreyedOut : Color.White;
+                _wizards[i].SpriteColour = _players.IntValue <= i ? Colours.GreyedOut : Color.White;
                 _wizards[i].DrawSprite(spriteBatch, _wizardPosition + new Vector2(i * 80, 0));
             }
 
             _wizardPosition.Y = _battleOptions.OptionsLayout[1].Y;
             _wizards[0].SpriteColour = Color.Black;
 
-            for (int i = 0; i < _battleOptionValues[1, 0]; i++)
+            for (int i = 0; i < _teamSize.IntValue; i++)
                 _wizards[0].DrawSprite(spriteBatch, _wizardPosition + new Vector2(i * 80, 0));
 
-            spriteBatch.DrawString(_optionsFont, (_battleOptionValues[2, 0] * HEALTH_INTERVAL).ToString(), _healthTextPosition, Color.White);
+            spriteBatch.DrawString(_optionsFont, (_health.IntValue * HEALTH_INTERVAL).ToString(), _healthTextPosition, Color.White);
         }
 
         private void DrawMapOptions(SpriteBatch spriteBatch)

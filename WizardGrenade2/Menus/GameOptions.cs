@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-
-namespace WizardGrenade2
+﻿namespace WizardGrenade2
 {
     public class GameOptions
     {

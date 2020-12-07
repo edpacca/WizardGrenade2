@@ -4,17 +4,23 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Media;
-using System.Media;
 using Microsoft.Xna.Framework.Audio;
-using System;
+using WizardGrenade2.Generics;
 
 namespace WizardGrenade2
 {
     class Settings
     {
-        private Options _settings;
-        public GameSettings _gameSettings { get; private set; }
+        public Setting MusicVolume { get; private set; }
+        public Setting AudioVolume { get; private set; }
+        public Setting Brightness { get; private set; }
+
+        private List<Setting> _settings;
         public bool InSettings { get; set; }
+
+        private Options _options;
+        private Vector2 _offset;
+        private float _spriteMeterWidth;
 
         private readonly List<string> _settingNames = new List<string>()
         {
@@ -23,70 +29,81 @@ namespace WizardGrenade2
             "Brightness"
         };
 
-        public Settings(Vector2 menuFirstOptionPosition, float menuLastOptionPosition)
+        public Settings(Vector2 firstOptionPosition, float lastOptionPosition, Vector2 textSpriteOffset, float spriteMeterWidth)
         {
-            _settings = new Options(_settingNames, true, true);
-            _settings.SetOptionLayout(menuFirstOptionPosition, menuLastOptionPosition);
-            Vector2 _gameSettingsFirstPosition = new Vector2(ScreenSettings.CentreScreenWidth + 50, menuFirstOptionPosition.Y);
-            _gameSettings = new GameSettings(_gameSettingsFirstPosition, menuLastOptionPosition);
-        }
+            _options = new Options(_settingNames, true, true);
+            _options.SetOptionLayout(firstOptionPosition, lastOptionPosition);
+
+            MusicVolume = new Setting(3, 0, 6);
+            AudioVolume = new Setting(3, 0, 6);
+            Brightness = new Setting(3, 0, 6);
+
+            _settings = new List<Setting>();
+            _settings.Add(MusicVolume);
+            _settings.Add(AudioVolume);
+            _settings.Add(Brightness);
+
+            _offset = textSpriteOffset;
+            _spriteMeterWidth = spriteMeterWidth;
+    }
 
         public void LoadContent(ContentManager contentManager)
         {
-            _settings.LoadContent(contentManager);
-            _gameSettings.LoadContent(contentManager);
+            _options.LoadContent(contentManager);
+            MusicVolume.LoadContent(contentManager, @"Menu/Lute");
+            AudioVolume.LoadContent(contentManager, @"Menu/Bell");
+            Brightness.LoadContent(contentManager, @"GameObjects/Fireball");
+
+            MusicVolume.SetSpriteMeter(_spriteMeterWidth, 1.5f);
+            AudioVolume.SetSpriteMeter(_spriteMeterWidth, 1.5f);
+            Brightness.SetSpriteMeter(_spriteMeterWidth, 4f);
         }
 
         public void SetOptionColours(Color selected, Color unselected)
         {
-            _settings.SetOptionColours(selected, unselected);
+            _options.SetOptionColours(selected, unselected);
         }
 
-        private void UpdateSettings()
+        public void Update(GameTime gameTime)
         {
             if (InputManager.WasKeyPressed(Keys.Back))
                 InSettings = false;
 
-            int valueChange = InputManager.WasKeyPressed(Keys.Right) ? 1 : InputManager.WasKeyPressed(Keys.Left) ? -1 : 0;
-            _gameSettings.ChangeValue(_settings.SelectedOption, valueChange);
+            _options.Update(gameTime);
+            UpdateSettings();
+        }
 
-            MediaPlayer.Volume = _gameSettings.MusicVolume;
-            SoundEffect.MasterVolume = _gameSettings.AudioVolume;
+        private void UpdateSettings()
+        {
+            int valueChange = InputManager.WasKeyPressed(Keys.Right) ? 1 : InputManager.WasKeyPressed(Keys.Left) ? -1 : 0;
+            _settings[_options.SelectedOption].ChangeValue(valueChange);
+            MediaPlayer.Volume = MusicVolume.Value;
+            SoundEffect.MasterVolume = AudioVolume.Value;
         }
 
         public void ApplySettings(int musicVolume, int audioVolume, int brightness)
         {
-            _gameSettings.SetValue(0, musicVolume);
-            _gameSettings.SetValue(1, audioVolume);
-            _gameSettings.SetValue(2, brightness);
-            _gameSettings.Brightness = brightness / _gameSettings._gameSettingsValueMinMax[2]._valueMinMax[2];
+            MusicVolume.SetValue(musicVolume);
+            AudioVolume.SetValue(audioVolume);
+            Brightness.SetValue(brightness);
         }
 
         public int[] GetSettings()
         {
             int[] settings = new int[3];
 
-            for (int i = 0; i < 3; i++)
-                settings[i] = _gameSettings._gameSettingsValueMinMax[i]._valueMinMax[0];
+            settings[0] = MusicVolume.IntValue;
+            settings[1] = AudioVolume.IntValue;
+            settings[2] = Brightness.IntValue;
 
             return settings;
         }
 
-        public void Update(GameTime gameTime)
-        {
-            _settings.Update(gameTime);
-            UpdateSettings();
-        }
-
-        public float GetBrightness()
-        {
-            return _gameSettings.Brightness;
-        }
-
         public void Draw(SpriteBatch spriteBatch)
         {
-            _settings.DrawOptions(spriteBatch);
-            _gameSettings.DrawSettings(spriteBatch);
+            _options.DrawOptions(spriteBatch);
+            for (int i = 0; i < 3; i++)
+                _settings[i].DrawSetting(spriteBatch, _options.OptionsLayout[i] + _offset);
         }
     }
 }
