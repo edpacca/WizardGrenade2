@@ -8,7 +8,7 @@ namespace WizardGrenade2
 {
     class Crosshair
     {
-        private readonly string _crosshairFileName = "Crosshair";
+        private readonly string _crosshairFileName = @"UserInterface/Crosshair";
         private Sprite _crosshair;
         private const int AIM_SPEED = 2;
         private const int CROSSHAIR_RADIUS = 50;
@@ -21,7 +21,7 @@ namespace WizardGrenade2
         private int _currentDirection = 1;
 
         private Sprite _chargeBar;
-        private readonly string _chargebarFileName = "ChargeBar";
+        private readonly string _chargebarFileName = @"UserInterface/ChargeBar";
         private Vector2 _chargeBarPosition;
         private float _chargePercentage;
 
@@ -45,7 +45,7 @@ namespace WizardGrenade2
             _currentDirection = directionCoefficient;
 
             if (_currentDirection != _previousDirection)
-                CrosshairAngle = MathsExt.FlipAngle(CrosshairAngle);
+                CrosshairAngle = Utility.FlipAngle(CrosshairAngle);
 
             RestrictAngle(directionCoefficient);
             
