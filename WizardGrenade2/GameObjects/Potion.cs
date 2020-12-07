@@ -9,7 +9,7 @@ namespace WizardGrenade2
     class Potion
     {
         private GameObject _potion;
-        private readonly string _fileName = "Potions";
+        private readonly string _fileName = @"GameObjects/Potions";
         private const int MASS = 75;
         private const float BOUNCE_FACTOR = 0.2f;
         private GameObjectParameters _potionParameters;
@@ -31,8 +31,7 @@ namespace WizardGrenade2
         {
             _potion.LoadContent(contentManager);
             _potion.LoadAnimationContent(_potionTypes);
-            //int type = _random.Next(0, 2);
-            int type = 0;
+            int type = _random.Next(0, 2);
             _potion.UpdateAnimationFrame(type.ToString(), type);
             _potion.SetPosition(new Vector2(ScreenSettings.CentreScreenWidth, 0));
         }

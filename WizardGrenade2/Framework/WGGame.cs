@@ -53,7 +53,7 @@ namespace WizardGrenade2
             _mainMenu.LoadContent(Content);
             _sky.LoadContent(Content);
             _gameSetup.LoadContent(Content);
-            _betaFont = Content.Load<SpriteFont>("BetaFont");
+            _betaFont = Content.Load<SpriteFont>(@"Fonts/BetaFont");
             MediaPlayer.Volume = 0.5f;
             SoundEffect.MasterVolume = 0.5f;
             SoundManager.Instance.LoadContent(Content);
@@ -80,7 +80,10 @@ namespace WizardGrenade2
             }
 
             if (InputManager.WasKeyPressed(Keys.Delete) || StateMachine.Instance.GameState == StateMachine.GameStates.ExitGame)
+            {
+                Content.Unload();
                 Exit();
+            }
 
             InputManager.Update();
 
@@ -143,11 +146,12 @@ namespace WizardGrenade2
             //    ResetGame();
         }
 
-        private void ResetGame()
-        {
-            _gameSetup.ResetGame();
-            _isGameSetup = false;
-        }
+        //private void ResetGame()
+        //{
+        //    LoadGameContent();
+        //    _gameSetup.ResetGame();
+        //    _isGameSetup = false;
+        //}
 
         protected override void Draw(GameTime gameTime)
         {

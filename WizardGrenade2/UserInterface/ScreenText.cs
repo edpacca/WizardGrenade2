@@ -18,8 +18,8 @@ namespace WizardGrenade2
 
         public void LoadContent(ContentManager contentManager)
         {
-            _mainFont = contentManager.Load<SpriteFont>("ScreenFont");
-            _secondaryFont = contentManager.Load<SpriteFont>("InfoFont");
+            _mainFont = contentManager.Load<SpriteFont>(@"Fonts/ScreenFont");
+            _secondaryFont = contentManager.Load<SpriteFont>(@"Fonts/InfoFont");
             MainText = "Place yer wizards!";
             InfoText = "use the mouse and click to confirm position";
         }

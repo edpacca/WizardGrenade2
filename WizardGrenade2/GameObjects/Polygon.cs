@@ -29,7 +29,7 @@ namespace WizardGrenade2
 
         public void LoadPolyContent(ContentManager contentManager)
         {
-            _pixelTexture = contentManager.Load<Texture2D>("Pixel");
+            _pixelTexture = contentManager.Load<Texture2D>(@"GameObjects/Pixel");
         }
 
         public void UpdateCollisionPoints(Vector2 position, float rotation)

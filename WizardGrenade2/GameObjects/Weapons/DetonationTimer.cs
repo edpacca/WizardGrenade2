@@ -8,7 +8,7 @@ namespace WizardGrenade2
     {
         public float Time { get; private set; }
         private SpriteFont _timerFont;
-        private readonly string _fileName = "StatFont";
+        private readonly string _fileName = @"Fonts/StatFont";
 
         public DetonationTimer(ContentManager contentManager) => _timerFont = contentManager.Load<SpriteFont>(_fileName);
 

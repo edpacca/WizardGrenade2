@@ -33,7 +33,7 @@ namespace WizardGrenade2
 
             for (int i = 0; i < 4; i++)
             {
-                fileName = "WizardSpritesheet" + i;
+                fileName = @"GameObjects/WizardSpritesheet" + i;
                 _wizards.Add(new Sprite());
                 _wizards[i].LoadContent(contentManager, fileName, WizardSettings.FRAMES_H, WizardSettings.FRAMES_V);
                 _wizards[i].LoadAnimationContent(WizardSettings.animationStates);

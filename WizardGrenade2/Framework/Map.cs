@@ -12,7 +12,7 @@ namespace WizardGrenade2
         public static Map Instance { get => lazyMap.Value; }
 
         private CollisionManager _collisionManager;
-        private readonly string _defaultFileName = "Map2";
+        private readonly string _defaultFileName = @"Maps/Map2";
 
         private Texture2D _mapTexture;
         private Vector2 _mapPosition = Vector2.Zero;
@@ -79,7 +79,7 @@ namespace WizardGrenade2
 
         private bool IsPointInBlastArea(int blastRadius, Vector2 blastPosition, int x, int y)
         {
-            return MathsExt.isWithinCircleInSquare(blastRadius, x, y) &&
+            return Utility.isWithinCircleInSquare(blastRadius, x, y) &&
                 blastPosition.X + x - blastRadius < _mapPixelCollisionData.GetLength(0) - 1 &&
                 blastPosition.Y + y - blastRadius < _mapPixelCollisionData.GetLength(1) - 1 &&
                 blastPosition.X + x - blastRadius >= 0 &&

@@ -22,9 +22,9 @@ namespace WizardGrenade2
 
         public void LoadContent(ContentManager contentManager)
         {
-            _sky = new Sprite(contentManager, "MenuSky");
+            _sky = new Sprite(contentManager, @"Background/MenuSky");
             _sky.SpriteColour = Colours.LighterGrey;
-            _moon = new Sprite(contentManager, "Moon");
+            _moon = new Sprite(contentManager, @"Background/Moon");
             _moon.SpriteScale = 0.3f;
             _moon.SpriteColour = new Color(50, 50, 50);
         }

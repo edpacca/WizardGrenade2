@@ -5,7 +5,7 @@
         public const bool ROTATION = true;
 
         // Fireball settings
-        private const string FIREBALL_FILENAME = "Fireball";
+        private const string FIREBALL_FILENAME = @"GameObjects/Fireball";
         private const int FIREBALL_MASS = 35;
         private const int FIREBALL_COLLISION_POINTS = 12;
         private const float FIREBALL_BOUNCE_FACTOR = 0.5f;
@@ -20,7 +20,7 @@
             (FIREBALL_FILENAME, FIREBALL_MASS, ROTATION, FIREBALL_COLLISION_POINTS, FIREBALL_BOUNCE_FACTOR);
 
         // Arrow settings
-        private const string ARROW_FILENAME = "MelfsAcidArrow";
+        private const string ARROW_FILENAME = @"GameObjects/MelfsAcidArrow";
         private const int ARROW_MASS = 25;
         private const int ARROW_COLLISION_POINTS = 0;
         private const float ARROW_BOUNCE_FACTOR = 0f;
@@ -34,7 +34,7 @@
             (ARROW_FILENAME, ARROW_MASS, ROTATION, ARROW_COLLISION_POINTS, ARROW_BOUNCE_FACTOR);
 
         // Icebomb Settings
-        private const string ICEBOMB_FILENAME = "IceBomb";
+        private const string ICEBOMB_FILENAME = @"GameObjects/IceBomb";
         private const int ICEBOMB_MASS = 70;
         private const int ICEBOMB_COLLISION_POINTS = 12;
         private const float ICEBOMB_BOUNCE_FACTOR = 0.1f;

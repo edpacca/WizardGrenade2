@@ -36,11 +36,11 @@ namespace WizardGrenade2
         public void LoadContent(ContentManager contentManager)
         {
 
-            _mainCloud = new Sprite(contentManager, "MainCloud");
-            _moon = new Sprite(contentManager, "Moon");
+            _mainCloud = new Sprite(contentManager, @"Background/MainCloud");
+            _moon = new Sprite(contentManager, @"Background/Moon");
             _moon.SpriteScale = 0.2f;
             _moon.SpriteColour = Colours.LighterGrey;
-            _sky = new Sprite(contentManager, "Sky");
+            _sky = new Sprite(contentManager, @"Background/Sky");
             float mainCloudX = ScreenSettings.CentreScreenWidth - (_mainCloud.GetSpriteRectangle().Width / 2);
             float mainCloudY = ScreenSettings.TARGET_HEIGHT - 100;
             _mainCloudPosition = new Vector2(mainCloudX, mainCloudY);

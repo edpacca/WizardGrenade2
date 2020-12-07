@@ -45,7 +45,7 @@ namespace WizardGrenade2
 
         public void LoadContent(ContentManager contentManager)
         {
-            _optionsFont = contentManager.Load<SpriteFont>("ScreenFont");
+            _optionsFont = contentManager.Load<SpriteFont>(@"Fonts/ScreenFont");
             _textPosition -= _optionsFont.MeasureString(_pausedText) / 2;
             _textPosition.Y -= 170;
 
@@ -59,9 +59,9 @@ namespace WizardGrenade2
             _pauseMenuOptions.SetOptionLayout(new Vector2(_textPosition.X, _textPosition.Y + 100), ScreenSettings.TARGET_HEIGHT - 210);
             _pauseMenuOptions.SetOptionColours(Colours.Ink, Colours.FadedInk);
             _pauseMenuOptions.LoadContent(contentManager);
-            _settings = new Settings(new Vector2(_textPosition.X - 200, _textPosition.Y + 100), ScreenSettings.TARGET_HEIGHT - 210);
+            _settings = new Settings(new Vector2(_textPosition.X - 200, _textPosition.Y + 100), ScreenSettings.TARGET_HEIGHT - 210, new Vector2(300, 0), 300f);
             _settings.LoadContent(contentManager);
-            _bigScroll = new Sprite(contentManager, "bigScroll");
+            _bigScroll = new Sprite(contentManager, @"Menu/bigScroll");
             _settings.SetOptionColours(Colours.Ink, Colours.FadedInk);
         }
 
@@ -109,10 +109,7 @@ namespace WizardGrenade2
             _settings.Update(gameTime);
         }
 
-        public float GetBrightness()
-        {
-            return _settings.GetBrightness();
-        }
+        public float GetBrightness() => _settings.Brightness.Value;
 
         private void OptionFunctions(int selectedIndex)
         {

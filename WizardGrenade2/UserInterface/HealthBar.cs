@@ -26,7 +26,7 @@ namespace WizardGrenade2
 
         public HealthBar(int teamNumber, int startTeamHealth, string teamName)
         {
-            _fileName = "HealthBar" + teamNumber;
+            _fileName = @"UserInterface/HealthBar" + teamNumber;
             _teamName = teamName;
             _startTeamHealth = startTeamHealth;
             _displayedTeamHealth = _startTeamHealth;
@@ -36,9 +36,10 @@ namespace WizardGrenade2
         public void LoadContent(ContentManager contentManager)
         {
             LoadContent(contentManager, _fileName, _framesH, _framesV);
-            _healthBarPosition -= GetSpriteOrigin();
             LoadAnimationContent(_animationState);
-            _spriteFont = contentManager.Load<SpriteFont>("WizardHealthFont");
+            _spriteFont = contentManager.Load<SpriteFont>(@"Fonts/WizardHealthFont");
+            SpriteScale = 1.2f;
+            _healthBarPosition -= GetSpriteOrigin();
         }
 
         public void Update(GameTime gameTime, int actualTeamHealth)

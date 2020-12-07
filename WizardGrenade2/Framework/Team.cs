@@ -28,7 +28,7 @@ namespace WizardGrenade2
 
         public void LoadContent(ContentManager contentManager)
         {
-            _spriteFont = contentManager.Load<SpriteFont>("WizardHealthFont");
+            _spriteFont = contentManager.Load<SpriteFont>(@"Fonts/WizardHealthFont");
 
             foreach (var wizard in wizards)
                 wizard.LoadContent(contentManager);

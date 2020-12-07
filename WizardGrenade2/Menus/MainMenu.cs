@@ -23,13 +23,15 @@ namespace WizardGrenade2
         private const float ARROW_SCALE = 6f;
         private SpriteFont _infoFont;
 
-
         private Options _menuOptions;
         public bool SettingUpGame { get; set; }
 
         public Settings _settings { get; private set; }
         private Instructions _instructions;
         private Credits _credits;
+
+        private Vector2 _settingsOffset = new Vector2(320, 0);
+        private float _settingsSpriteMeterWidth = ScreenSettings.CentreScreenWidth - 200;
 
         public readonly List<string> _menuOptionNames = new List<string>()
         {
@@ -53,7 +55,7 @@ namespace WizardGrenade2
             _titlePosition = new Vector2(ScreenSettings.CentreScreenWidth, ScreenSettings.TARGET_HEIGHT / 6);
             _wizardPosition = new Vector2(100, ScreenSettings.CentreScreenHeight);
             _menuOptions.SetOptionLayout(_optionsFirstPosition, _optionsLastYPosition);
-            _settings = new Settings(new Vector2(ScreenSettings.TARGET_WIDTH / 4f, _optionsFirstPosition.Y) , _optionsLastYPosition);
+            _settings = new Settings(new Vector2(ScreenSettings.TARGET_WIDTH / 4f, _optionsFirstPosition.Y), _optionsLastYPosition, _settingsOffset, _settingsSpriteMeterWidth);
             _arrowLPosition = new Vector2(20, 20);
             _arrowRPosition = new Vector2(ScreenSettings.TARGET_WIDTH - 20, 20);
         }
@@ -61,11 +63,11 @@ namespace WizardGrenade2
         public void LoadContent(ContentManager contentManager)
         {
             _wizard = new MenuWizard(contentManager);
-            _title = new Sprite(contentManager, "Title");
+            _title = new Sprite(contentManager, @"Menu/Title");
             _menuOptions.LoadContent(contentManager);
             _settings.LoadContent(contentManager);
-            _infoFont = contentManager.Load<SpriteFont>("InfoFont2");
-            _arrow = new Sprite(contentManager, "MelfsAcidArrow");
+            _infoFont = contentManager.Load<SpriteFont>(@"Fonts/InfoFont2");
+            _arrow = new Sprite(contentManager, @"GameObjects/MelfsAcidArrow");
             _arrow.SpriteScale = ARROW_SCALE;
             _arrowRPosition.X -= _arrow.GetSpriteRectangle().Width;
             _instructions.LoadContent(contentManager);
@@ -123,10 +125,7 @@ namespace WizardGrenade2
             _credits.Update();
         }
 
-        public float GetBrightness()
-        {
-            return _settings.GetBrightness();
-        }
+        public float GetBrightness() => _settings.Brightness.Value;
 
         public int[] GetSettings()
         {
@@ -169,7 +168,6 @@ namespace WizardGrenade2
         {
             _instructions.Draw(spriteBatch);
         }
-
 
         private void DrawCredits(SpriteBatch spriteBatch)
         {

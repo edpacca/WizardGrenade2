@@ -22,11 +22,13 @@ namespace WizardGrenade2
         private float _sandTopYOffset;
         private int _spriteHeight;
         private float _percentage;
-        private const float TOP_PERCENT = 0.6f;
+        private const float TOP_PERCENT = 0.56f;
         private const float BOTTOM_PERCENT = 0.53f;
         private float _bottomPercentage;
         private float _topPercentage;
         private bool _timerReversing;
+
+        private float _lastSeconds = 3f;
 
         public RoundTimer(float startTime) : base(startTime)
         {
@@ -35,10 +37,10 @@ namespace WizardGrenade2
 
         public void LoadContent(ContentManager contentManager)
         {
-            _timerFont = contentManager.Load<SpriteFont>("TimerFont");
-            _hourglass = new Sprite(contentManager, "Timer");
-            _sandBottom = new Sprite(contentManager, "SandBottom");
-            _sandTop = new Sprite(contentManager, "SandTop");
+            _timerFont = contentManager.Load<SpriteFont>(@"Fonts/TimerFont");
+            _hourglass = new Sprite(contentManager, @"UserInterface/Timer");
+            _sandBottom = new Sprite(contentManager, @"UserInterface/SandBottom");
+            _sandTop = new Sprite(contentManager, @"UserInterface/SandTop");
             _timeTextSize = _timerFont.MeasureString(Time.ToString("0"));
             _timerPosition = new Vector2(TIMER_INSET_POSITION + (_hourglass.GetSpriteRectangle().Width / 2), ScreenSettings.TARGET_HEIGHT - (_timeTextSize.Y + TIMER_INSET_POSITION + 48));
             _hourglassPosition = new Vector2(TIMER_INSET_POSITION, ScreenSettings.TARGET_HEIGHT - (_hourglass.GetSpriteRectangle().Height + TIMER_INSET_POSITION));
@@ -61,11 +63,13 @@ namespace WizardGrenade2
             {
                 StateMachine.Instance.ForceTurnEnd();
                 ResetTimer(_roundTime);
+                _lastSeconds = 3;
             }
 
             if (StateMachine.Instance.NewTurn())
             {
                 ResetTimer(_roundTime);
+                _lastSeconds = 3;
             }
         }
 
@@ -107,8 +111,13 @@ namespace WizardGrenade2
             _sandTop.DrawSprite(spriteBatch, new Vector2(_hourglassPosition.X, _hourglassPosition.Y + _sandTopYOffset));
             _hourglass.DrawSprite(spriteBatch, _hourglassPosition);
 
-            _timerColour = Time > 3.5f ? Colours.Gold : Color.Red;
+            if (Time <= _lastSeconds + 0.4f && _lastSeconds != 0f)
+            {
+                _lastSeconds -= 1.0f;
+                SoundManager.Instance.PlaySoundInstance("clink");
+            }
 
+            _timerColour = Time > 3.5f ? Colours.Gold : Color.Red;
             Vector2 fontSize = _timerFont.MeasureString(Time.ToString("0")) / 2;
 
             if (StateMachine.Instance.GameState == StateMachine.GameStates.PlayerTurn && Time > 0.5f)

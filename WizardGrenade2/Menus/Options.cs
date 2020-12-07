@@ -3,8 +3,6 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
-using Microsoft.Xna.Framework.Media;
-using Microsoft.Xna.Framework.Audio;
 
 namespace WizardGrenade2
 {
@@ -39,7 +37,7 @@ namespace WizardGrenade2
 
         public void LoadContent(ContentManager contentManager)
         {
-            _optionFont = contentManager.Load<SpriteFont>("OptionFont");
+            _optionFont = contentManager.Load<SpriteFont>(@"Fonts/OptionFont");
 
             if (_isLayoutVertical)
                 ApplyVerticalOptionLayout();

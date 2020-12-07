@@ -29,8 +29,8 @@ namespace WizardGrenade2
 
         public void LoadContent(ContentManager contentManager)
         {
-            _scrollTop = new Sprite(contentManager, "Scroll0");
-            _scrollBottom = new Sprite(contentManager, "Scroll1");
+            _scrollTop = new Sprite(contentManager, @"Menu/Scroll0");
+            _scrollBottom = new Sprite(contentManager, @"Menu/Scroll1");
 
             _topPosition = _position - _scrollTop.GetSpriteOrigin();
             _bottomPosition = _topPosition;

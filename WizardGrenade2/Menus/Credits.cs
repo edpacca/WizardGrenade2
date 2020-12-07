@@ -31,7 +31,7 @@ namespace WizardGrenade2
 
         public void LoadContent(ContentManager contentManager)
         {
-            _textFont = contentManager.Load<SpriteFont>("ScreenFont");
+            _textFont = contentManager.Load<SpriteFont>(@"Fonts/ScreenFont");
         }
 
         public void Update()

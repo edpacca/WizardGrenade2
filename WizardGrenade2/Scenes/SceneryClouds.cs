@@ -58,7 +58,7 @@ namespace WizardGrenade2
                 int randomX = _random.Next((int)_minPosition.X, (int)_maxPosition.X);
                 int randomY = _random.Next((int)_minPosition.Y, (int)_maxPosition.Y);
 
-                _clouds.Add(new Sprite(contentManager, "Cloud"));
+                _clouds.Add(new Sprite(contentManager, @"Background/Cloud"));
                 _cloudPositions.Add(new Vector2(randomX, randomY));
                 float randomScale = _random.Next(_minScalePercentage, _maxScalePercentage);
                 _cloudScales.Add(randomScale / 100);

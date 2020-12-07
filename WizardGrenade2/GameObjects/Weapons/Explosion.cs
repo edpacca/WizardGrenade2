@@ -6,7 +6,7 @@ namespace WizardGrenade2
 {
     class Explosion : Sprite
     {
-        private readonly string _fileName = "Explosion";
+        private readonly string _fileName = @"GameObjects/Explosion";
         private bool _isVisible;
         private float _explosionTime = 0.1f;
         private Timer _explosionTimer;

@@ -46,12 +46,12 @@ namespace WizardGrenade2
         public void LoadContent(ContentManager contentManager)
         {
             _instructions.LoadContent(contentManager);
-            _infoFont = contentManager.Load<SpriteFont>("InfoFont");
-            _images.Add(new Sprite(contentManager, "Fireball"));
-            _images.Add(new Sprite(contentManager, "MelfsAcidArrow"));
-            _images.Add(new Sprite(contentManager, "IceBomb"));
+            _infoFont = contentManager.Load<SpriteFont>(@"Fonts/InfoFont");
+            _images.Add(new Sprite(contentManager, @"GameObjects/Fireball"));
+            _images.Add(new Sprite(contentManager, @"GameObjects/MelfsAcidArrow"));
+            _images.Add(new Sprite(contentManager, @"GameObjects/IceBomb"));
             _images.Add(new Sprite());
-            _images[3].LoadContent(contentManager, "Potions", 3, 1);
+            _images[3].LoadContent(contentManager, @"GameObjects/Potions", 3, 1);
 
             for (int i = 0; i < _images.Count; i++)
             {

@@ -10,12 +10,10 @@ namespace WizardGrenade2
         private readonly string _mapFileName;
         private Map _map = Map.Instance;
         private WeaponManager _weaponManager = WeaponManager.Instance;
-
         private Teams _wizardTeams;
         private List<Wizard> _allWizards;
         public int[] TeamHealths => _wizardTeams.TeamHealthValues;
         public List<string> TeamNames => _wizardTeams.TeamNames;
-        private Potion _potion = new Potion();
         
         public BattleManager(string mapFileName)
         {
@@ -27,7 +25,6 @@ namespace WizardGrenade2
             _map.LoadContent(contentManager, _mapFileName, true);
             _wizardTeams.LoadContent(contentManager);
             _weaponManager.LoadContent(contentManager, _allWizards);
-            _potion.LoadContent(contentManager);
         }
 
         public void Initialise(GameOptions gameOptions)
@@ -38,7 +35,6 @@ namespace WizardGrenade2
 
         public void Update(GameTime gameTime)
         {
-
             if (StateMachine.Instance.GameState == StateMachine.GameStates.PlaceWizards)
             {
                 _wizardTeams.PlaceTeams();
@@ -47,7 +43,6 @@ namespace WizardGrenade2
             {
                 _wizardTeams.Update(gameTime);
                 _weaponManager.Update(gameTime, _wizardTeams.ActiveWizardPosition, _wizardTeams.ActiveWizardDirection);
-                _potion.Update(gameTime);
             }
         }
 
@@ -56,7 +51,6 @@ namespace WizardGrenade2
             _map.Draw(spriteBatch);
             _wizardTeams.Draw(spriteBatch);
             _weaponManager.Draw(spriteBatch);
-            _potion.Draw(spriteBatch);
         }
     }
 }

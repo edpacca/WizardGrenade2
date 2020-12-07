@@ -7,7 +7,7 @@ namespace WizardGrenade2
 {
     public class UserInterface
     {
-        private const float ROUND_TIME = 45f;
+        private const float ROUND_TIME = 15f;
         private Sprite _cursor;
         private RoundTimer _timer;
         private List<HealthBar> _healthBars;
@@ -32,7 +32,7 @@ namespace WizardGrenade2
         public void LoadContent(ContentManager contentManager)
         {
 
-            _cursor = new Sprite(contentManager, "cursor");
+            _cursor = new Sprite(contentManager, @"UserInterface/cursor");
             _timer = new RoundTimer(ROUND_TIME);
             _detonationTimer = new DetonationTimer(contentManager);
             _timer.LoadContent(contentManager);

@@ -4,7 +4,7 @@ namespace WizardGrenade2
 {
     public class WizardSettings
     {
-        private const string BASE_FILENAME = "WizardSpritesheet";
+        private const string BASE_FILENAME = @"GameObjects/WizardSpritesheet";
 
         public const int FRAMES_V = 1;
         public const int FRAMES_H = 15;
