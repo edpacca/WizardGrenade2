@@ -32,6 +32,7 @@ namespace WizardGrenade2
             _sounds.Add("magicChord", contentManager.Load<SoundEffect>(@"Audio/WQ_magic_hit_chord"));
             _sounds.Add("frost", contentManager.Load<SoundEffect>(@"Audio/WQ_frostray"));
             _sounds.Add("fireHit", contentManager.Load<SoundEffect>(@"Audio/FireHit"));
+            _sounds.Add("fireBounce", contentManager.Load<SoundEffect>(@"Audio/fireBounce"));
             _sounds.Add("fireCharge", contentManager.Load<SoundEffect>(@"Audio/WQ_firecharge"));
             _sounds.Add("fireCast", contentManager.Load<SoundEffect>(@"Audio/WQ_fireball"));
             _sounds.Add("hiss", contentManager.Load<SoundEffect>(@"Audio/WQ_nocast"));

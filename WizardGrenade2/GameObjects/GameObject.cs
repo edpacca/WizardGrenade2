@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace WizardGrenade2
 {
@@ -15,6 +16,9 @@ namespace WizardGrenade2
         private CollisionManager Collider = CollisionManager.Instance;
         public bool Collided { get; set; }
         public float DrawRotation { get; set; }
+
+        private bool _hasImpactAudio;
+        private string _impactAudio;
 
         public GameObject(GameObjectParameters inputParameters)
         {
@@ -38,6 +42,12 @@ namespace WizardGrenade2
 
             _collisionPoints = new Polygon(GetSpriteRectangle(), _parameters.numberOfCollisionPoints, _parameters.CanRotate);
             _collisionPoints.LoadPolyContent(contentManager);
+        }
+
+        public void LoadAudio(string fileName)
+        {
+            _impactAudio = fileName;
+            _hasImpactAudio = true;
         }
 
         public void Update(GameTime gameTime)
@@ -79,6 +89,9 @@ namespace WizardGrenade2
 
                 // Update collision points from potential position to real position
                 _collisionPoints.UpdateCollisionPoints(_realSpace.position, _realSpace.rotation);
+
+                if (_hasImpactAudio && Mechanics.VectorMagnitude(_realSpace.velocity) > 10)
+                    SoundManager.Instance.PlaySound(_impactAudio);
             }
             else
             {

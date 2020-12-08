@@ -18,6 +18,7 @@ namespace WizardGrenade2
             ChargingSoundFile = "fireCharge";
             MovingSoundFile = "fireCast";
             _explosionRadius = WeaponSettings.FIREBALL_EXPLOSION_RADIUS;
+            _weapon.LoadAudio("fireBounce");
         }
 
         public Fireball(int blastRadius)
@@ -26,6 +27,7 @@ namespace WizardGrenade2
             _explosion = new Explosion(blastRadius);
             LoadWeaponObject(WeaponSettings.FIREBALL_GAMEOBJECT, WeaponSettings.FIREBALL_CHARGE_POWER, WeaponSettings.FIREBALL_MAX_CHARGE_TIME);
             _explosionRadius = blastRadius;
+            _weapon.LoadAudio("stone1");
         }
 
         public override void LoadContent(ContentManager contentManager)
