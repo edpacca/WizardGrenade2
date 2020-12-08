@@ -130,7 +130,6 @@
     <Compile Include="UserInterface\ScreenText.cs" />
     <Compile Include="UserInterface\UserInterface.cs" />
     <Compile Include="Utilities\Colours.cs" />
-    <Compile Include="Utilities\MathsExt.cs" />
     <Compile Include="Utilities\Mechanics.cs" />
     <Compile Include="Utilities\Utility.cs" />
     <Compile Include="Program.cs" />
