@@ -53,6 +53,7 @@ namespace WizardGrenade2
 
             _numberOfWeapons = Weapons.Count;
             _crosshair.LoadContent(contentManager);
+            _fireball.DetonationTimer.ResetTimer(4);
         }
 
         public void Update(GameTime gameTime, Vector2 activeWizardPosition, int activeDirection)
