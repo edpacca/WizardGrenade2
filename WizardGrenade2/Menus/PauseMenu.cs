@@ -25,7 +25,7 @@ namespace WizardGrenade2
         { 
           "Resume",
           "Settings",
-          //"Restart",
+          "Restart",
           "Quit",
           "Fireball?"
         };
@@ -46,7 +46,7 @@ namespace WizardGrenade2
         public void LoadContent(ContentManager contentManager)
         {
             _optionsFont = contentManager.Load<SpriteFont>(@"Fonts/ScreenFont");
-            _textPosition -= _optionsFont.MeasureString(_pausedText) / 2;
+            _textPosition = ScreenSettings.ScreenCentre - _optionsFont.MeasureString(_pausedText) / 2;
             _textPosition.Y -= 170;
 
             _backgroundRectangle = new Rectangle(0, 0, (int)ScreenSettings.TARGET_WIDTH, (int)ScreenSettings.TARGET_HEIGHT);
@@ -109,6 +109,11 @@ namespace WizardGrenade2
             _settings.Update(gameTime);
         }
 
+        public int[] GetSettings()
+        {
+            return _settings.GetSettings();
+        }
+
         public float GetBrightness() => _settings.Brightness.Value;
 
         private void OptionFunctions(int selectedIndex)
@@ -122,11 +127,11 @@ namespace WizardGrenade2
             if (selectedIndex == _pauseMenuOptionNames.IndexOf("Quit"))
                 StateMachine.Instance.ExitGame();
 
-            //if (selectedIndex == _pauseMenuOptionNames.IndexOf("Restart"))
-            //{
-            //    StateMachine.Instance.ResetGame();
-            //    IsPaused = false;
-            //}
+            if (selectedIndex == _pauseMenuOptionNames.IndexOf("Restart"))
+            {
+                StateMachine.Instance.ResetGame();
+                IsPaused = false;
+            }
 
             if (selectedIndex == _pauseMenuOptionNames.IndexOf("Fireball?"))
             {

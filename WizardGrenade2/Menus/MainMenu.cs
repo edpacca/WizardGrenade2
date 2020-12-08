@@ -132,6 +132,12 @@ namespace WizardGrenade2
             return _settings.GetSettings();
         }
 
+        public void ApplySettings(int[] settings, GameTime gameTime)
+        {
+            _settings.ApplySettings(settings[0], settings[1], settings[2]);
+            _settings.Update(gameTime);
+        }
+
         public void Draw(SpriteBatch spriteBatch)
         {
             _title.DrawSpriteAtScale(spriteBatch, _titlePosition, 0.4f);
