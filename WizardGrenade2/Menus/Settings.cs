@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Audio;
 using WizardGrenade2.Generics;
+using System;
 
 namespace WizardGrenade2
 {
@@ -21,6 +22,7 @@ namespace WizardGrenade2
         private Options _options;
         private Vector2 _offset;
         private float _spriteMeterWidth;
+        private Random _randomGenerator;
 
         private readonly List<string> _settingNames = new List<string>()
         {
@@ -45,6 +47,7 @@ namespace WizardGrenade2
 
             _offset = textSpriteOffset;
             _spriteMeterWidth = spriteMeterWidth;
+            _randomGenerator = new Random();
     }
 
         public void LoadContent(ContentManager contentManager)
@@ -77,6 +80,13 @@ namespace WizardGrenade2
         {
             int valueChange = InputManager.WasKeyPressed(Keys.Right) ? 1 : InputManager.WasKeyPressed(Keys.Left) ? -1 : 0;
             _settings[_options.SelectedOption].ChangeValue(valueChange);
+
+            if (valueChange != 0)
+            {
+                string sound = "magic" + _randomGenerator.Next(1, 5);
+                SoundManager.Instance.PlaySound(sound);
+            }
+
             MediaPlayer.Volume = MusicVolume.Value;
             SoundEffect.MasterVolume = AudioVolume.Value;
         }
