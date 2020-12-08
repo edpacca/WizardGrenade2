@@ -106,6 +106,7 @@ namespace WizardGrenade2
 
             if (InputManager.WasKeyReleased(Keys.Enter) && _jumpCounter < 5)
             {
+                SoundManager.Instance.PlaySound("wizardJump");
                 State = States.Jumping;
                 _jumpCounter++;
                 _wizard.ModifyVelocityY(- WizardSettings.JUMP_HEIGHT);
@@ -178,6 +179,7 @@ namespace WizardGrenade2
             if (entity.JustDied)
             {
                 SoundManager.Instance.PlaySound("wizardSad");
+                SoundManager.Instance.PlaySound("stone1");
                 _wizard.SpriteColour = Colours.WizardIsDeadColor;
                 _wizard.DrawRotation = (Mechanics.PI / 2);
             }
