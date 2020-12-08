@@ -7,7 +7,7 @@ namespace WizardGrenade2
 {
     public class UserInterface
     {
-        private const float ROUND_TIME = 15f;
+        private const float ROUND_TIME = 45f;
         private Sprite _cursor;
         private RoundTimer _timer;
         private List<HealthBar> _healthBars;
