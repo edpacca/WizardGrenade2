@@ -166,6 +166,7 @@ namespace WizardGrenade2
 
         public void ResetGame()
         {
+            GameOptions = new GameOptions();
             _isMapSet = false;
             _AreBattleOptionsSet = false;
             StateMachine.Instance.RestartGame();

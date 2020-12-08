@@ -49,7 +49,7 @@ namespace WizardGrenade2
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _pauseMenu = new PauseMenu(GraphicsDevice);
-            _brightnessManager = new BrightnessManager(GraphicsDevice);
+            _brightnessManager = new BrightnessManager(GraphicsDevice, Content);
             _mainMenu.LoadContent(Content);
             _sky.LoadContent(Content);
             _gameSetup.LoadContent(Content);
@@ -134,24 +134,26 @@ namespace WizardGrenade2
             StateMachine.Instance.UpdateStateMachine(gameTime);
             _gameScreen.Update(gameTime);
 
-            //if (StateMachine.Instance.GameState == StateMachine.GameStates.GameOver)
-            //{
-            //    if (InputManager.WasKeyPressed(Keys.Enter))
-            //    {
-            //        ResetGame();
-            //    }
-            //}
+            if (StateMachine.Instance.GameState == StateMachine.GameStates.GameOver)
+            {
+                if (InputManager.WasKeyPressed(Keys.Enter))
+                {
+                    ResetGame(gameTime);
+                }
+            }
 
-            //if (StateMachine.Instance.GameState == StateMachine.GameStates.Reset)
-            //    ResetGame();
+            if (StateMachine.Instance.GameState == StateMachine.GameStates.Reset)
+                ResetGame(gameTime);
         }
 
-        //private void ResetGame()
-        //{
-        //    LoadGameContent();
-        //    _gameSetup.ResetGame();
-        //    _isGameSetup = false;
-        //}
+        private void ResetGame(GameTime gameTime)
+        {
+            _mainMenu.ApplySettings(_pauseMenu.GetSettings(), gameTime);
+            _gameSetup.ResetGame();
+            _isGameSetup = false;
+            _isGameContentLoaded = false;
+            SoundManager.Instance.PlaySong(0);
+        }
 
         protected override void Draw(GameTime gameTime)
         {
@@ -162,7 +164,7 @@ namespace WizardGrenade2
             else
                 DrawGameSetup();
 
-            _spriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.PointClamp, null, null, null, _cameraManager.OriginMatrix);
+            _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, null, null, null, _cameraManager.OriginMatrix);
             _brightnessManager.Draw(_spriteBatch);
             _spriteBatch.End();
 

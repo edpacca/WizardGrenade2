@@ -103,7 +103,7 @@ namespace WizardGrenade2
             {
                 _screenText.IsDisplaying = true;
                 _screenText.MainText = String.IsNullOrEmpty(winningTeam) ? "It's a Draw!" : winningTeam + " wins!";
-                _screenText.InfoText = "Press 'Delete' to quit";
+                _screenText.InfoText = "Press 'Enter' to restart, or 'Delete' to quit";
 
                 string gameEndSound = String.IsNullOrEmpty(winningTeam) ? "Draw" : "Win";
                 SoundManager.Instance.PlaySoundInstance(gameEndSound);
@@ -120,10 +120,10 @@ namespace WizardGrenade2
             GameState = GameStates.PlaceWizards;
         }
 
-        //public void ResetGame()
-        //{
-        //    GameState = GameStates.Reset;
-        //}
+        public void ResetGame()
+        {
+            GameState = GameStates.Reset;
+        }
 
         public bool IsInGameState(GameStates gameState)
         {
