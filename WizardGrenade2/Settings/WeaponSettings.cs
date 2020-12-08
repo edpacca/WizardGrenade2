@@ -26,9 +26,9 @@
         private const float ARROW_BOUNCE_FACTOR = 0f;
 
         public const int ARROW_POWER = 1500;
-        public const float ARROW_MAX_CHARGE_TIME = 0.6f;
-        public const float ARROW_KNOCKBACK_FACTOR = 1.2f;
-        public const float ARROW_DAMAGE_FACTOR = 0.028f;
+        public const float ARROW_MAX_CHARGE_TIME = 0.7f;
+        public const float ARROW_KNOCKBACK_FACTOR = 1.4f;
+        public const float ARROW_DAMAGE_FACTOR = 0.0245f;
 
         public static GameObjectParameters ARROW_GAMEOBJECT = new GameObjectParameters
             (ARROW_FILENAME, ARROW_MASS, ROTATION, ARROW_COLLISION_POINTS, ARROW_BOUNCE_FACTOR);
