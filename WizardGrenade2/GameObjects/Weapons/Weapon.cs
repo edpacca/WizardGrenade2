@@ -7,7 +7,7 @@ namespace WizardGrenade2
 {
     public class Weapon
     {
-        private GameObject _weapon;
+        protected GameObject _weapon;
         public Timer DetonationTimer { get; set; }
         public int WeaponPower { get; private set; }
         public float MaxChargeTime { get; private set; }
