@@ -27,7 +27,7 @@ namespace WizardGrenade2
         };
         private List<List<string>> _instructionScripts = new List<List<string>>();
         private Vector2 _firstLine = new Vector2(ScreenSettings.CentreScreenWidth, 300);
-        private Vector2 _imagePosition = new Vector2(ScreenSettings.CentreScreenWidth, ScreenSettings.TARGET_HEIGHT * 0.75f);
+        private Vector2 _imagePosition = new Vector2(ScreenSettings.CentreScreenWidth, ScreenSettings.TARGET_HEIGHT * 0.72f);
         private float _interval = 30f;
 
         public Instructions()
