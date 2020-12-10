@@ -21,6 +21,8 @@ namespace WizardGrenade2
             ["Jumping"] = new int[] { 11 },
         };
 
+        public const int HEALTH_INTERVAL = 25;
+
         private const int MASS = 100;
         private const int COLLISION_POINTS = 15;
         private const bool CAN_ROTATE = false;
