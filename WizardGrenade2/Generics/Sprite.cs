@@ -146,7 +146,6 @@ namespace WizardGrenade2
         {
             _spriteRectangle.Y = (int)(_spriteTexture.Height * maskPercentage);
             _spriteRectangle.Height = (int)(_spriteTexture.Height * (1 - maskPercentage));
-            
         }
     }
 }

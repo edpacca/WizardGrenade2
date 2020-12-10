@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace WizardGrenade2.Generics
+namespace WizardGrenade2
 {
     public class Setting
     {
@@ -20,17 +20,6 @@ namespace WizardGrenade2.Generics
             Value = (float)IntValue / (float)MaxValue;
         }
 
-        public void SetValue(int value)
-        {
-            IntValue = value >= MaxValue ? MaxValue : value <= MinValue ? MinValue : value;
-            Value = (float)IntValue / (float)MaxValue;
-        }
-
-        public void ChangeValue(int diff)
-        {
-            SetValue(IntValue + diff);
-        }
-
         public void LoadContent(ContentManager contentManager, string spriteFile)
         {
             _spriteMeter = new SpriteMeter(contentManager, spriteFile);
@@ -39,8 +28,17 @@ namespace WizardGrenade2.Generics
         public void SetSpriteMeter(float maxWidth, float spriteScale)
         {
             _spriteMeter.Interval = maxWidth / (MaxValue - 1);
-            _spriteMeter.SetSpriteScale(spriteScale);
+            _spriteMeter.Sprite.SpriteScale = spriteScale;
         }
+
+        public void SetValue(int value)
+        {
+            IntValue = value >= MaxValue ? MaxValue : value <= MinValue ? MinValue : value;
+            Value = (float)IntValue / (float)MaxValue;
+        }
+
+        public void ChangeValue(int diff) => SetValue(IntValue + diff);
+        public void SetSpriteMeterColour(Color colour) => _spriteMeter.Sprite.SpriteColour = colour;
 
         public void DrawSetting(SpriteBatch spriteBatch, Vector2 startPosition)
         {

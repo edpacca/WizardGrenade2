@@ -6,23 +6,18 @@ namespace WizardGrenade2
 {
     public class SpriteMeter
     {
-        private Sprite _sprite;
+        public Sprite Sprite { get; set; }
         public float Interval { get; set; } = 10f;
 
         public SpriteMeter(ContentManager contentManager, string fileName)
         {
-            _sprite = new Sprite(contentManager, fileName);
-        }
-
-        public void SetSpriteScale(float scale)
-        {
-            _sprite.SpriteScale = scale;
+            Sprite = new Sprite(contentManager, fileName);
         }
 
         public void Draw(SpriteBatch spriteBatch, Vector2 position, int value)
         {
             for (int i = 0; i < value; i++)
-                _sprite.DrawSprite(spriteBatch, new Vector2(position.X + (i * Interval), position.Y));
+                Sprite.DrawSprite(spriteBatch, new Vector2(position.X + (i * Interval), position.Y));
         }
     }
 }
