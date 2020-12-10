@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Audio;
-using WizardGrenade2.Generics;
 using System;
 
 namespace WizardGrenade2

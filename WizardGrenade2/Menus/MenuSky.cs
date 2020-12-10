@@ -8,46 +8,61 @@ namespace WizardGrenade2
     public class MenuSky
     {
         private Sprite _sky;
-        private Vector2 _skyPosition = Vector2.Zero;
-        private Vector2 _vector = Mechanics.NormaliseVector(new Vector2(ScreenSettings.RESOLUTION_WIDTH, ScreenSettings.RESOLUTION_HEIGHT));
-        private Vector2 _moonOrbitCentre = new Vector2(ScreenSettings.TARGET_WIDTH, ScreenSettings.TARGET_HEIGHT + 500);
-        private float MOON_ORBIT_RADIUS = ScreenSettings.TARGET_WIDTH - 30;
-        private Vector2 _moonPosition = Vector2.Zero;
-        private const float MOON_SPEED = 0.1f;
-        private float _moonRotation = 0f;
-        private Vector2 _minPosition = new Vector2(-710, 415);
-        private bool _negativeDirection = true;
-        private int _direction = -1;
         private Sprite _moon;
+
+        private Vector2 _skyPosition;
+        private Vector2 _moonPosition;
+        private Vector2 _skyVector;
+        private Vector2 _skyMinPosition;
+        private Vector2 _moonOrbitCentre;
+
+        private const float MOON_ORBIT_RADIUS = ScreenSettings.TARGET_WIDTH - 30;
+        private const float MOON_SPEED = 0.1f;
+        private const float SKY_SPEED = 10f;
+
+        private float _moonRotation = 0f;
+        private bool _isMovingLeft = true;
+        private int _direction = -1;
 
         public void LoadContent(ContentManager contentManager)
         {
             _sky = new Sprite(contentManager, @"Background/MenuSky");
-            _sky.SpriteColour = Colours.LighterGrey;
             _moon = new Sprite(contentManager, @"Background/Moon");
             _moon.SpriteScale = 0.3f;
-            _moon.SpriteColour = new Color(50, 50, 50);
+            _moon.SpriteColour = Colours.MoonGrey;
+            _sky.SpriteColour = Colours.LighterGrey;
+            SetLayout();
+        }
+
+        private void SetLayout()
+        {
+            _skyPosition = Vector2.Zero;
+            _moonPosition = Vector2.Zero;
+            _skyVector = Mechanics.NormaliseVector(new Vector2(ScreenSettings.RESOLUTION_WIDTH, ScreenSettings.RESOLUTION_HEIGHT));
+            _skyMinPosition = new Vector2(-710, 415);
+            _moonOrbitCentre = new Vector2(ScreenSettings.TARGET_WIDTH, ScreenSettings.TARGET_HEIGHT + 500);
         }
 
         public void Update(GameTime gameTime)
         {
             CheckDirection();
-             _skyPosition += _direction * _vector * (float)gameTime.ElapsedGameTime.TotalSeconds * 10;
+             _skyPosition += _direction * _skyVector * (float)gameTime.ElapsedGameTime.TotalSeconds * SKY_SPEED;
+
             MoonOrbit(gameTime);
             _moonRotation -= (float)gameTime.ElapsedGameTime.TotalSeconds / 3f;
         }
 
         private void CheckDirection()
         {
-            if (_skyPosition.X <= _minPosition.X && _negativeDirection)
+            if (_skyPosition.X <= _skyMinPosition.X && _isMovingLeft)
             {
-                _negativeDirection = false;
+                _isMovingLeft = false;
                 _direction = 1;
             }
 
-            if (_skyPosition.X >= -5 && !_negativeDirection)
+            if (_skyPosition.X >= -5 && !_isMovingLeft)
             {
-                _negativeDirection = true;
+                _isMovingLeft = true;
                 _direction = -1;
             }
         }
