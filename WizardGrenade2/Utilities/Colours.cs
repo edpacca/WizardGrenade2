@@ -16,6 +16,10 @@ namespace WizardGrenade2
         public static Color Gold = new Color(255, 215, 0);
         public static Color DarkGrey = new Color(20, 20, 20);
         public static Color LightGreenBlue = new Color(100, 120, 120);
-        public static Color Turqouise = new Color(0, 200, 180   );
+        public static Color Turqouise = new Color(0, 200, 180);
+        public static Color MoonGrey = new Color(50, 50, 50);
+        public static Color DarknessMask = new Color(10, 10, 10, 255);
+
+        public static Vector2 ShadowOffset = new Vector2(2, 1);
     }
 }
