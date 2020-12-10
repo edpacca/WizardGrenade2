@@ -31,10 +31,10 @@ namespace WizardGrenade2
 
         public WGGame()
         {
-            _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            _graphics.PreferredBackBufferWidth = ScreenSettings.RESOLUTION_WIDTH;
-            _graphics.PreferredBackBufferHeight = ScreenSettings.RESOLUTION_HEIGHT;
+            _graphics = new GraphicsDeviceManager(this);
+            _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+            _graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
             _cameraManager = new CameraManager();
             Window.AllowUserResizing = true;
         }

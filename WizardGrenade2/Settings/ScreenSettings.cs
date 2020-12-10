@@ -1,13 +1,15 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace WizardGrenade2
 {
-    class ScreenSettings
+    public class ScreenSettings
     {
         public const float TARGET_WIDTH = 1200;
         public const float TARGET_HEIGHT = TARGET_WIDTH * 0.5625f;
-        public const int RESOLUTION_WIDTH = 1920;
-        public const int RESOLUTION_HEIGHT = 1080;
+        public static int RESOLUTION_WIDTH = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+        public static int RESOLUTION_HEIGHT = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
 
         public static int CentreScreenWidth => (int)(TARGET_WIDTH / 2);
         public static int CentreScreenHeight => (int)(TARGET_HEIGHT / 2);
