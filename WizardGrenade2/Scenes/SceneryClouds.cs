@@ -6,21 +6,18 @@ using System.Collections.Generic;
 
 namespace WizardGrenade2
 {
-    class SceneryClouds
+    public class SceneryClouds
     {
-        private int _numberOfClouds;
-        private int _cloudSpeed;
-        private Random _random = new Random(); 
-
         private List<Sprite> _clouds = new List<Sprite>();
-        private List<float> _cloudScales = new List<float>();
-        private int _minScalePercentage = 50;
-        private int _maxScalePercentage = 100;
-
         private List<Vector2> _cloudPositions = new List<Vector2>();
+        private List<float> _cloudScales = new List<float>();
+        private Random _random = new Random();
         private Vector2 _minPosition = Vector2.Zero;
         private Vector2 _maxPosition = new Vector2(ScreenSettings.TARGET_WIDTH, ScreenSettings.TARGET_WIDTH);
-
+        private int _minScalePercentage = 50;
+        private int _maxScalePercentage = 100;
+        private int _numberOfClouds;
+        private int _cloudSpeed;
 
         public SceneryClouds(int numberOfClouds, int cloudSpeed)
         {
@@ -28,27 +25,16 @@ namespace WizardGrenade2
             _cloudSpeed = cloudSpeed;
         }
 
-        public SceneryClouds(int numberOfClouds, int cloudSpeed, Vector2 minPosition, Vector2 maxPosition) : this (numberOfClouds, cloudSpeed)
+        public SceneryClouds(int numberOfClouds, int cloudSpeed, Vector2 minPosition, Vector2 maxPosition) 
+            : this (numberOfClouds, cloudSpeed)
         {
             SetCloudLimits(minPosition, maxPosition);
         }
 
-        public SceneryClouds(int numberOfClouds, int cloudSpeed, Vector2 minPosition, Vector2 maxPosition, int minScalePercentage, int maxScalePercentage) : this(numberOfClouds, cloudSpeed, minPosition, maxPosition)
+        public SceneryClouds(int numberOfClouds, int cloudSpeed, Vector2 minPosition, Vector2 maxPosition, int minScalePercentage, int maxScalePercentage) 
+            : this(numberOfClouds, cloudSpeed, minPosition, maxPosition)
         {
             SetCloudScaleRange(minScalePercentage, maxScalePercentage);
-        }
-
-        public void SetCloudLimits(Vector2 minPosition, Vector2 maxPosition)
-        {
-            _minPosition = minPosition;
-            _maxPosition = maxPosition;
-        }
-
-        public void SetCloudScaleRange(int minScalePercentage, int maxScalePercantage)
-        {
-            _minScalePercentage = minScalePercentage;
-            _maxScalePercentage = maxScalePercantage;
-
         }
 
         public void LoadContent(ContentManager contentManager)
@@ -64,6 +50,18 @@ namespace WizardGrenade2
                 _cloudScales.Add(randomScale / 100);
                 _clouds[i].SpriteScale = _cloudScales[i];
             }
+        }
+
+        public void SetCloudLimits(Vector2 minPosition, Vector2 maxPosition)
+        {
+            _minPosition = minPosition;
+            _maxPosition = maxPosition;
+        }
+
+        public void SetCloudScaleRange(int minScalePercentage, int maxScalePercantage)
+        {
+            _minScalePercentage = minScalePercentage;
+            _maxScalePercentage = maxScalePercantage;
         }
 
         public void Update(GameTime gameTime)

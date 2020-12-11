@@ -5,48 +5,47 @@ using System;
 
 namespace WizardGrenade2
 {
-    class Scenery
+    public class Scenery
     {
         private SceneryClouds _foregroundClouds;
         private SceneryClouds _backgroundClouds;
         private Sprite _moon;
+        private Sprite _sky;
         private Sprite _mainCloud;
         private Vector2 _mainCloudPosition;
         private Vector2 _moonPosition;
-        private Sprite _sky;
-        private float _rotation = 0f;
+        private Vector2 _foregroundMinPosition;
+        private Vector2 _foregroundMaxPosition;
+        private Vector2 _backgroundMinPosition;
+        private Vector2 _backgroundMaxPosition;
         private const int NUMBER_FOREGROUND_CLOUDS = 5;
         private const int FOREGROUND_CLOUD_SPEED = 30;
         private const int NUMBER_BACKGROUND_CLOUDS = 15;
         private const int BACKGROUND_CLOUD_SPEED = 15;
         private const float MOON_RADIUS = 700f;
         private const float MOON_SPEED = 0.05f;
+        private float _rotation = 0f;
 
-        private Vector2 _foregroundMinPosition;
-        private Vector2 _foregroundMaxPosition;
-        private Vector2 _backgroundMinPosition;
-        private Vector2 _backgroundMaxPosition;
-
-        public Scenery()
+        public Scenery(ContentManager contentManager)
         {
             _foregroundClouds = new SceneryClouds(NUMBER_FOREGROUND_CLOUDS, FOREGROUND_CLOUD_SPEED);
             _backgroundClouds = new SceneryClouds(NUMBER_BACKGROUND_CLOUDS, BACKGROUND_CLOUD_SPEED);
+            LoadContent(contentManager);
         }
 
-        public void LoadContent(ContentManager contentManager)
+        private void LoadContent(ContentManager contentManager)
         {
-
             _mainCloud = new Sprite(contentManager, @"Background/MainCloud");
             _moon = new Sprite(contentManager, @"Background/Moon");
             _moon.SpriteScale = 0.2f;
             _moon.SpriteColour = Colours.LighterGrey;
             _sky = new Sprite(contentManager, @"Background/Sky");
-            float mainCloudX = ScreenSettings.CentreScreenWidth - (_mainCloud.GetSpriteRectangle().Width / 2);
+            float mainCloudX = ScreenSettings.CentreScreenWidth - (_mainCloud.SpriteRectangle.Width / 2);
             float mainCloudY = ScreenSettings.TARGET_HEIGHT - 100;
             _mainCloudPosition = new Vector2(mainCloudX, mainCloudY);
 
             _foregroundMinPosition = new Vector2(-300, ScreenSettings.TARGET_HEIGHT - 150);
-            _foregroundMaxPosition = new Vector2(ScreenSettings.TARGET_WIDTH + 300, ScreenSettings.TARGET_HEIGHT + _mainCloud.GetSpriteRectangle().Height);
+            _foregroundMaxPosition = new Vector2(ScreenSettings.TARGET_WIDTH + 300, ScreenSettings.TARGET_HEIGHT + _mainCloud.SpriteRectangle.Height);
             _backgroundMinPosition = new Vector2(-300, -300);
             _backgroundMaxPosition = new Vector2(ScreenSettings.TARGET_WIDTH + 300, ScreenSettings.TARGET_HEIGHT);
             _moonPosition = Vector2.Zero;
