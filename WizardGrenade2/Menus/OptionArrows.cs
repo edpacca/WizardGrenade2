@@ -7,12 +7,12 @@ namespace WizardGrenade2
 {
     class OptionArrows : Sprite
     {
+        private Vector2 _positionL = Vector2.Zero;
+        private Vector2 _positionR = Vector2.Zero;
         private readonly string _fileName = @"UserInterface/Marker";
         private const float OSCILLATION_RATE = 2.5f;
         private const float OSCILLATION_AMPLITUDE = 0.2f;
-        private Vector2 _positionL = Vector2.Zero;
-        private Vector2 _positionR = Vector2.Zero;
-        bool _doubleArrow;
+        private bool _doubleArrow;
 
         public OptionArrows(bool doubleArrow)
         {

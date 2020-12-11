@@ -1,27 +1,26 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Audio;
+using System.Collections.Generic;
 using System;
 
 namespace WizardGrenade2
 {
-    class Settings
+    public class Settings
     {
         public Setting MusicVolume { get; private set; }
         public Setting AudioVolume { get; private set; }
         public Setting Brightness { get; private set; }
-
-        private List<Setting> _settings;
         public bool InSettings { get; set; }
 
+        private List<Setting> _settings;
         private Options _options;
+        private Random _randomGenerator;
         private Vector2 _offset;
         private float _spriteMeterWidth;
-        private Random _randomGenerator;
 
         private readonly List<string> _settingNames = new List<string>()
         {
@@ -47,7 +46,7 @@ namespace WizardGrenade2
             _offset = textSpriteOffset;
             _spriteMeterWidth = spriteMeterWidth;
             _randomGenerator = new Random();
-    }
+        }
 
         public void LoadContent(ContentManager contentManager)
         {
@@ -59,11 +58,6 @@ namespace WizardGrenade2
             MusicVolume.SetSpriteMeter(_spriteMeterWidth, 1.5f);
             AudioVolume.SetSpriteMeter(_spriteMeterWidth, 1.5f);
             Brightness.SetSpriteMeter(_spriteMeterWidth, 4f);
-        }
-
-        public void SetOptionColours(Color selected, Color unselected)
-        {
-            _options.SetOptionColours(selected, unselected);
         }
 
         public void Update(GameTime gameTime)
@@ -107,6 +101,8 @@ namespace WizardGrenade2
 
             return settings;
         }
+        
+        public void SetOptionColours(Color selected, Color unselected) => _options.SetOptionColours(selected, unselected);
 
         public void Draw(SpriteBatch spriteBatch)
         {

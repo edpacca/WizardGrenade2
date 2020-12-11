@@ -34,8 +34,7 @@ namespace WizardGrenade2
             _images.Add(new Sprite(contentManager, @"GameObjects/Fireball"));
             _images.Add(new Sprite(contentManager, @"GameObjects/MelfsAcidArrow"));
             _images.Add(new Sprite(contentManager, @"GameObjects/IceBomb"));
-            _images.Add(new Sprite());
-            _images[3].LoadContent(contentManager, @"GameObjects/Potions", 3, 1);
+            _images.Add(new Sprite(contentManager, @"GameObjects/Potions", 3, 1));
 
             for (int i = 0; i < _images.Count; i++)
                 _images[i].SpriteScale = 10f;
@@ -65,16 +64,16 @@ namespace WizardGrenade2
             }
 
             if (_instructions.OptionNames[_instructions.SelectedOption] == "Fireball")
-                _images[0].DrawSprite(spriteBatch, _imagePosition - _images[0].GetSpriteOrigin());
+                _images[0].DrawSprite(spriteBatch, _imagePosition - _images[0].Origin);
 
             else if (_instructions.OptionNames[_instructions.SelectedOption] == "Melf's Acid Arrow")
-                _images[1].DrawSprite(spriteBatch, _imagePosition - _images[1].GetSpriteOrigin());
+                _images[1].DrawSprite(spriteBatch, _imagePosition - _images[1].Origin);
 
             else if (_instructions.OptionNames[_instructions.SelectedOption] == "Ice Bomb")
-                _images[2].DrawSprite(spriteBatch, _imagePosition - _images[2].GetSpriteOrigin());
+                _images[2].DrawSprite(spriteBatch, _imagePosition - _images[2].Origin);
 
             else if (_instructions.OptionNames[_instructions.SelectedOption] == "Items")
-                _images[3].DrawSprite(spriteBatch, _imagePosition - _images[3].GetSpriteOrigin());
+                _images[3].DrawSprite(spriteBatch, _imagePosition - _images[3].Origin);
 
             _instructions.DrawOptions(spriteBatch);
         }

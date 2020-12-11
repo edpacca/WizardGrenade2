@@ -3,24 +3,31 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 
 namespace WizardGrenade2
 {
-    class PauseMenu
+    public class PauseMenu
     {
-        private SpriteFont _optionsFont;
-        private Vector2 _textPosition = ScreenSettings.ScreenCentre;
-        private readonly string _pausedText = "Paused";
-        private GraphicsDevice _graphics;
-        private Texture2D _background;
-        private Rectangle _backgroundRectangle;
-        private Color _backgroundColour = new Color(0, 0, 0, 150);
-        private Sprite _bigScroll;
-
-        private Settings _settings;
+        public int[] Settings { get => _settings.GetSettings(); }
+        public float Brightness { get => _settings.Brightness.Value; }
+        public bool IsPaused { get; set; }
+        public bool InSettings { get; set; }
+        public bool Reset { get; set; }
 
         private Options _pauseMenuOptions;
+        private Settings _settings;
+        private SpriteFont _optionsFont;
+        private GraphicsDevice _graphics;
+        private Texture2D _background;
+        private Scroll _scroll;
+        private Sprite _bigScroll;
+        private Vector2 _textPosition = ScreenSettings.ScreenCentre;
+        private Rectangle _backgroundRectangle;
+        private Color _backgroundColour = Colours.PauseMenuColour;
+        private readonly string _pausedText = "Paused";
+        private bool _previousPauseState;
+        private bool _currentPauseState;
+
         private List<string> _pauseMenuOptionNames = new List<string>()
         { 
           "Resume",
@@ -30,42 +37,33 @@ namespace WizardGrenade2
           "Fireball?"
         };
 
-        private Scroll _scroll;
-        public bool IsPaused { get; set; }
-        private bool _previousPauseState;
-        private bool _currentPauseState;
-        public bool InSettings { get; set; }
-        public bool Reset { get; set; }
-
-        public PauseMenu(GraphicsDevice graphics)
+        public PauseMenu(GraphicsDevice graphics, ContentManager contentManager)
         {
             _graphics = graphics;
             _pauseMenuOptions = new Options(_pauseMenuOptionNames, false, true);
+            LoadContent(contentManager);
         }
 
-        public void LoadContent(ContentManager contentManager)
+        private void LoadContent(ContentManager contentManager)
         {
             _optionsFont = contentManager.Load<SpriteFont>(@"Fonts/ScreenFont");
             _textPosition = ScreenSettings.ScreenCentre - _optionsFont.MeasureString(_pausedText) / 2;
             _textPosition.Y -= 170;
-
             _backgroundRectangle = new Rectangle(0, 0, (int)ScreenSettings.TARGET_WIDTH, (int)ScreenSettings.TARGET_HEIGHT);
             _background = new Texture2D(_graphics, 1, 1);
             _background.SetData(new Color[] { _backgroundColour });
-
             _scroll = new Scroll(ScreenSettings.ScreenCentre);
             _scroll.LoadContent(contentManager);
-
+            _bigScroll = new Sprite(contentManager, @"Menu/bigScroll");
             _pauseMenuOptions.SetOptionLayout(new Vector2(_textPosition.X, _textPosition.Y + 100), ScreenSettings.TARGET_HEIGHT - 210);
             _pauseMenuOptions.SetOptionColours(Colours.Ink, Colours.FadedInk);
             _pauseMenuOptions.LoadContent(contentManager);
             _settings = new Settings(new Vector2(_textPosition.X - 200, _textPosition.Y + 100), ScreenSettings.TARGET_HEIGHT - 210, new Vector2(300, 0), 300f);
             _settings.LoadContent(contentManager);
-            _bigScroll = new Sprite(contentManager, @"Menu/bigScroll");
             _settings.SetOptionColours(Colours.Ink, Colours.FadedInk);
         }
 
-        public void PauseGame(Keys key)
+        private void PauseGame(Keys key)
         {
             if (InputManager.WasKeyPressed(key))
             {
@@ -80,6 +78,8 @@ namespace WizardGrenade2
         {
             _previousPauseState = _currentPauseState;
             _currentPauseState = IsPaused;
+
+            PauseGame(Keys.Escape);
 
             if (IsPaused)
             {
@@ -98,9 +98,7 @@ namespace WizardGrenade2
             }
 
             else if (_currentPauseState != _previousPauseState)
-            {
                 _scroll.ResetPauseMenu();
-            }
         }
 
         public void ApplySettings(int[] settings, GameTime gameTime)
@@ -109,12 +107,7 @@ namespace WizardGrenade2
             _settings.Update(gameTime);
         }
 
-        public int[] GetSettings()
-        {
-            return _settings.GetSettings();
-        }
 
-        public float GetBrightness() => _settings.Brightness.Value;
 
         private void OptionFunctions(int selectedIndex)
         {
@@ -149,7 +142,7 @@ namespace WizardGrenade2
 
                 if (InSettings)
                 {
-                    _bigScroll.DrawSprite(spriteBatch, ScreenSettings.ScreenCentre - _bigScroll.GetSpriteOrigin());
+                    _bigScroll.DrawSprite(spriteBatch, ScreenSettings.ScreenCentre - _bigScroll.Origin);
                     _settings.Draw(spriteBatch);
                 }
 

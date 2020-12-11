@@ -72,7 +72,7 @@ namespace WizardGrenade2
                 _maps[i].SpriteScale = MenuSettings.MENU_MAPS_SCALE;
             }
 
-            _mapPosition -= _maps[0].GetSpriteOrigin();
+            _mapPosition -= _maps[0].Origin;
             _teamSize.LoadContent(contentManager, @"Menu/Wizard0");
             _teamSize.SetSpriteMeterColour(Color.Black);
             _teamSize.SetSpriteMeter(MenuSettings.TeamSizeSpriteSpan, MenuSettings.WIZARD_SPRITE_SCALE);

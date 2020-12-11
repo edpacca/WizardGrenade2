@@ -9,17 +9,14 @@ namespace WizardGrenade2
     {
         private Sprite _sky;
         private Sprite _moon;
-
         private Vector2 _skyPosition;
         private Vector2 _moonPosition;
         private Vector2 _skyVector;
         private Vector2 _skyMinPosition;
         private Vector2 _moonOrbitCentre;
-
         private const float MOON_ORBIT_RADIUS = ScreenSettings.TARGET_WIDTH - 30;
         private const float MOON_SPEED = 0.1f;
         private const float SKY_SPEED = 10f;
-
         private float _moonRotation = 0f;
         private bool _isMovingLeft = true;
         private int _direction = -1;

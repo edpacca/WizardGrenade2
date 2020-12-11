@@ -1,16 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WizardGrenade2
 {
-    class Scroll
+    public class Scroll
     {
+        public bool IsUnrolled { get; private set; }
         private Sprite _scrollTop;
         private Sprite _scrollBottom;
         private Vector2 _position;
@@ -20,7 +16,6 @@ namespace WizardGrenade2
         private float _positionOffset = 10f;
         private float _percentage;
         private const float ANIMATION_SPEED = 800;
-        public bool IsUnrolled { get; private set; }
 
         public Scroll(Vector2 position)
         {
@@ -32,9 +27,9 @@ namespace WizardGrenade2
             _scrollTop = new Sprite(contentManager, @"Menu/Scroll0");
             _scrollBottom = new Sprite(contentManager, @"Menu/Scroll1");
 
-            _topPosition = _position - _scrollTop.GetSpriteOrigin();
+            _topPosition = _position - _scrollTop.Origin;
             _bottomPosition = _topPosition;
-            _yOffset = _scrollBottom.GetSpriteRectangle().Height;
+            _yOffset = _scrollBottom.SpriteRectangle.Height;
             ResetPauseMenu();
         }
 
@@ -48,10 +43,10 @@ namespace WizardGrenade2
         {
             if (_bottomPosition.Y < _topPosition.Y - _positionOffset)
             {
-                IsUnrolled = false;
                 _bottomPosition.Y += (float)gameTime.ElapsedGameTime.TotalSeconds * ANIMATION_SPEED;
                 _percentage = 1 - ((_topPosition.Y - _bottomPosition.Y + 80) / _yOffset);
                 _scrollTop.MaskSpriteRectangleHeight(_percentage);
+                IsUnrolled = false;
             }
             else
             {

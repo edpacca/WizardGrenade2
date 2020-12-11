@@ -7,8 +7,8 @@ namespace WizardGrenade2
     public class MenuManager
     {
         public GameOptions GameOptions { get => _gameSetup.GameOptions; }
+        public int[] MainMenuSettings { get => _mainMenu.Settings; }
         public float Brightness { get => _mainMenu.Brightness; }
-        public int[] MainMenuSettings { get => _mainMenu.GetSettings(); }
         public bool IsGameSetup { get => _gameSetup.isGameSetup; }
 
         private MainMenu _mainMenu = new MainMenu();
@@ -16,9 +16,14 @@ namespace WizardGrenade2
         private MenuSky _sky = new MenuSky();
         private MenuTitle _title = new MenuTitle();
         private MenuArrows _menuArrows = new MenuArrows();
-        private bool _settingUpGame;
+        private bool _inGameSetup;
 
-        public void LoadContent(ContentManager contentManager)
+        public MenuManager(ContentManager contentManager)
+        {
+            LoadContent(contentManager);
+        }
+
+        private void LoadContent(ContentManager contentManager)
         {
             _title.LoadContent(contentManager);
             _mainMenu.LoadContent(contentManager);
@@ -32,17 +37,17 @@ namespace WizardGrenade2
             _sky.Update(gameTime);
             _title.Update(gameTime);
 
-            if (_settingUpGame)
+            if (_inGameSetup)
             {
-                _settingUpGame = _gameSetup.InGameSetup;
-                _mainMenu.SettingUpGame = _settingUpGame ? true : false;
                 _gameSetup.Update(gameTime);
+                _inGameSetup = _gameSetup.InGameSetup;
+                _mainMenu.InGameSetup = _inGameSetup ? true : false;
             }
             else
             {
-                _settingUpGame = _mainMenu.SettingUpGame;
-                _gameSetup.InGameSetup = _settingUpGame ? true : false;
                 _mainMenu.Update(gameTime);
+                _inGameSetup = _mainMenu.InGameSetup;
+                _gameSetup.InGameSetup = _inGameSetup ? true : false;
             }
         }
 
@@ -53,9 +58,9 @@ namespace WizardGrenade2
         {
             _sky.Draw(spriteBatch);
             _title.Draw(spriteBatch);
-            _menuArrows.Draw(spriteBatch, _mainMenu.CanGoBack);
+            _menuArrows.Draw(spriteBatch, _mainMenu.CanGoBack, _mainMenu.CanGoForward);
 
-            if (_mainMenu.SettingUpGame)
+            if (_mainMenu.InGameSetup)
                 _gameSetup.Draw(spriteBatch);
             else
                 _mainMenu.Draw(spriteBatch);

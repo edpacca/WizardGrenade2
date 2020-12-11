@@ -8,31 +8,28 @@ namespace WizardGrenade2
 {
     public class Options
     {
-        public List<Vector2> OptionsLayout { get; private set; }
+        public List<Vector2> OptionsLayout { get; private set; } = new List<Vector2>();
         public List<string> OptionNames { get; private set; }
         public int SelectedOption { get; private set; }
+
         private SpriteFont _optionFont;
         private OptionArrows _arrows;
-        private int _numberOfOptions;
-
-        private bool _isLayoutVertical;
-        private Vector2 _firstOptionPosition = Vector2.Zero;
-        private float _lastOptionPositionY = ScreenSettings.TARGET_HEIGHT;
-
         private Color _selectedColour = Colours.Gold;
         private Color _unselectedColour = Colours.LightGreenBlue;
+        private Vector2 _firstOptionPosition = Vector2.Zero;
+        private float _lastOptionPositionY = ScreenSettings.TARGET_HEIGHT;
+        private int _numberOfOptions;
+        private bool _isLayoutVertical;
 
         public Options(List<string> optionNames, bool doubleArrow, bool verticalLayout)
         {
             OptionNames = optionNames;
             _numberOfOptions = OptionNames.Count;
             _isLayoutVertical = verticalLayout;
-            OptionsLayout = new List<Vector2>();
+            _arrows = new OptionArrows(doubleArrow);
 
             if (_isLayoutVertical)
                 ApplyVerticalOptionLayout();
-
-            _arrows = new OptionArrows(doubleArrow);
         }
 
         public void LoadContent(ContentManager contentManager)
@@ -53,15 +50,6 @@ namespace WizardGrenade2
             _firstOptionPosition = firstOptionPosition;
             _lastOptionPositionY = lastOptionY;
             ApplyVerticalOptionLayout();
-        }
-
-        public void SetSinglePosition(Vector2 centre) => _firstOptionPosition = centre;
-        public void SetOptionColours(Color selected) => _selectedColour = selected;
-
-        public void SetOptionColours(Color selected, Color unselected)
-        {
-            _selectedColour = selected;
-            _unselectedColour = unselected;
         }
 
         private void ApplyVerticalOptionLayout()
@@ -88,6 +76,15 @@ namespace WizardGrenade2
             Vector2 fontSize = _optionFont.MeasureString(OptionNames[SelectedOption]);
             Vector2 _optionArrowOffset = new Vector2(-25, fontSize.Y / 2);
             _arrows.SetPositions(OptionsLayout[SelectedOption] + _optionArrowOffset, fontSize.X + 47);
+        }
+
+        public void SetSinglePosition(Vector2 centre) => _firstOptionPosition = centre;
+        public void SetOptionColours(Color selected) => _selectedColour = selected;
+
+        public void SetOptionColours(Color selected, Color unselected)
+        {
+            _selectedColour = selected;
+            _unselectedColour = unselected;
         }
 
         public void Update(GameTime gameTime)

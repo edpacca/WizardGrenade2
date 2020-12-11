@@ -5,10 +5,10 @@ using Microsoft.Xna.Framework.Input;
 
 namespace WizardGrenade2
 {
-    class Credits
+    public class Credits
     {
-        private SpriteFont _textFont;
         public bool InCredits { get; set; }
+        private SpriteFont _textFont;
 
         public void LoadContent(ContentManager contentManager)
         {

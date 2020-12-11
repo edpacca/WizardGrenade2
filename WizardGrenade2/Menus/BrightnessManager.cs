@@ -11,7 +11,7 @@ namespace WizardGrenade2
         private Sprite _brightnessMask10;
         private Sprite _brightnessMask15;
         private Rectangle _screen;
-        private Color _darknessColour;
+        private Color _darknessColour = new Color(10, 10, 10, 255);
         private float _brightness = 0.5f;
 
         public BrightnessManager(GraphicsDevice graphics, ContentManager contentManager)
@@ -20,7 +20,6 @@ namespace WizardGrenade2
             _darknessMask = new Texture2D(graphics, 1, 1);            
             _darknessMask.SetData(new Color[] { _darknessColour });
             _darknessMask.GraphicsDevice.BlendState = BlendState.NonPremultiplied;
-            _darknessColour = Colours.DarknessMask;
             _brightnessMask5 = new Sprite(contentManager, @"UserInterface/BrightnessMask5");
             _brightnessMask10 = new Sprite(contentManager, @"UserInterface/BrightnessMask10");
             _brightnessMask15 = new Sprite(contentManager, @"UserInterface/BrightnessMask15");

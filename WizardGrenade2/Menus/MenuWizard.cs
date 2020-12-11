@@ -1,30 +1,26 @@
 ﻿using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
 namespace WizardGrenade2
 {
-    class MenuWizard
+    public class MenuWizard
     {
         private List<Sprite> _wizards = new List<Sprite>();
         private Timer _animationTimer = new Timer(6f);
-        private int _animationCounter = 0;
-        private const float SCALE = 8f;
-        private int _activeWizard = 2;
-        private int _nextWizard;
-
+        private Timer _wizardTimer = new Timer(WIZARD_CYCLE_TIME);
         private const float WALK_TIME = 3f;
         private const float ONSCREEN_TIME = 12f;
         private const float WIZARD_CYCLE_TIME = ONSCREEN_TIME + WALK_TIME;
         private const float X_DIFFERENCE = 400f;
+        private const float SCALE = 8f;
         private float _walkingSpeed = X_DIFFERENCE / (WIZARD_CYCLE_TIME - ONSCREEN_TIME);
-
-        private Timer _wizardTimer = new Timer(WIZARD_CYCLE_TIME);
         private float _nextWizardXOffset = -X_DIFFERENCE;
         private float _activeWizardXOffset = 0;
- 
+        private int _animationCounter = 0;
+        private int _activeWizard = 2;
+        private int _nextWizard;
 
         public MenuWizard(ContentManager contentManager)
         {
@@ -92,6 +88,7 @@ namespace WizardGrenade2
         private void IdleLook(GameTime gameTime)
         {
             _wizards[_activeWizard].UpdateAnimationSequence("Looking", 1, gameTime);
+
             if (!_animationTimer.IsRunning)
             {
                 _animationCounter = 0;
@@ -117,11 +114,10 @@ namespace WizardGrenade2
 
         public void Draw(SpriteBatch spriteBatch, Vector2 position)
         {
-                Vector2 activeWizardPosition = new Vector2(position.X + _activeWizardXOffset, position.Y);
-                Vector2 nextWizardPosition = new Vector2(position.X + _nextWizardXOffset, position.Y);
-
-                _wizards[_activeWizard].DrawSprite(spriteBatch, activeWizardPosition);
-                _wizards[_nextWizard].DrawSprite(spriteBatch, nextWizardPosition);
+            Vector2 activeWizardPosition = new Vector2(position.X + _activeWizardXOffset, position.Y);
+            Vector2 nextWizardPosition = new Vector2(position.X + _nextWizardXOffset, position.Y);
+            _wizards[_activeWizard].DrawSprite(spriteBatch, activeWizardPosition);
+            _wizards[_nextWizard].DrawSprite(spriteBatch, nextWizardPosition);
         }
     }
 }

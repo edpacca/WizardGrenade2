@@ -19,8 +19,8 @@ namespace WizardGrenade2
             _title = new Sprite(contentManager, @"Menu/Title");
             _taglineFont = contentManager.Load<SpriteFont>(@"Fonts/BetaFont");
             _title.SpriteScale = 0.4f;
-            _titlePosition = new Vector2(ScreenSettings.CentreScreenWidth, _title.GetSpriteRectangle().Height / 2) - _title.GetSpriteOrigin();
-            _taglinePosition = new Vector2(_titlePosition.X + (_title.GetSpriteRectangle().Width * 0.78f), 0f);
+            _titlePosition = new Vector2(ScreenSettings.CentreScreenWidth, _title.SpriteRectangle.Height / 2) - _title.Origin;
+            _taglinePosition = new Vector2(_titlePosition.X + (_title.SpriteRectangle.Width * 0.78f), 0f);
         }
 
         public void Update(GameTime gameTime)

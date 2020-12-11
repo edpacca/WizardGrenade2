@@ -7,9 +7,11 @@ namespace WizardGrenade2
 {
     class MainMenu
     {
-        public bool SettingUpGame { get; set; }
+        public bool InGameSetup { get; set; }
         public float Brightness { get => _settings.Brightness.Value; }
-        public bool CanGoBack { get => SettingUpGame || _settings.InSettings || _instructions.InInstructions || _credits.InCredits; }
+        public bool CanGoBack { get => InGameSetup || _settings.InSettings || _instructions.InInstructions || _credits.InCredits; }
+        public bool CanGoForward { get => InGameSetup || !(_settings.InSettings || _instructions.InInstructions || _credits.InCredits); }
+        public int[] Settings { get => _settings.GetSettings(); }
 
         private Options _menuOptions;
         private Settings _settings;
@@ -42,8 +44,6 @@ namespace WizardGrenade2
             _credits.LoadContent(contentManager);
             _wizard = new MenuWizard(contentManager);
         }
-
-        public int[] GetSettings() => _settings.GetSettings();
 
         public void ApplySettings(int[] settings, GameTime gameTime)
         {
@@ -78,7 +78,7 @@ namespace WizardGrenade2
             if (InputManager.WasKeyPressed(Keys.Enter))
             {
                 if (_menuOptions.SelectedOption == MenuSettings.MenuOptionsList.IndexOf("Play"))
-                    SettingUpGame = true;
+                    InGameSetup = true;
 
                 else if (_menuOptions.SelectedOption == MenuSettings.MenuOptionsList.IndexOf("Settings"))
                     _settings.InSettings = true;
