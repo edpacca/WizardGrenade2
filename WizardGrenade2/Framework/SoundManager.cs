@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.Xna.Framework.Audio;
+﻿using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Media;
+using System;
+using System.Collections.Generic;
 
 namespace WizardGrenade2
 {
     public sealed class SoundManager
     {
-        private SoundManager() { }
+        private SoundManager() {}
         private static readonly Lazy<SoundManager> lazyManager = new Lazy<SoundManager>(() => new SoundManager());
         public static SoundManager Instance { get => lazyManager.Value; }
 
@@ -78,9 +78,7 @@ namespace WizardGrenade2
         public void PlaySoundInstance(string soundInstance)
         {
             if (soundInstance != null && _soundInstances.ContainsKey(soundInstance))
-            {
                 _soundInstances[soundInstance].Play();
-            }
         }
 
         public void StopSoundInstance(string soundInstance)
@@ -98,9 +96,6 @@ namespace WizardGrenade2
             MediaPlayer.IsRepeating = true;
         }
 
-        public void StopMediaPlayer()
-        {
-            MediaPlayer.Stop();
-        }
+        public void StopMediaPlayer() => MediaPlayer.Stop();
     }
 }

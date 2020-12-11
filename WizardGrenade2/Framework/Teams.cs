@@ -1,48 +1,35 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 
 namespace WizardGrenade2
 {
     public class Teams
     {
-        private readonly List<Wizard> _allWizards = new List<Wizard>();
-        private List<Team> _teams = new List<Team>();
-        private Marker _marker = new Marker();
-        public List<string> TeamNames { get; private set; }
+        public List<Wizard> AllWizards { get; private set; } = new List<Wizard>();
+        public List<string> TeamNames { get; private set; } = new List<string>();
         public int[] TeamHealthValues { get; private set; }
+        public Vector2 ActiveWizardPosition { get => _teams[_activeTeam].Wizards[_activeWizard].Position; }
+        public int ActiveWizardDirection { get => _teams[_activeTeam].Wizards[_activeWizard].DirectionCoefficient; }
         public bool AreTeamsPlaced { get; private set; }
         public bool IsGameOver { get; private set; }
         public string WinningTeam { get; private set; }
 
+        private List<Team> _teams = new List<Team>();
+        private Marker _marker = new Marker();
         private int _activeWizard;
         private int _activeTeam;
         private int _numberOfTeams;
         private int _teamSize;
-        private const int MAXIMUM_TEAMS = 4;
 
         public Teams(GameOptions gameOptions)
         {
-            _numberOfTeams = gameOptions.NumberOfTeams > MAXIMUM_TEAMS ? MAXIMUM_TEAMS : gameOptions.NumberOfTeams;
+            _numberOfTeams = gameOptions.NumberOfTeams > WizardSettings.MAXIMUM_TEAMS ? WizardSettings.MAXIMUM_TEAMS : gameOptions.NumberOfTeams;
             _teamSize = gameOptions.TeamSize;
-            TeamNames = new List<string>();
-
-            for (int i = 0; i < _numberOfTeams; i++)
-            {
-                _teams.Add(new Team(i, _teamSize, gameOptions.WizardHealth));
-                TeamNames.Add("Team " + (i + 1));
-            }
-
-            foreach (var team in _teams)
-                foreach (var wizard in team.wizards)
-                    _allWizards.Add(wizard);
-
-            TeamHealthValues = new int[_numberOfTeams];
-            LoadTeamHealth();
-
-            _teams[_activeTeam].wizards[_activeWizard].IsActive = true;
+            AddTeams(gameOptions);
+            CollectWizards();
+            _teams[_activeTeam].Wizards[_activeWizard].IsActive = true;
         }
 
         public void LoadContent(ContentManager contentManager)
@@ -51,6 +38,31 @@ namespace WizardGrenade2
                 team.LoadContent(contentManager);
 
             _marker.LoadContent(contentManager);
+        }
+
+        private void AddTeams(GameOptions gameOptions)
+        {
+            for (int i = 0; i < gameOptions.NumberOfTeams; i++)
+            {
+                _teams.Add(new Team(i, _teamSize, gameOptions.WizardHealth));
+                TeamNames.Add("Team " + (i + 1));
+            }
+
+            TeamHealthValues = new int[_numberOfTeams];
+            LoadTeamHealth(gameOptions);
+        }
+
+        private void CollectWizards()
+        {
+            foreach (var team in _teams)
+                foreach (var wizard in team.Wizards)
+                    AllWizards.Add(wizard);
+        }
+
+        private void LoadTeamHealth(GameOptions gameOptions)
+        {
+            for (int i = 0; i < gameOptions.NumberOfTeams; i++)
+                TeamHealthValues[i] = _teams[i].GetTeamHealth();
         }
 
         public void Update(GameTime gameTime)
@@ -67,37 +79,31 @@ namespace WizardGrenade2
                 SoundManager.Instance.PlaySound("wizardOh1");
             }
 
-
             if (StateMachine.Instance.GameState == StateMachine.GameStates.PlayerTurn ||
                 StateMachine.Instance.GameState == StateMachine.GameStates.ShotTaken)
-                _teams[_activeTeam].wizards[_activeWizard].UpdateControl(gameTime);
+                _teams[_activeTeam].Wizards[_activeWizard].UpdateControl(gameTime);
 
-            CheckGameOverStatus();
             _marker.Update(gameTime, ActiveWizardPosition);
-        }
-
-        private void LoadTeamHealth()
-        {
-            for (int i = 0; i < _numberOfTeams; i++)
-                TeamHealthValues[i] = _teams[i].GetTeamHealth();
+            CheckGameOverStatus();
         }
 
         public void PlaceTeams()
         {
             Vector2 position = InputManager.CursorPosition();
-            _teams[_activeTeam].wizards[_activeWizard].Position = position;
-            bool isValidPlacement = _teams[_activeTeam].wizards[_activeWizard].CheckPlacement();
+            _teams[_activeTeam].Wizards[_activeWizard].Position = position;
+            bool isValidPlacement = _teams[_activeTeam].Wizards[_activeWizard].CheckPlacement();
 
             if (InputManager.WasLeftMousePressed() && isValidPlacement)
             {
                 SoundManager.Instance.PlaySound("wizardCast");
-                _teams[_activeTeam].wizards[_activeWizard].PlaceWizard(position);
+                _teams[_activeTeam].Wizards[_activeWizard].PlaceWizard(position);
                 _activeTeam = Utility.WrapAroundCounter(_activeTeam, _numberOfTeams);
 
-                if (_teams[_activeTeam].wizards[_activeWizard].IsPlaced)
+                if (_teams[_activeTeam].Wizards[_activeWizard].IsPlaced)
                 {
                     _activeWizard = Utility.WrapAroundCounter(_activeWizard, _teamSize);
-                    if (_teams[_activeTeam].wizards[_activeWizard].IsPlaced)
+
+                    if (_teams[_activeTeam].Wizards[_activeWizard].IsPlaced)
                         StateMachine.Instance.WizardsPlaced();
                 }
             }
@@ -105,7 +111,7 @@ namespace WizardGrenade2
 
         public void ChangeTeam()
         {
-            _teams[_activeTeam].wizards[_activeWizard].IsActive = false;
+            _teams[_activeTeam].Wizards[_activeWizard].IsActive = false;
             _activeTeam = Utility.WrapAroundCounter(_activeTeam, _numberOfTeams);
 
             if (_teams[_activeTeam].IsTeamOut)
@@ -114,7 +120,7 @@ namespace WizardGrenade2
             {
                 _teams[_activeTeam].NextActiveWizard();
                 _activeWizard = _teams[_activeTeam].ActiveWizard;
-                _teams[_activeTeam].wizards[_activeWizard].IsActive = true;
+                _teams[_activeTeam].Wizards[_activeWizard].IsActive = true;
             }
         }
 
@@ -128,7 +134,7 @@ namespace WizardGrenade2
                     remainingTeams++;
             }
 
-            IsGameOver = remainingTeams < 2 ? true : false;
+            IsGameOver = remainingTeams <= 1 ? true : false;
             
             if (IsGameOver)
             {
@@ -155,9 +161,5 @@ namespace WizardGrenade2
             foreach (var team in _teams)
                 team.Draw(spriteBatch);
         }
-
-        public Vector2 ActiveWizardPosition { get => _teams[_activeTeam].wizards[_activeWizard].Position; }
-        public int ActiveWizardDirection { get => _teams[_activeTeam].wizards[_activeWizard].DirectionCoefficient; }
-        public List<Wizard> AllWizards { get => _allWizards; }
     }
 }

@@ -13,47 +13,42 @@ namespace WizardGrenade2
         private static readonly Lazy<WeaponManager> lazyManager = new Lazy<WeaponManager>(() => new WeaponManager());
         public static WeaponManager Instance { get => lazyManager.Value; }
 
+        public List<Weapon> Weapons { get; private set; } = new List<Weapon>();
+        public Vector2 ActiveWizardPosition { get; set; }
+        public Rectangle WizardSpriteRectangle { get; private set; }
+        public float ChargePower { get; private set; }
+        public float DetonationTime { get => _isTimerNull ? 0 : Weapons[ActiveWeapon].DetonationTimer.Time; }
+        public int ActiveWeapon { get; private set; }
+        public bool IsCharging { get; private set; }
+
+        private List<Wizard> _allWizards;
         private Fireball _fireball = new Fireball();
         private Arrow _arrow = new Arrow();
         private IceBomb _iceBomb = new IceBomb();
         private Crosshair _crosshair = new Crosshair();
-        private List<Wizard> _allWizards;
-
         private HugeFireball _hugeFireball = new HugeFireball();
-
-        private int _numberOfWeapons;
-        private int _timer = 4;
-        private bool _isLoaded;
-
-        public float ChargePower { get; private set; }
-        public int ActiveWeapon { get; private set; }
-        public bool IsCharging { get; private set; }
-        public List<Weapon> Weapons { get; private set; }
-        public Rectangle WizardSpriteRectangle { get; private set; }
-        private Vector2 _initialPosition;
-        public Vector2 ActiveWizardPosition;
-
         private Random _random = new Random();
-
-        private readonly int[] _detonationTimes = new int[] { 1, 2, 3, 4, 5 };
+        private Vector2 _initialPosition;
+        private int _numberOfWeapons;
+        private float _timer = 4f;
+        private bool _isLoaded;
+        private bool _isTimerNull { get => (Weapons[ActiveWeapon].DetonationTimer == null); }
         
         public void LoadContent(ContentManager contentManager, List<Wizard> allWizards)
         {
             PopulateGameObjects(allWizards);
 
-            Weapons = new List<Weapon>();
             Weapons.Add(_fireball);
             Weapons.Add(_arrow);
             Weapons.Add(_iceBomb);
+            _numberOfWeapons = Weapons.Count;
 
             foreach (var weapon in Weapons)
                 weapon.LoadContent(contentManager);
 
             _hugeFireball.LoadContent(contentManager);
-
-            _numberOfWeapons = Weapons.Count;
             _crosshair.LoadContent(contentManager);
-            _fireball.DetonationTimer.ResetTimer(4);
+            _fireball.DetonationTimer.ResetTimer(WeaponSettings.FIREBALL_DETONATION_TIME);
         }
 
         public void Update(GameTime gameTime, Vector2 activeWizardPosition, int activeDirection)
@@ -64,23 +59,19 @@ namespace WizardGrenade2
 
             if (_isLoaded)
                 ChargeWeapon(gameTime, activeWizardPosition, activeDirection);
-
-            ResetCharge();
-
+            else if (Vector2.Distance(_initialPosition, Weapons[ActiveWeapon].Position) > WeaponSettings.MAX_DISTANCE)
+                 Weapons[ActiveWeapon].KillProjectile();
+            
             Weapons[ActiveWeapon].Update(gameTime, _allWizards);
-            UpdateGrenadeTimer();
-            ResetTimer();
-
-            if (!_isLoaded && Vector2.Distance(_initialPosition, Weapons[ActiveWeapon].Position) > ScreenSettings.TARGET_WIDTH + 200)
-                Weapons[ActiveWeapon].KillProjectile();
-
             _hugeFireball.Update(gameTime, _allWizards);
+            UpdateGrenadeTimer();
+            NewTurnReset();
         }
 
         public void PopulateGameObjects(List<Wizard> allWizards)
         {
             _allWizards = allWizards;
-            WizardSpriteRectangle = _allWizards[0].GetSpriteRectangle();
+            WizardSpriteRectangle = _allWizards[0].SpriteRectangle;
         }
 
         private void CycleWeapons(Keys key)
@@ -97,8 +88,7 @@ namespace WizardGrenade2
 
         private void ChargeWeapon(GameTime gameTime, Vector2 activePlayerPosition, int activeDirection)
         {
-            if (InputManager.IsKeyDown(Keys.Space) && 
-                StateMachine.Instance.GameState == StateMachine.GameStates.PlayerTurn)
+            if (InputManager.IsKeyDown(Keys.Space) && StateMachine.Instance.GameState == StateMachine.GameStates.PlayerTurn)
             {
                 SoundManager.Instance.PlaySoundInstance(Weapons[ActiveWeapon].ChargingSoundFile);
                 IsCharging = true;
@@ -113,17 +103,17 @@ namespace WizardGrenade2
                 SoundManager.Instance.PlaySoundInstance(Weapons[ActiveWeapon].MovingSoundFile);
                 _isLoaded = false;
                 IsCharging = false;
-                Weapons[ActiveWeapon].FireProjectile(ChargePower, _crosshair.CrosshairAngle);
                 _initialPosition = activePlayerPosition;
+                Weapons[ActiveWeapon].FireProjectile(ChargePower, _crosshair.CrosshairAngle);
                 ChargePower = 0f;
                 StateMachine.Instance.ShotTaken();
             }
         }
 
-        private void ResetCharge()
+        private void NewTurnReset()
         {
-            if (!Weapons[ActiveWeapon].IsMoving && StateMachine.Instance.GameState == StateMachine.GameStates.PlayerTurn)
-                _isLoaded = true;
+            ResetCharge();
+            ResetTimer();
         }
 
         private void UpdateGrenadeTimer()
@@ -132,7 +122,7 @@ namespace WizardGrenade2
             {
                 int numberKey = InputManager.NumberKeys();
 
-                foreach (var time in _detonationTimes)
+                foreach (var time in WeaponSettings.DETONATION_TIMES)
                 {
                     if (numberKey == time)
                     {
@@ -143,18 +133,21 @@ namespace WizardGrenade2
             }
         }
 
-        private bool IsTimerNull() => (Weapons[ActiveWeapon].DetonationTimer == null);
-        public float GetDetonationTime() => IsTimerNull() ? 0 : Weapons[ActiveWeapon].DetonationTimer.Time;
-
         private void SetTimer(int time)
         {
-            if (!IsTimerNull())
+            if (!_isTimerNull)
                 Weapons[ActiveWeapon].DetonationTimer.ResetTimer(time);
+        }
+
+        private void ResetCharge()
+        {
+            if (!Weapons[ActiveWeapon].IsMoving && StateMachine.Instance.GameState == StateMachine.GameStates.PlayerTurn)
+                _isLoaded = true;
         }
 
         private void ResetTimer()
         {
-            if (!IsTimerNull() && StateMachine.Instance.NewTurn())
+            if (!_isTimerNull && StateMachine.Instance.NewTurn())
                 Weapons[ActiveWeapon].DetonationTimer.ResetTimer(_timer);
         }
 

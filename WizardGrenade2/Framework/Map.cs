@@ -7,19 +7,17 @@ namespace WizardGrenade2
 {
     public sealed class Map
     {
-        private Map() { }
+        private Map() {}
         private static readonly Lazy<Map> lazyMap = new Lazy<Map>(() => new Map());
         public static Map Instance { get => lazyMap.Value; }
 
-        private CollisionManager _collisionManager;
-        private readonly string _defaultFileName = @"Maps/Map2";
+        public bool[,] MapPixelCollisionData { get; private set; }
+        private uint[] _mapPixelColourData;
 
+        private CollisionManager _collisionManager;
         private Texture2D _mapTexture;
         private Vector2 _mapPosition = Vector2.Zero;
-        private uint[] _mapPixelColourData;
-        private bool[,] _mapPixelCollisionData;
-
-        public bool[,] GetMapPixelCollisionData() => _mapPixelCollisionData;
+        private readonly string _defaultFileName = @"Maps/Map2";
 
         public void LoadContent(ContentManager contentManager, string fileName, bool isCollidable)
         {
@@ -28,7 +26,7 @@ namespace WizardGrenade2
 
             _mapPixelColourData = new uint[_mapTexture.Width * _mapTexture.Height];
             _mapTexture.GetData(_mapPixelColourData, 0, _mapPixelColourData.Length);
-            _mapPixelCollisionData = LoadPixelCollisionData(_mapTexture, _mapPixelColourData);
+            MapPixelCollisionData = LoadPixelCollisionData(_mapTexture, _mapPixelColourData);
 
             if (isCollidable)
             {
@@ -66,22 +64,18 @@ namespace WizardGrenade2
                     if (IsPointInBlastArea(radius, position, x, y))
                     {
                         _mapPixelColourData[PositionInArray(radius, position, x, y)] = 0;
-                        _mapPixelCollisionData[ArrayColumn(radius, position, x), ArrayRow(radius, position, y)] = false;
+                        MapPixelCollisionData[ArrayColumn(radius, position, x), ArrayRow(radius, position, y)] = false;
                     }
                 }
             }
             _mapTexture.SetData(_mapPixelColourData);
         }
 
-        private int PositionInArray(int radius, Vector2 position, int x, int y) => ArrayColumn(radius, position, x) + (ArrayRow(radius, position, y) * _mapTexture.Width);
-        private int ArrayColumn(int radius, Vector2 position, int x) => (int)position.X + x - radius;
-        private int ArrayRow(int radius, Vector2 position, int y) => (int)position.Y + y - radius;
-
         private bool IsPointInBlastArea(int blastRadius, Vector2 blastPosition, int x, int y)
         {
             return Utility.isWithinCircleInSquare(blastRadius, x, y) &&
-                blastPosition.X + x - blastRadius < _mapPixelCollisionData.GetLength(0) - 1 &&
-                blastPosition.Y + y - blastRadius < _mapPixelCollisionData.GetLength(1) - 1 &&
+                blastPosition.X + x - blastRadius < MapPixelCollisionData.GetLength(0) - 1 &&
+                blastPosition.Y + y - blastRadius < MapPixelCollisionData.GetLength(1) - 1 &&
                 blastPosition.X + x - blastRadius >= 0 &&
                 blastPosition.Y + y - blastRadius >= 0;
         }
@@ -90,5 +84,9 @@ namespace WizardGrenade2
         {
             spriteBatch.Draw(_mapTexture, _mapPosition, Color.White);
         }
+
+        private int PositionInArray(int radius, Vector2 position, int x, int y) => ArrayColumn(radius, position, x) + (ArrayRow(radius, position, y) * _mapTexture.Width);
+        private int ArrayColumn(int radius, Vector2 position, int x) => (int)position.X + x - radius;
+        private int ArrayRow(int radius, Vector2 position, int y) => (int)position.Y + y - radius;
     }
 }

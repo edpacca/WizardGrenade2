@@ -1,11 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 
 namespace WizardGrenade2
 {
-    public class StateMachine
+    public sealed class StateMachine
     {
         private StateMachine()
         {
@@ -13,14 +14,8 @@ namespace WizardGrenade2
         }
         private static readonly Lazy<StateMachine> lazyStateMachine = new Lazy<StateMachine>(() => new StateMachine());
         public static StateMachine Instance { get => lazyStateMachine.Value; }
-        private const float TIME_BETWEEN_TURNS = 3f;
-        private Timer _timer = new Timer(TIME_BETWEEN_TURNS);
-        private ScreenText _screenText = new ScreenText();
 
-        public void LoadContent(ContentManager contentManager) => _screenText.LoadContent(contentManager);
-        public void Draw(SpriteBatch spriteBatch) => _screenText.Draw(spriteBatch);
-
-        public enum GameStates 
+        public enum GameStates
         {
             GameSetup,
             PlaceWizards,
@@ -37,6 +32,17 @@ namespace WizardGrenade2
         public GameStates GameState { get; private set; }
         private GameStates _previousGameState;
         private GameStates _currentGameState;
+        private Timer _timer = new Timer(TIME_BETWEEN_TURNS);
+        private ScreenText _screenText = new ScreenText();
+        private const float TIME_BETWEEN_TURNS = 3f;
+
+        public void LoadContent(ContentManager contentManager) => _screenText.LoadContent(contentManager);
+        public void Draw(SpriteBatch spriteBatch) => _screenText.Draw(spriteBatch);
+        public bool NewGameState() => _previousGameState != _currentGameState;
+        public void ForceTurnEnd() => GameState = GameStates.BetweenTurns;
+        public void ExitGame() => GameState = GameStates.ExitGame;
+        public void RestartGame() => GameState = GameStates.PlaceWizards;
+        public void ResetGame() => GameState = GameStates.Reset;
 
         public void UpdateStateMachine(GameTime gameTime)
         {
@@ -88,13 +94,6 @@ namespace WizardGrenade2
                 _previousGameState != GameStates.PlaceWizards;
         }
 
-        public bool NewGameState() => _previousGameState != _currentGameState;
-
-        public void ForceTurnEnd()
-        {
-            GameState = GameStates.BetweenTurns;
-        }
-
         public void EndCurrentGame(string winningTeam)
         {
             GameState = GameStates.GameOver;
@@ -102,32 +101,15 @@ namespace WizardGrenade2
             if (NewGameState())
             {
                 _screenText.IsDisplaying = true;
-                _screenText.MainText = String.IsNullOrEmpty(winningTeam) ? "It's a Draw!" : winningTeam + " wins!";
+                _screenText.MainText = string.IsNullOrEmpty(winningTeam) ? "It's a Draw!" : winningTeam + " wins!";
                 _screenText.InfoText = "Press 'Enter' to restart, or 'Delete' to quit";
 
-                string gameEndSound = String.IsNullOrEmpty(winningTeam) ? "Draw" : "Win";
+                string gameEndSound = string.IsNullOrEmpty(winningTeam) ? "Draw" : "Win";
                 SoundManager.Instance.PlaySoundInstance(gameEndSound);
             }
-        }
 
-        public void ExitGame()
-        {
-            GameState = GameStates.ExitGame;
-        }
-
-        public void RestartGame()
-        {
-            GameState = GameStates.PlaceWizards;
-        }
-
-        public void ResetGame()
-        {
-            GameState = GameStates.Reset;
-        }
-
-        public bool IsInGameState(GameStates gameState)
-        {
-            return GameState == gameState;
+            if (InputManager.WasKeyPressed(Keys.Enter))
+                ResetGame();
         }
     }
 }

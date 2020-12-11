@@ -5,16 +5,17 @@ using System.Collections.Generic;
 
 namespace WizardGrenade2
 {
-    class BattleManager
+    public class BattleManager
     {
+        public int[] TeamHealths { get => _wizardTeams.TeamHealthValues; }
+        public List<string> TeamNames { get => _wizardTeams.TeamNames; }
+
         private readonly string _mapFileName;
         private Map _map = Map.Instance;
         private WeaponManager _weaponManager = WeaponManager.Instance;
-        private Teams _wizardTeams;
         private List<Wizard> _allWizards;
-        public int[] TeamHealths => _wizardTeams.TeamHealthValues;
-        public List<string> TeamNames => _wizardTeams.TeamNames;
-        
+        private Teams _wizardTeams;
+
         public BattleManager(string mapFileName)
         {
             _mapFileName = mapFileName;
@@ -22,7 +23,7 @@ namespace WizardGrenade2
 
         public void LoadContent(ContentManager contentManager)
         {
-            _map.LoadContent(contentManager, _mapFileName, true);
+            Map.Instance.LoadContent(contentManager, _mapFileName, true);
             _wizardTeams.LoadContent(contentManager);
             _weaponManager.LoadContent(contentManager, _allWizards);
         }
@@ -36,9 +37,7 @@ namespace WizardGrenade2
         public void Update(GameTime gameTime)
         {
             if (StateMachine.Instance.GameState == StateMachine.GameStates.PlaceWizards)
-            {
                 _wizardTeams.PlaceTeams();
-            }
             else
             {
                 _wizardTeams.Update(gameTime);

@@ -16,13 +16,26 @@ namespace WizardGrenade2
 
         public void InitialiseMapData()
         {
-            if (Map.Instance.GetMapPixelCollisionData() == null)
+            if (Map.Instance.MapPixelCollisionData == null)
                 throw new ArgumentNullException("Error: Map data is empty");
 
-            _mapCollisionData = Map.Instance.GetMapPixelCollisionData();
+            _mapCollisionData = Map.Instance.MapPixelCollisionData;
             _mapWidth = _mapCollisionData.GetLength(0);
             _mapHeight = _mapCollisionData.GetLength(1);
         }
+
+        public bool CheckObjectPlacement(List<Vector2> collisionPoints)
+        {
+            foreach (var point in collisionPoints)
+            {
+                if (IsPointWithinMap(point) && HasCollided(point))
+                    return false;
+            }
+            return true;
+        }
+
+        private bool IsPointWithinMap(Vector2 point) => point.X >= 0 && point.Y >= 0 && point.X < _mapWidth - 1 && point.Y < _mapHeight - 1;
+        public bool HasCollided(Vector2 collisionPoint) => _mapCollisionData[(int)collisionPoint.X, (int)collisionPoint.Y];
 
         public List<Vector2> CheckCollision(List<Vector2> transformedCollisionPoints)
         {
@@ -31,30 +44,10 @@ namespace WizardGrenade2
             foreach (var point in transformedCollisionPoints)
             {
                 if (IsPointWithinMap(point) && HasCollided(point))
-                        collidingPoints.Add(point);
+                    collidingPoints.Add(point);
             }
 
             return collidingPoints;
-        }
-
-        public bool CheckObjectPlacement(List<Vector2> collisionPoints)
-        {
-            foreach (var point in collisionPoints)
-            {
-                if (IsPointWithinMap(point) && HasCollided(point))
-                        return false;
-            }
-            return true;
-        }
-
-        private bool IsPointWithinMap(Vector2 point)
-        {
-            return point.X >= 0 && point.Y >= 0 && point.X < _mapWidth - 1 && point.Y < _mapHeight - 1;
-        }
-
-        public bool HasCollided(Vector2 collisionPoint)
-        {
-            return _mapCollisionData[(int)collisionPoint.X, (int)collisionPoint.Y];
         }
 
         public Vector2 ResolveCollision(List<Vector2> collidingPoints, Vector2 position, Vector2 velocity)

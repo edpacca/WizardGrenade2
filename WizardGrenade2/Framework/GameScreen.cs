@@ -7,9 +7,15 @@ namespace WizardGrenade2
 {
     class GameScreen
     {
-        public BattleManager _battleManager;
         public int[] TeamHealths { get => _battleManager.TeamHealths; }
         public List<string> TeamNames { get => _battleManager.TeamNames; }
+        private BattleManager _battleManager;
+
+        public GameScreen(GameOptions gameOptions, ContentManager contentManager)
+        {
+            Initialise(gameOptions);
+            LoadContent(contentManager);
+        }
 
         public void Initialise(GameOptions gameOptions)
         {
@@ -17,7 +23,7 @@ namespace WizardGrenade2
             _battleManager.Initialise(gameOptions);
         }
 
-        public void LoadContent(ContentManager contentManager)
+        private void LoadContent(ContentManager contentManager)
         {
             _battleManager.LoadContent(contentManager);
         }
