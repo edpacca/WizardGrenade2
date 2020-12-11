@@ -15,7 +15,7 @@
     <MonoGamePlatform>Windows</MonoGamePlatform>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <PublishUrl>C:\Users\eddie\OneDrive\ComputerScience\WizardGrenade\Published\</PublishUrl>
+    <PublishUrl>C:\Users\eddie\OneDrive\ComputerScience\WizardGrenade\Published\WizardGrenade_Beta1\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
     <UpdateEnabled>false</UpdateEnabled>
@@ -25,7 +25,10 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <AutorunEnabled>true</AutorunEnabled>
+    <ProductName>Wizard Grenade beta</ProductName>
+    <PublisherName>Eddie Pace</PublisherName>
+    <SuiteName>Wizard Quest</SuiteName>
+    <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
     <ApplicationRevision>1</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
@@ -38,7 +41,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\$(MonoGamePlatform)\$(Platform)\$(Configuration)\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;WINDOWS</DefineConstants>
+    <DefineConstants>TRACE;WINDOWS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -50,13 +53,14 @@
     <DefineConstants>TRACE;WINDOWS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <CodeAnalysisRuleSet>ManagedMinimumRules.ruleset</CodeAnalysisRuleSet>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
-  </PropertyGroup>
+  <PropertyGroup />
   <PropertyGroup>
     <SignManifests>false</SignManifests>
   </PropertyGroup>
@@ -70,7 +74,17 @@
     <TargetZone>LocalIntranet</TargetZone>
   </PropertyGroup>
   <PropertyGroup>
-    <GenerateManifests>false</GenerateManifests>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>
+    </StartupObject>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Framework\BattleManager.cs" />
@@ -111,7 +125,10 @@
     <Compile Include="Menus\GameSetup.cs" />
     <Compile Include="Menus\Instructions.cs" />
     <Compile Include="Menus\MainMenu.cs" />
+    <Compile Include="Menus\MenuArrows.cs" />
+    <Compile Include="Menus\MenuManager.cs" />
     <Compile Include="Menus\MenuSky.cs" />
+    <Compile Include="Menus\MenuTitle.cs" />
     <Compile Include="Menus\MenuWizard.cs" />
     <Compile Include="Menus\OptionArrows.cs" />
     <Compile Include="Menus\Options.cs" />
@@ -120,6 +137,8 @@
     <Compile Include="Menus\Settings.cs" />
     <Compile Include="Scenes\Scenery.cs" />
     <Compile Include="Scenes\SceneryClouds.cs" />
+    <Compile Include="Settings\InstructionsScript.cs" />
+    <Compile Include="Settings\MenuSettings.cs" />
     <Compile Include="Settings\ScreenSettings.cs" />
     <Compile Include="Settings\WeaponSettings.cs" />
     <Compile Include="Settings\WizardSettings.cs" />
@@ -143,177 +162,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Audio\ArrowShot.wav" />
-    <Content Include="Content\Audio\BowDraw.wav" />
-    <Content Include="Content\Audio\DrawTheme.wav" />
-    <Content Include="Content\Audio\FireHit.wav" />
-    <Content Include="Content\Audio\IceCharge.wav" />
-    <Content Include="Content\Audio\IceHit.wav" />
-    <Content Include="Content\Audio\WinTheme.wav" />
-    <Content Include="Content\Audio\wizard_cast.wav" />
-    <Content Include="Content\Audio\wizard_hit1.wav" />
-    <Content Include="Content\Audio\wizard_hit2.wav" />
-    <Content Include="Content\Audio\wizard_hit3.wav" />
-    <Content Include="Content\Audio\wizard_nocast.wav" />
-    <Content Include="Content\Audio\wizard_ooh1.wav" />
-    <Content Include="Content\Audio\wizard_ooh2.wav" />
-    <Content Include="Content\Audio\WQ_fireball.wav" />
-    <Content Include="Content\Audio\WQ_firecharge.wav" />
-    <Content Include="Content\Audio\WQ_firehit.wav" />
-    <Content Include="Content\Audio\WQ_frostray.wav" />
-    <Content Include="Content\Audio\WQ_magic1.wav" />
-    <Content Include="Content\Audio\WQ_magic_hit1.wav" />
-    <Content Include="Content\Audio\WQ_magic_hit2.wav" />
-    <Content Include="Content\Audio\WQ_magic_hit3.wav" />
-    <Content Include="Content\Audio\WQ_magic_hit4.wav" />
-    <Content Include="Content\Audio\WQ_magic_hit5.wav" />
-    <Content Include="Content\Audio\WQ_magic_hit_chord.wav" />
-    <Content Include="Content\Audio\WQ_main_theme_mp3.mp3" />
-    <Content Include="Content\Audio\WQ_nocast.wav" />
-    <Content Include="Content\Audio\WQ_potiongone.wav" />
-    <Content Include="Content\Audio\WQ_potion_cork.wav" />
-    <Content Include="Content\Audio\WQ_scroll.wav" />
-    <Content Include="Content\Audio\WQ_tile2.wav" />
-    <Content Include="Content\Audio\WQ_tile3.wav" />
-    <Content Include="Content\Background\Cloud.png" />
-    <Content Include="Content\Background\MainCloud.png" />
-    <Content Include="Content\Background\MenuSky.png" />
-    <Content Include="Content\Background\Moon.png" />
-    <Content Include="Content\Background\Sky.png" />
-    <Content Include="Content\Content\WQ_main_theme_mp3.wma" />
-    <Content Include="Content\GameObjects\explosion.png" />
-    <Content Include="Content\GameObjects\fireball_single.png" />
-    <Content Include="Content\GameObjects\IceBomb.png" />
-    <Content Include="Content\GameObjects\MelfsAcidArrow.png" />
-    <Content Include="Content\GameObjects\Pixel.png" />
-    <Content Include="Content\GameObjects\Potions.png" />
-    <Content Include="Content\GameObjects\WizardSpritesheet0.png" />
-    <Content Include="Content\GameObjects\WizardSpritesheet1.png" />
-    <Content Include="Content\GameObjects\WizardSpritesheet2.png" />
-    <Content Include="Content\GameObjects\WizardSpritesheet3.png" />
-    <Content Include="Content\Maps\Map0.png" />
-    <Content Include="Content\Maps\Map1.png" />
-    <Content Include="Content\Maps\Map2.png" />
-    <Content Include="Content\Maps\Map3.png" />
-    <Content Include="Content\Maps\Map4.png" />
-    <Content Include="Content\Menu\Bell.png" />
-    <Content Include="Content\Menu\bigScroll.png" />
-    <Content Include="Content\Menu\Lute.png" />
-    <Content Include="Content\Menu\Scroll0.png" />
-    <Content Include="Content\Menu\Scroll1.png" />
-    <Content Include="Content\Menu\Title.png" />
-    <Content Include="Content\Menu\Wizard0.png" />
-    <Content Include="Content\Menu\Wizard1.png" />
-    <Content Include="Content\Menu\Wizard2.png" />
-    <Content Include="Content\Menu\Wizard3.png" />
-    <Content Include="Content\UserInterface\ChargeBar.png" />
-    <Content Include="Content\UserInterface\Crosshair.png" />
-    <Content Include="Content\UserInterface\Cursor.png" />
-    <Content Include="Content\UserInterface\HealthBar0.png" />
-    <Content Include="Content\UserInterface\HealthBar1.png" />
-    <Content Include="Content\UserInterface\HealthBar2.png" />
-    <Content Include="Content\UserInterface\HealthBar3.png" />
-    <Content Include="Content\UserInterface\Marker.png" />
-    <Content Include="Content\UserInterface\SandBottom.png" />
-    <Content Include="Content\UserInterface\SandTop.png" />
-    <Content Include="Content\UserInterface\Timer.png" />
     <Content Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>
     <MonoGameContentReference Include="Content\Content.mgcb" />
     <None Include="app.manifest" />
-    <None Include="Content\Content\ArrowShot.xnb" />
-    <None Include="Content\Content\Bell.xnb" />
-    <None Include="Content\Content\BetaFont.xnb" />
-    <None Include="Content\Content\bigScroll.xnb" />
-    <None Include="Content\Content\BowDraw.xnb" />
-    <None Include="Content\Content\ChargeBar.xnb" />
-    <None Include="Content\Content\ChargingIceBall.xnb" />
-    <None Include="Content\Content\Cloud.xnb" />
-    <None Include="Content\Content\Crosshair.xnb" />
-    <None Include="Content\Content\Cursor.xnb" />
-    <None Include="Content\Content\DrawTheme.xnb" />
-    <None Include="Content\Content\Explosion.xnb" />
-    <None Include="Content\Content\Fireball.xnb" />
-    <None Include="Content\Content\FireHit.xnb" />
-    <None Include="Content\Content\HealthBar0.xnb" />
-    <None Include="Content\Content\HealthBar1.xnb" />
-    <None Include="Content\Content\HealthBar2.xnb" />
-    <None Include="Content\Content\HealthBar3.xnb" />
-    <None Include="Content\Content\IceBomb.xnb" />
-    <None Include="Content\Content\IceCharge.xnb" />
-    <None Include="Content\Content\IceHit.xnb" />
-    <None Include="Content\Content\InfoFont.xnb" />
-    <None Include="Content\Content\InfoFont2.xnb" />
-    <None Include="Content\Content\Lute.xnb" />
-    <None Include="Content\Content\MainCloud.xnb" />
-    <None Include="Content\Content\Map0.xnb" />
-    <None Include="Content\Content\Map1.xnb" />
-    <None Include="Content\Content\Map2.xnb" />
-    <None Include="Content\Content\Map3.xnb" />
-    <None Include="Content\Content\Map4.xnb" />
-    <None Include="Content\Content\Marker.xnb" />
-    <None Include="Content\Content\MelfsAcidArrow.xnb" />
-    <None Include="Content\Content\MenuSky.xnb" />
-    <None Include="Content\Content\Moon.xnb" />
-    <None Include="Content\Content\OptionFont.xnb" />
-    <None Include="Content\Content\pixel.xnb" />
-    <None Include="Content\Content\Potions.xnb" />
-    <None Include="Content\Content\SandBottom.xnb" />
-    <None Include="Content\Content\SandTop.xnb" />
-    <None Include="Content\Content\ScreenFont.xnb" />
-    <None Include="Content\Content\Scroll0.xnb" />
-    <None Include="Content\Content\Scroll1.xnb" />
-    <None Include="Content\Content\Sky.xnb" />
-    <None Include="Content\Content\StatFont.xnb" />
-    <None Include="Content\Content\TestMap2.xnb" />
-    <None Include="Content\Content\Timer.xnb" />
-    <None Include="Content\Content\TimerFont.xnb" />
-    <None Include="Content\Content\Title.xnb" />
-    <None Include="Content\Content\WinTheme.xnb" />
-    <None Include="Content\Content\Wizard0.xnb" />
-    <None Include="Content\Content\Wizard1.xnb" />
-    <None Include="Content\Content\Wizard2.xnb" />
-    <None Include="Content\Content\Wizard3.xnb" />
-    <None Include="Content\Content\WizardHealthFont.xnb" />
-    <None Include="Content\Content\WizardSpritesheet0.xnb" />
-    <None Include="Content\Content\WizardSpritesheet1.xnb" />
-    <None Include="Content\Content\WizardSpritesheet2.xnb" />
-    <None Include="Content\Content\WizardSpritesheet3.xnb" />
-    <None Include="Content\Content\wizard_cast.xnb" />
-    <None Include="Content\Content\wizard_hit1.xnb" />
-    <None Include="Content\Content\wizard_hit2.xnb" />
-    <None Include="Content\Content\wizard_hit3.xnb" />
-    <None Include="Content\Content\wizard_nocast.xnb" />
-    <None Include="Content\Content\wizard_ooh1.xnb" />
-    <None Include="Content\Content\wizard_ooh2.xnb" />
-    <None Include="Content\Content\WQ_fireball.xnb" />
-    <None Include="Content\Content\WQ_firecharge.xnb" />
-    <None Include="Content\Content\WQ_frostray.xnb" />
-    <None Include="Content\Content\WQ_magic1.xnb" />
-    <None Include="Content\Content\WQ_magic_hit1.xnb" />
-    <None Include="Content\Content\WQ_magic_hit2.xnb" />
-    <None Include="Content\Content\WQ_magic_hit3.xnb" />
-    <None Include="Content\Content\WQ_magic_hit4.xnb" />
-    <None Include="Content\Content\WQ_magic_hit5.xnb" />
-    <None Include="Content\Content\WQ_magic_hit_chord.xnb" />
-    <None Include="Content\Content\WQ_main_theme_mp3.xnb" />
-    <None Include="Content\Content\WQ_nocast.xnb" />
-    <None Include="Content\Content\WQ_potiongone.xnb" />
-    <None Include="Content\Content\WQ_potion_cork.xnb" />
-    <None Include="Content\Content\WQ_scroll.xnb" />
-    <None Include="Content\Content\WQ_tile2.xnb" />
-    <None Include="Content\Content\WQ_tile3.xnb" />
-    <None Include="Content\Fonts\BetaFont.spritefont" />
-    <None Include="Content\Fonts\File.spritefont" />
-    <None Include="Content\Fonts\InfoFont.spritefont" />
-    <None Include="Content\Fonts\InfoFont2.spritefont" />
-    <None Include="Content\Fonts\OptionFont.spritefont" />
-    <None Include="Content\Fonts\ScreenFont.spritefont" />
-    <None Include="Content\Fonts\StatFont.spritefont" />
-    <None Include="Content\Fonts\TimerFont.spritefont" />
-    <None Include="Content\Fonts\WizardHealthFont.spritefont" />
-    <None Include="WizardGrenade2_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
