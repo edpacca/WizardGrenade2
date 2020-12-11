@@ -8,19 +8,17 @@ namespace WizardGrenade2
 {
     public class Sprite
     {
-        private Texture2D _spriteTexture;
-        private Rectangle _spriteRectangle;
-        private Animator _animator;
-        private float _layerDepth = 0f;
-        private int _frameSize;
-        private bool _verticalAnimation;
-
+        public Texture2D SpriteTexture { get; private set; }
+        public Rectangle SpriteRectangle { get => GetSpriteRectangle(); }
+        public Vector2 Origin { get => GetSpriteOrigin(); }
         public Color SpriteColour { get; set; }
         public SpriteEffects SpriteVisualEffect { get; set; }
         public float SpriteScale { get; set; }
- 
-        public Texture2D GetSpriteTexture() => _spriteTexture;
-        public Rectangle GetSpriteRectangle() => new Rectangle(_spriteRectangle.X, _spriteRectangle.Y, (int)(_spriteRectangle.Width * SpriteScale), (int)(_spriteRectangle.Height * SpriteScale));
+
+        private Animator _animator;
+        private Rectangle _spriteRectangle;
+        private int _frameSize;
+        private bool _verticalAnimation;
 
         // Constructors
         public Sprite()
@@ -36,18 +34,24 @@ namespace WizardGrenade2
             LoadContent(contentManager, fileName);
         }
 
+        public Sprite(ContentManager contentManager, string fileName, int framesH, int framesV)
+            : this()
+        {
+            LoadContent(contentManager, fileName, framesH, framesV);
+        }
+
         // LoadContent for single sprite
         protected internal void LoadContent(ContentManager contentManager, string fileName)
         {
-            _spriteTexture = contentManager.Load<Texture2D>(fileName);
-            _spriteRectangle = new Rectangle(0, 0, _spriteTexture.Width, _spriteTexture.Height);
+            SpriteTexture = contentManager.Load<Texture2D>(fileName);
+            _spriteRectangle = new Rectangle(0, 0, SpriteTexture.Width, SpriteTexture.Height);
         }
 
         // LoadContent from animation spriteSheet
         protected internal void LoadContent(ContentManager contentManager, string fileName, int framesH, int framesV)
         {
-            _spriteTexture = contentManager.Load<Texture2D>(fileName);
-            _spriteRectangle = new Rectangle(0, 0, _spriteTexture.Width / framesH, _spriteTexture.Height / framesV);
+            SpriteTexture = contentManager.Load<Texture2D>(fileName);
+            _spriteRectangle = new Rectangle(0, 0, SpriteTexture.Width / framesH, SpriteTexture.Height / framesV);
 
             if (framesV > framesH)
             {
@@ -63,7 +67,12 @@ namespace WizardGrenade2
             _animator = new Animator(animationStates, _frameSize);
         }
 
-        public Vector2 GetSpriteOrigin()
+        private Rectangle GetSpriteRectangle()
+        {
+            return new Rectangle(_spriteRectangle.X, _spriteRectangle.Y, (int)(_spriteRectangle.Width * SpriteScale), (int)(_spriteRectangle.Height * SpriteScale));
+        }
+
+        private Vector2 GetSpriteOrigin()
         {
             return new Vector2((float)_spriteRectangle.Width / 2, (float)_spriteRectangle.Height / 2) * SpriteScale;
         }
@@ -78,18 +87,19 @@ namespace WizardGrenade2
 
         public void DrawSprite(SpriteBatch spriteBatch, Vector2 position)
         {
-            spriteBatch.Draw(_spriteTexture, position, _spriteRectangle, SpriteColour, 0f, Vector2.Zero, SpriteScale, SpriteVisualEffect, _layerDepth);
+            spriteBatch.Draw(SpriteTexture, position, _spriteRectangle, SpriteColour, 0f, Vector2.Zero, SpriteScale, SpriteVisualEffect, 0f);
         }
 
         public void DrawSprite(SpriteBatch spriteBatch, Vector2 position, float rotation)
         {
             Vector2 rotationOffset = CalcRotationOffset(rotation);
-            spriteBatch.Draw(_spriteTexture, position + rotationOffset, _spriteRectangle, SpriteColour, rotation, Vector2.Zero, SpriteScale, SpriteVisualEffect, _layerDepth);
+            spriteBatch.Draw(SpriteTexture, position + rotationOffset, _spriteRectangle, SpriteColour, rotation, Vector2.Zero, SpriteScale, SpriteVisualEffect, 0f);
         }
 
+        // For drawing at scale without changing base scaling
         public void DrawSpriteAtScale(SpriteBatch spriteBatch, Vector2 position, float scale)
         {
-            spriteBatch.Draw(_spriteTexture, position - (GetSpriteOrigin() * scale), _spriteRectangle, SpriteColour, 0f, Vector2.Zero, scale, SpriteVisualEffect, _layerDepth);
+            spriteBatch.Draw(SpriteTexture, position - (Origin * scale), _spriteRectangle, SpriteColour, 0f, Vector2.Zero, scale, SpriteVisualEffect, 0f);
         }
 
         public void UpdateAnimationSequence(string state, float targetFrameRate, GameTime gameTime)
@@ -112,40 +122,21 @@ namespace WizardGrenade2
                 _spriteRectangle.X = frameNumber * _frameSize;
         }
 
-        public void MaskSpriteRectangleX(float maskPercentage)
-        {
-            float percentage = maskPercentage <= 1 && maskPercentage >= 0 ? maskPercentage : 1;
-            _spriteRectangle.X = (int)(_spriteTexture.Width * percentage);
-        }
-
-        public void MaskSpriteRectangleY(float maskPercentage)
-        {
-            float percentage = maskPercentage <= 1 && maskPercentage >= 0 ? maskPercentage : 1;
-            _spriteRectangle.Y = (int)(_spriteTexture.Height * percentage);
-        }
-
-        public void MaskSpriteRectangleWidth(float maskPercentage)
-        {
-            float percentage = maskPercentage <= 1 && maskPercentage >= 0 ? maskPercentage : 1;
-            _spriteRectangle.Width = (int)(_spriteTexture.Width * percentage);
-        }
-
-        public void MaskSpriteRectangleHeight(float maskPercentage)
-        {
-            float percentage = maskPercentage <= 1 && maskPercentage >= 0 ? maskPercentage : 1;
-            _spriteRectangle.Height = (int)(_spriteTexture.Height * percentage);
-        }
+        public void MaskSpriteRectangleX(float maskPercentage) => _spriteRectangle.X = (int)(SpriteTexture.Width * maskPercentage);
+        public void MaskSpriteRectangleY(float maskPercentage) => _spriteRectangle.Y = (int)(SpriteTexture.Height * maskPercentage);
+        public void MaskSpriteRectangleWidth(float maskPercentage) => _spriteRectangle.Width = (int)(SpriteTexture.Width * maskPercentage);
+        public void MaskSpriteRectangleHeight(float maskPercentage) => _spriteRectangle.Height = (int)(SpriteTexture.Height * maskPercentage);
 
         public void MaskSpriteFromBottom(float maskPercentage)
         {
-            _spriteRectangle.Height = _spriteTexture.Height - (int)(_spriteTexture.Height * maskPercentage);
-            _spriteRectangle.Y = (int)(_spriteTexture.Height * maskPercentage);
+            _spriteRectangle.Height = SpriteTexture.Height - (int)(SpriteTexture.Height * maskPercentage);
+            _spriteRectangle.Y = (int)(SpriteTexture.Height * maskPercentage);
         }
 
         public void MaskSpriteFromTop(float maskPercentage)
         {
-            _spriteRectangle.Y = (int)(_spriteTexture.Height * maskPercentage);
-            _spriteRectangle.Height = (int)(_spriteTexture.Height * (1 - maskPercentage));
+            _spriteRectangle.Y = (int)(SpriteTexture.Height * maskPercentage);
+            _spriteRectangle.Height = (int)(SpriteTexture.Height * (1 - maskPercentage));
         }
     }
 }

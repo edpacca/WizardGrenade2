@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace WizardGrenade2
 {
-    class Fireball : Weapon
+    public class Fireball : Weapon
     {
         private Explosion _explosion;
         private int _explosionRadius;
@@ -13,11 +13,12 @@ namespace WizardGrenade2
         public Fireball()
         {
             DetonationTimer = new Timer(WeaponSettings.FIREBALL_DETONATION_TIME);
-            _explosion = new Explosion(WeaponSettings.FIREBALL_EXPLOSION_RADIUS);
+            _explosionRadius = WeaponSettings.FIREBALL_EXPLOSION_RADIUS;
+            _explosion = new Explosion(_explosionRadius);
+
             LoadWeaponObject(WeaponSettings.FIREBALL_GAMEOBJECT, WeaponSettings.FIREBALL_CHARGE_POWER, WeaponSettings.FIREBALL_MAX_CHARGE_TIME);
             ChargingSoundFile = "fireCharge";
             MovingSoundFile = "fireCast";
-            _explosionRadius = WeaponSettings.FIREBALL_EXPLOSION_RADIUS;
             _weapon.LoadAudio("fireBounce");
         }
 
@@ -45,7 +46,7 @@ namespace WizardGrenade2
             {
                 Explode(gameTime, gameObjects);
                 KillProjectile("fireHit");
-                DetonationTimer.ResetTimer(WeaponManager.Instance.GetDetonationTime());
+                DetonationTimer.ResetTimer(WeaponManager.Instance.DetonationTime);
             }
 
             _explosion.UpdateExplosion(gameTime);
@@ -71,7 +72,7 @@ namespace WizardGrenade2
                     SoundManager.Instance.PlaySound("wizardHit0");
                     Vector2 pushBack = _explosion.ExplosionVector(explosionToObject) * WeaponSettings.FIREBALL_EXPLOSION_DAMPING;
                     gameObject.AddVelocity(pushBack);
-                    gameObject.entity.ApplyDamage((int)Mechanics.VectorMagnitude(pushBack) / 3);
+                    gameObject.Entity.ApplyDamage((int)Mechanics.VectorMagnitude(pushBack) / 3);
                 }
             }
         }

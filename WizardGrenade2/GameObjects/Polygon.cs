@@ -5,26 +5,23 @@ using System.Collections.Generic;
 
 namespace WizardGrenade2
 {
-    class Polygon
+    public class Polygon
     {
+        public List<Vector2> TransformedPolyPoints { get; private set; } = new List<Vector2>();
         private List<Vector2> polyPoints = new List<Vector2>();
-        public List<Vector2> transformedPolyPoints = new List<Vector2>();
-        private Rectangle _pixelRectangle = new Rectangle(0, 0, 1, 1);
         private Texture2D _pixelTexture;
+        private Rectangle _pixelRectangle = new Rectangle(0, 0, 1, 1);
         
-        public Polygon(Rectangle spriteRectangle, int numberOfCollisionPoints, bool canRotate)
+        public Polygon(Rectangle spriteRectangle, int numberOfCollisionPoints)
         {
             polyPoints = (numberOfCollisionPoints == 0) ?
                 CalcRectanglePoints(spriteRectangle.Width, spriteRectangle.Height) :
                 CalcCircleCollisionPoints((spriteRectangle.Width + spriteRectangle.Height) / 4, numberOfCollisionPoints);
 
-            //int points = canRotate ? (numberOfCollisionPoints / 2) + 1 : polyPoints.Count;
             int points = (numberOfCollisionPoints / 2) + 1;
 
             for (int i = 0; i < points; i++)
-            {
-                transformedPolyPoints.Add(polyPoints[i]);
-            }
+                TransformedPolyPoints.Add(polyPoints[i]);
         }
 
         public void LoadPolyContent(ContentManager contentManager)
@@ -34,10 +31,8 @@ namespace WizardGrenade2
 
         public void UpdateCollisionPoints(Vector2 position, float rotation)
         {
-            for (int i = 0; i < transformedPolyPoints.Count; i++)
-            {
-                transformedPolyPoints[i] = Vector2.Transform(polyPoints[i], Matrix.CreateRotationZ(rotation)) + position;
-            }
+            for (int i = 0; i < TransformedPolyPoints.Count; i++)
+                TransformedPolyPoints[i] = Vector2.Transform(polyPoints[i], Matrix.CreateRotationZ(rotation)) + position;
         }
 
         public static List<Vector2> CalcRectanglePoints(float width, float height)
@@ -65,10 +60,10 @@ namespace WizardGrenade2
         public void DrawCollisionPoints(SpriteBatch spriteBatch, Vector2 position)
         {
             // Draw collision points as single pixel
-            //foreach (var point in polyPoints)
-                //spriteBatch.Draw(_pixelTexture, point + position, _pixelRectangle, Color.White);
+            foreach (var point in polyPoints)
+                spriteBatch.Draw(_pixelTexture, point + position, _pixelRectangle, Color.White);
 
-            foreach (var point in transformedPolyPoints)
+            foreach (var point in TransformedPolyPoints)
                 spriteBatch.Draw(_pixelTexture, point, _pixelRectangle, Color.Aqua);
 
             // Draw point in centre

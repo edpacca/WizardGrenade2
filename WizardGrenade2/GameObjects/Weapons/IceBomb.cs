@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace WizardGrenade2
 {
-    class IceBomb : Weapon
+    public class IceBomb : Weapon
     {
         private Explosion _explosion;
 
@@ -55,7 +55,7 @@ namespace WizardGrenade2
                 {
                     Vector2 pushBack = _explosion.ExplosionVector(explosionToObject) / 2;
                     gameObject.AddVelocity(pushBack);
-                    gameObject.entity.ApplyDamage((int)Mechanics.VectorMagnitude(pushBack) / 10);
+                    gameObject.Entity.ApplyDamage((int)Mechanics.VectorMagnitude(pushBack) / 10);
                 }
             }
         }

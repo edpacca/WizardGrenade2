@@ -6,8 +6,8 @@ namespace WizardGrenade2
 {
     public class Setting
     {
-        public int IntValue { get; private set; }
         public float Value { get; private set; }
+        public int IntValue { get; private set; }
         public int MinValue { get; private set; }
         public int MaxValue { get; private set; }
         private SpriteMeter _spriteMeter;

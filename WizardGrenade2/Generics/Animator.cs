@@ -7,9 +7,9 @@ namespace WizardGrenade2
     {
         private readonly Dictionary<string, int[]> _animationStates;
         private readonly int _frameSize;
-        private int _currentFrameIndex = 0;
-        private float _elapsedFrameTime = 0;
         private string _currentState;
+        private float _elapsedFrameTime;
+        private int _currentFrameIndex;
         private int _framesInCurrentState;
 
         public Animator(Dictionary<string, int[]> animationStates, int frameSize)
@@ -31,15 +31,8 @@ namespace WizardGrenade2
             _framesInCurrentState = _animationStates[state].Length;
         }
 
-        public int GetAnimationFrames(string state, float targetFrameRate, GameTime gameTime)
-        {
-            return GetFramePosition(GetCurrentFrame(state, targetFrameRate, gameTime));
-        }
-
-        public int GetFramePosition(int currentFrame)
-        {
-            return currentFrame * _frameSize;
-        }
+        public int GetAnimationFrames(string state, float targetFrameRate, GameTime gameTime) => GetFramePosition(GetCurrentFrame(state, targetFrameRate, gameTime));
+        public int GetFramePosition(int currentFrame) => currentFrame * _frameSize;
 
         public int GetSingleFrame(string state, int frame)
         {

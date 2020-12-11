@@ -5,7 +5,6 @@
         public int Health { get; private set; }
         public bool IsDead { get; private set; }
         public bool JustDied { get; private set; }
-
         private bool _previousIsDead;
         private bool _currentIsDead;
 
@@ -29,7 +28,6 @@
         {
             _previousIsDead = _currentIsDead;
             _currentIsDead = IsDead;
-
             JustDied = _previousIsDead != _currentIsDead && !_previousIsDead;
         }
 

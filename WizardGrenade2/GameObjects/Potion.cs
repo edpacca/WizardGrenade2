@@ -1,19 +1,20 @@
-﻿using Microsoft.Xna.Framework.Content;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using Microsoft.Xna.Framework;
 
 namespace WizardGrenade2
 {
-    class Potion
+    public class Potion
     {
         private GameObject _potion;
+        private GameObjectParameters _potionParameters;
+        private Random _random = new Random();
         private readonly string _fileName = @"GameObjects/Potions";
         private const int MASS = 75;
         private const float BOUNCE_FACTOR = 0.2f;
-        private GameObjectParameters _potionParameters;
-        private Random _random = new Random();
+
         private Dictionary<string, int[]> _potionTypes = new Dictionary<string, int[]>()
         {
             ["0"] = new int[] { 0 },
@@ -29,11 +30,11 @@ namespace WizardGrenade2
 
         public void LoadContent(ContentManager contentManager)
         {
+            int type = _random.Next(0, 2);
             _potion.LoadContent(contentManager);
             _potion.LoadAnimationContent(_potionTypes);
-            int type = _random.Next(0, 2);
             _potion.UpdateAnimationFrame(type.ToString(), type);
-            _potion.SetPosition(new Vector2(ScreenSettings.CentreScreenWidth, 0));
+            _potion.Position = new Vector2(ScreenSettings.CentreScreenWidth, 0);
         }
 
         public void Update(GameTime gameTime)
@@ -45,6 +46,5 @@ namespace WizardGrenade2
         {
             _potion.Draw(spriteBatch);
         }
-
     }
 }

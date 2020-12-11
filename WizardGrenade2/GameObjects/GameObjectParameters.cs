@@ -2,11 +2,11 @@
 {
     public class GameObjectParameters
     {
+        public bool CanRotate { get; set; }
         public readonly string fileName;
         public readonly int framesH;
         public readonly int framesV;
         public readonly float mass;
-        public bool CanRotate { get; set; }
         public readonly int numberOfCollisionPoints;
         public readonly float dampingFactor;
 

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace WizardGrenade2
 {
-    class Arrow : Weapon
+    public class Arrow : Weapon
     {
         private int _arrowOffset;
 
@@ -37,10 +37,10 @@ namespace WizardGrenade2
             foreach (var wizard in wizards)
             {
                 float distance = Math.Abs(Mechanics.VectorMagnitude(Position - wizard.Position));
-                if (IsMoving && distance <= wizard.GetSpriteRectangle().Width / 2)
+                if (IsMoving && distance <= wizard.SpriteRectangle.Width / 2)
                 {
                     wizard.AddVelocity(Velocity * WeaponSettings.ARROW_KNOCKBACK_FACTOR);
-                    wizard.entity.ApplyDamage((int)(Mechanics.VectorMagnitude(Velocity) * WeaponSettings.ARROW_DAMAGE_FACTOR));
+                    wizard.Entity.ApplyDamage((int)(Mechanics.VectorMagnitude(Velocity) * WeaponSettings.ARROW_DAMAGE_FACTOR));
                     KillProjectile("wizardHit1");
                 }
             }

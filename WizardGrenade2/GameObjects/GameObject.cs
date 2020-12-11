@@ -2,23 +2,24 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
-using System.Reflection;
 
 namespace WizardGrenade2
 {
     public class GameObject : Sprite
     {
-        private readonly GameObjectParameters _parameters = new GameObjectParameters();
-        private Space2D _realSpace = new Space2D();
-        private Vector2 _acceleration = Vector2.Zero;
-        private Space2D _potentialSpace = new Space2D();
-        private Polygon _collisionPoints;
-        private CollisionManager Collider = CollisionManager.Instance;
+        public Vector2 Velocity { get => _realSpace.velocity; set => _realSpace.velocity = value; }
+        public Vector2 Position { get => _realSpace.position; set => _realSpace.position = value; }
         public bool Collided { get; set; }
         public float DrawRotation { get; set; }
 
-        private bool _hasImpactAudio;
+        private readonly GameObjectParameters _parameters = new GameObjectParameters();
+        private CollisionManager Collider = CollisionManager.Instance;
+        private Space2D _realSpace = new Space2D();
+        private Space2D _potentialSpace = new Space2D();
+        private Polygon _collisionPoints;
+        private Vector2 _acceleration = Vector2.Zero;
         private string _impactAudio;
+        private bool _hasImpactAudio;
 
         public GameObject(GameObjectParameters inputParameters)
         {
@@ -34,13 +35,12 @@ namespace WizardGrenade2
 
         public void LoadContent(ContentManager contentManager)
         {
-            // Check if animated object and call relevant method from Sprite class
             if (_parameters.framesH == 0 || _parameters.framesV == 0)
                 LoadContent(contentManager, _parameters.fileName);
             else
                 LoadContent(contentManager, _parameters.fileName, _parameters.framesH, _parameters.framesV);
 
-            _collisionPoints = new Polygon(GetSpriteRectangle(), _parameters.numberOfCollisionPoints, _parameters.CanRotate);
+            _collisionPoints = new Polygon(SpriteRectangle, _parameters.numberOfCollisionPoints);
             _collisionPoints.LoadPolyContent(contentManager);
         }
 
@@ -74,20 +74,14 @@ namespace WizardGrenade2
 
         private void ResolveCollisions(GameTime gameTime)
         {
-            // Check for a collision in potential space by evaluating possible reflection vector
-            List<Vector2> collidingPoints = Collider.CheckCollision(_collisionPoints.transformedPolyPoints);
+            List<Vector2> collidingPoints = Collider.CheckCollision(_collisionPoints.TransformedPolyPoints);
 
             if (collidingPoints.Count > 0)
             {
                 Collided = true;
-                Vector2 reflectionVector = Collider.ResolveCollision
-                    (collidingPoints, _potentialSpace.position, _realSpace.velocity);
-
-                // If colliding in potential space then update position with damped reflection vector
+                Vector2 reflectionVector = Collider.ResolveCollision(collidingPoints, _potentialSpace.position, _realSpace.velocity);
                 _realSpace.velocity = ApplyDamping(reflectionVector, _parameters.dampingFactor);
                 UpdateRealSpace(gameTime);
-
-                // Update collision points from potential position to real position
                 _collisionPoints.UpdateCollisionPoints(_realSpace.position, _realSpace.rotation);
 
                 if (_hasImpactAudio && Mechanics.VectorMagnitude(_realSpace.velocity) > 10)
@@ -95,8 +89,6 @@ namespace WizardGrenade2
             }
             else
             {
-                // If no collision, set real position to potential position
-                //_realSpace.position = _potentialSpace.position;
                 UpdateRealSpace(gameTime);
             }
         }
@@ -115,17 +107,8 @@ namespace WizardGrenade2
         public List<Vector2> GetTransformedPolyPoints(Vector2 position)
         {
             _collisionPoints.UpdateCollisionPoints(position, 0f);
-            return _collisionPoints.transformedPolyPoints;
+            return _collisionPoints.TransformedPolyPoints;
         }
-
-        public void AddVelocity(Vector2 deltaVelocity) => _realSpace.velocity += deltaVelocity;
-        public void AddRotation(float rotation) => _realSpace.rotation += rotation;
-        public Vector2 GetVelocity() => _realSpace.velocity;
-        public Vector2 GetPosition() => _realSpace.position;
-        public void SetVelocity(Vector2 velocity) => _realSpace.velocity = velocity;
-        public void SetPosition(Vector2 position) => _realSpace.position = position;
-        public void ModifyVelocityX(float xVelocity) => _realSpace.velocity.X = xVelocity;
-        public void ModifyVelocityY(float yVelocity) => _realSpace.velocity.Y = yVelocity;
 
         public void Draw(SpriteBatch spriteBatch)
         {
@@ -133,5 +116,10 @@ namespace WizardGrenade2
             DrawSprite(spriteBatch, _realSpace.position, rotation);
             //_collisionPoints.DrawCollisionPoints(spriteBatch, _realSpace.position);
         }
+
+        public void AddVelocity(Vector2 deltaVelocity) => _realSpace.velocity += deltaVelocity;
+        public void ModifyVelocityX(float xVelocity) => _realSpace.velocity.X = xVelocity;
+        public void ModifyVelocityY(float yVelocity) => _realSpace.velocity.Y = yVelocity;
+        public void AddRotation(float rotation) => _realSpace.rotation += rotation;
     }
 }

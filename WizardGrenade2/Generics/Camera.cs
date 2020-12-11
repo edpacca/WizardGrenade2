@@ -4,10 +4,10 @@ namespace WizardGrenade2
 {
     public class Camera
     {
-        public float Zoom { get; set; }
         public Matrix Transform { get => Transformation(); }
-        public Matrix Invert { get => Inverted();  }
+        public Matrix Invert { get => Inverted(); }
         public Vector2 Position { get; set; }
+        public float Zoom { get; set; }
 
         public Camera()
         {

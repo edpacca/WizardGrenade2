@@ -7,22 +7,26 @@ namespace WizardGrenade2
 {
     public class Weapon
     {
-        protected GameObject _weapon;
         public Timer DetonationTimer { get; set; }
-        public int WeaponPower { get; private set; }
-        public float MaxChargeTime { get; private set; }
-        public bool IsMoving { get; set; }
-        public bool IsActive { get; set; }
-        public bool HasCollided { get => _weapon.Collided; set => _weapon.Collided = value; }
-        public virtual void SetToPlayerPosition(Vector2 newPosition, int activeDirection, float angle) => _weapon.SetPosition(newPosition);
-        public virtual void WizardInteraction(List<Wizard> gameObjects) {}
-        public Vector2 Position => _weapon.GetPosition();
-        public Vector2 Velocity => _weapon.GetVelocity();
-        public Texture2D Symbol => _weapon.GetSpriteTexture();
+        public Texture2D Symbol { get => _weapon.SpriteTexture; }
+        public Vector2 Position { get => _weapon.Position; }
+        public Vector2 Velocity { get => _weapon.Velocity; }
         public string ChargingSoundFile { get; set; }
         public string MovingSoundFile { get; set; }
         public string ImpaceSoundFile { get; set; }
-  
+        public float MaxChargeTime { get; private set; }
+        public int WeaponPower { get; private set; }
+        public bool HasCollided { get => _weapon.Collided; set => _weapon.Collided = value; }
+        public bool IsMoving { get; set; }
+        public bool IsActive { get; set; }
+
+        protected GameObject _weapon;
+
+        public virtual void SetToPlayerPosition(Vector2 newPosition, int activeDirection, float angle) => _weapon.Position = newPosition;
+        public virtual void WizardInteraction(List<Wizard> gameObjects) { }
+        public void SetSpriteScale(float scale) => _weapon.SpriteScale = scale;
+        public void DrawSymbol(SpriteBatch spriteBatch, Vector2 position, float scale) => _weapon.DrawSpriteAtScale(spriteBatch, position, scale);
+
         public void LoadWeaponObject(GameObjectParameters parameters)
         {
             _weapon = new GameObject(parameters);
@@ -50,16 +54,15 @@ namespace WizardGrenade2
 
         public virtual void FireProjectile(float chargeTime, float firingAngle)
         {
-            _weapon.SetVelocity(Mechanics.VectorComponents(chargeTime * WeaponPower, firingAngle));
+            _weapon.Velocity = Mechanics.VectorComponents(chargeTime * WeaponPower, firingAngle);
             IsMoving = true;
         }
 
         public virtual void KillProjectile()
         {
-            _weapon.SetVelocity(Vector2.Zero);
+            _weapon.Velocity = Vector2.Zero;
             IsMoving = false;
             StateMachine.Instance.ShotLanded();
-            //SoundManager.Instance.StopSoundInstance(MovingSoundFile);
         }
 
         public virtual void KillProjectile(string SoundEffect)
@@ -68,20 +71,10 @@ namespace WizardGrenade2
             KillProjectile();
         }
 
-        public void SetSpriteScale(float scale)
-        {
-            _weapon.SpriteScale = scale;
-        }
-
         public virtual void Draw(SpriteBatch spriteBatch)
         {
             if (IsMoving)
                 _weapon.Draw(spriteBatch);
-        }
-
-        public void DrawSymbol(SpriteBatch spriteBatch, Vector2 position, float scale)
-        {
-            _weapon.DrawSpriteAtScale(spriteBatch, position, scale);
         }
     }
 }
