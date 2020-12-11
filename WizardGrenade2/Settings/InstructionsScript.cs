@@ -2,7 +2,7 @@
 
 namespace WizardGrenade2
 {
-    public class InstructionsScript
+    public static class InstructionsScript
     {
         public static readonly List<string> InstructionsList = new List<string>()
         {
@@ -88,5 +88,4 @@ namespace WizardGrenade2
             ItemsScript,
         };
     }
-
 }

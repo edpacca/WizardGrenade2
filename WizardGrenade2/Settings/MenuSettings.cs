@@ -1,10 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 
-
 namespace WizardGrenade2
 {
-    public class MenuSettings
+    public static class MenuSettings
     {
         // MainMenu layout and settings
         public static Vector2 MenuOptionsPosition = new Vector2(ScreenSettings.TARGET_WIDTH / 2.5f, ScreenSettings.TARGET_HEIGHT * 0.4f);

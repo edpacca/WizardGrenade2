@@ -1,8 +1,11 @@
 ﻿namespace WizardGrenade2
 {
-    public class WeaponSettings
+    public static class WeaponSettings
     {
+        // General settings
+        public static readonly int[] DETONATION_TIMES = new int[] { 1, 2, 3, 4, 5 };
         public const bool ROTATION = true;
+        public const float MAX_DISTANCE = ScreenSettings.TARGET_WIDTH + 200;
 
         // Fireball settings
         private const string FIREBALL_FILENAME = @"GameObjects/Fireball";
