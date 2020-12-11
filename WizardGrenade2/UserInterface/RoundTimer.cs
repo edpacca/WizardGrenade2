@@ -6,29 +6,26 @@ namespace WizardGrenade2
 {
     public class RoundTimer : Timer
     {
+        private Sprite _hourglass;
+        private Sprite _sandTop;
+        private Sprite _sandBottom;
         private SpriteFont _timerFont;
         private Color _timerColour;
         private Vector2 _timeTextSize;
         private Vector2 _timerPosition;
-        private Vector2 _offset = new Vector2(1, 2);
-        private const float TIMER_INSET_POSITION = 30f;
-        private float _roundTime;
-
-        private Sprite _hourglass;
-        private Sprite _sandTop;
-        private Sprite _sandBottom;
         private Vector2 _hourglassPosition;
+        private const float TIMER_INSET_POSITION = 30f;
+        private const float TOP_PERCENT = 0.50f;
+        private const float BOTTOM_PERCENT = 0.53f;
+        private float _roundTime;
         private float _sandBottomYOffset;
         private float _sandTopYOffset;
-        private int _spriteHeight;
         private float _percentage;
-        private const float TOP_PERCENT = 0.56f;
-        private const float BOTTOM_PERCENT = 0.53f;
         private float _bottomPercentage;
         private float _topPercentage;
-        private bool _timerReversing;
-
         private float _lastSeconds = 3f;
+        private int _spriteHeight;
+        private bool _timerReversing;
 
         public RoundTimer(float startTime) : base(startTime)
         {
@@ -42,9 +39,9 @@ namespace WizardGrenade2
             _sandBottom = new Sprite(contentManager, @"UserInterface/SandBottom");
             _sandTop = new Sprite(contentManager, @"UserInterface/SandTop");
             _timeTextSize = _timerFont.MeasureString(Time.ToString("0"));
-            _timerPosition = new Vector2(TIMER_INSET_POSITION + (_hourglass.GetSpriteRectangle().Width / 2), ScreenSettings.TARGET_HEIGHT - (_timeTextSize.Y + TIMER_INSET_POSITION + 48));
-            _hourglassPosition = new Vector2(TIMER_INSET_POSITION, ScreenSettings.TARGET_HEIGHT - (_hourglass.GetSpriteRectangle().Height + TIMER_INSET_POSITION));
-            _spriteHeight = _sandBottom.GetSpriteTexture().Height;
+            _timerPosition = new Vector2(TIMER_INSET_POSITION + (_hourglass.SpriteRectangle.Width / 2), ScreenSettings.TARGET_HEIGHT - (_timeTextSize.Y + TIMER_INSET_POSITION + 48));
+            _hourglassPosition = new Vector2(TIMER_INSET_POSITION, ScreenSettings.TARGET_HEIGHT - (_hourglass.SpriteRectangle.Height + TIMER_INSET_POSITION));
+            _spriteHeight = _sandBottom.SpriteTexture.Height;
         }
 
         public override void Update(GameTime gameTime)
@@ -55,9 +52,7 @@ namespace WizardGrenade2
                 RunSandTimerForward();
             }
             else if (StateMachine.Instance.GameState == StateMachine.GameStates.BetweenTurns)
-            {
                 ReverseSandTimer(gameTime);
-            }
 
             if (!IsRunning)
             {
@@ -102,6 +97,7 @@ namespace WizardGrenade2
 
             if (_percentage < 1)
                 _percentage += (float)gameTime.ElapsedGameTime.TotalSeconds / 2.5f;
+
             RunSandTimer();
         }
 
@@ -122,7 +118,7 @@ namespace WizardGrenade2
 
             if (StateMachine.Instance.GameState == StateMachine.GameStates.PlayerTurn && Time > 0.5f)
             {
-                spriteBatch.DrawString(_timerFont, Time.ToString("0"), _timerPosition - fontSize - _offset, Colours.Ink);
+                spriteBatch.DrawString(_timerFont, Time.ToString("0"), _timerPosition - fontSize - Colours.ShadowOffset, Colours.Ink);
                 spriteBatch.DrawString(_timerFont, Time.ToString("0"), _timerPosition - fontSize, _timerColour);
             }
         }

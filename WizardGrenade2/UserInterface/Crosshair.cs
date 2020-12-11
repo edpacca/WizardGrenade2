@@ -6,24 +6,23 @@ using Microsoft.Xna.Framework.Input;
 
 namespace WizardGrenade2
 {
-    class Crosshair
+    public class Crosshair
     {
-        private readonly string _crosshairFileName = @"UserInterface/Crosshair";
+        public float CrosshairAngle { get; private set; }
+
         private Sprite _crosshair;
+        private Sprite _chargeBar;
+        private Vector2 _crosshairPosition;
+        private Vector2 _chargeBarPosition;
+        private readonly string _crosshairFileName = @"UserInterface/Crosshair";
+        private readonly string _chargebarFileName = @"UserInterface/ChargeBar";
         private const int AIM_SPEED = 2;
         private const int CROSSHAIR_RADIUS = 50;
         private const int START_ANGLE = (int)(120f * Mechanics.PI / 180f);
-        public float CrosshairAngle { get; private set; }
         private float _rotation = 0f;
-
-        private Vector2 _crosshairPosition;
+        private float _chargePercentage;
         private int _previousDirection = 1;
         private int _currentDirection = 1;
-
-        private Sprite _chargeBar;
-        private readonly string _chargebarFileName = @"UserInterface/ChargeBar";
-        private Vector2 _chargeBarPosition;
-        private float _chargePercentage;
 
         public void LoadContent(ContentManager contentManager)
         {

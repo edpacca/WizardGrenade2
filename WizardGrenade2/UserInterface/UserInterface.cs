@@ -7,31 +7,30 @@ namespace WizardGrenade2
 {
     public class UserInterface
     {
-        private const float ROUND_TIME = 45f;
-        private Sprite _cursor;
-        private RoundTimer _timer;
         private List<HealthBar> _healthBars;
+        private List<Weapon> _weaponList;
         private List<string> _teamNames = new List<string>();
+        private DetonationTimer _detonationTimer;
+        private RoundTimer _timer;
+        private Sprite _cursor;
+        private Vector2 _weaponSymbolPosition = new Vector2(40, 40);
+        private const float ROUND_TIME = 45f;
         private int _numberOfTeams;
         private int _teamStartHealth;
-        private List<Weapon> _weaponList;
-        private DetonationTimer _detonationTimer;
-        private Vector2 _weaponSymbolPosition = new Vector2(40, 40);
 
-        public UserInterface(GameOptions gameOptions)
+        public UserInterface(GameOptions gameOptions, ContentManager contentManager)
         {
             _numberOfTeams = gameOptions.NumberOfTeams;
             _teamStartHealth = gameOptions.TeamSize * gameOptions.WizardHealth;
 
             for (int i = 0; i < gameOptions.NumberOfTeams; i++)
-            {
                 _teamNames.Add("Team " + (i + 1));
-            }
+
+            LoadContent(contentManager);
         }
 
-        public void LoadContent(ContentManager contentManager)
+        private void LoadContent(ContentManager contentManager)
         {
-
             _cursor = new Sprite(contentManager, @"UserInterface/cursor");
             _timer = new RoundTimer(ROUND_TIME);
             _detonationTimer = new DetonationTimer(contentManager);
@@ -49,15 +48,8 @@ namespace WizardGrenade2
 
         public void Update(GameTime gameTime, int[] teamHealths)
         {
-            //if (StateMachine.Instance.GameState == StateMachine.GameStates.PlayerTurn)
             _timer.Update(gameTime);
-            //if (!_timer.IsRunning)
-            //{
-            //    StateMachine.Instance.ForceTurnEnd();
-            //    _timer.ResetTimer(ROUND_TIME);
-            //}
-
-            _detonationTimer.SetTimer((int)WeaponManager.Instance.GetDetonationTime());
+            _detonationTimer.SetTimer((int)WeaponManager.Instance.DetonationTime);
 
             for (int i = 0; i < _numberOfTeams; i++)
                 _healthBars[i].Update(gameTime, teamHealths[i]);
@@ -65,15 +57,16 @@ namespace WizardGrenade2
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            foreach (var healthBar in _healthBars)
-                healthBar.Draw(spriteBatch);
+            if (StateMachine.Instance.GameState != StateMachine.GameStates.GameOver && StateMachine.Instance.GameState != StateMachine.GameStates.PlaceWizards)
+            {
+                foreach (var healthBar in _healthBars)
+                    healthBar.Draw(spriteBatch);
 
-            //if (StateMachine.Instance.GameState == StateMachine.GameStates.PlayerTurn)
-            _timer.Draw(spriteBatch);
-
-            _cursor.DrawSprite(spriteBatch, InputManager.CursorPosition());
-            _weaponList[WeaponManager.Instance.ActiveWeapon].DrawSymbol(spriteBatch, _weaponSymbolPosition, 6f);
-            _detonationTimer.Draw(spriteBatch, _weaponSymbolPosition);
+                _timer.Draw(spriteBatch);
+                _cursor.DrawSprite(spriteBatch, InputManager.CursorPosition());
+                _weaponList[WeaponManager.Instance.ActiveWeapon].DrawSymbol(spriteBatch, _weaponSymbolPosition, 6f);
+                _detonationTimer.Draw(spriteBatch, _weaponSymbolPosition);
+            }
         }
     }
 }

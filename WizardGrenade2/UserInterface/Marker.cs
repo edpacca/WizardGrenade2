@@ -5,18 +5,18 @@ using System;
 
 namespace WizardGrenade2
 {
-    class Marker : Sprite
+    public class Marker : Sprite
     {
+        private Vector2 _position;
+        private Vector2 _markerOffset;
         private readonly string _fileName = @"UserInterface/Marker";
         private const int OSCILLATION_RATE = 2;
         private const int OSCILLATION_AMPLITUDE = 3;
-        private Vector2 _position = Vector2.Zero;
-        private Vector2 _markerOffset = new Vector2(0, 36);
 
         public void LoadContent(ContentManager contentManager)
         {
             LoadContent(contentManager, _fileName);
-            _markerOffset.X = GetSpriteRectangle().Width / 2;
+            _markerOffset = new Vector2(SpriteRectangle.Width / 2, 36);
         }
 
         public void Update(GameTime gameTime, Vector2 activePlayerPosition)
