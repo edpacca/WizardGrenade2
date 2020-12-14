@@ -33,6 +33,7 @@ namespace WizardGrenade2
             GameObjectParameters parameters = WizardSettings.GetWizardParameters(skinNumber);
             Entity = new Entity(startHealth);
             _wizard = new GameObject(parameters, position);
+            _wizard.SpriteColour = Colours.Transparent;
         }
 
         public void LoadContent(ContentManager contentManager)
