@@ -83,9 +83,9 @@ namespace WizardGrenade2
 
         private void UpdateGamePlay(GameTime gameTime)
         {
-            _cameraManager.Update(gameTime);
             _userInterface.Update(gameTime, _gameScreen.TeamHealths);
             _gameScreen.Update(gameTime);
+            _cameraManager.Update(gameTime);
             StateMachine.Instance.UpdateStateMachine(gameTime);
 
             if (StateMachine.Instance.GameState == StateMachine.GameStates.Reset)
