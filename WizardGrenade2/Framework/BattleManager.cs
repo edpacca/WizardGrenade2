@@ -36,7 +36,7 @@ namespace WizardGrenade2
 
         public void Update(GameTime gameTime)
         {
-            if (StateMachine.Instance.GameState == StateMachine.GameStates.PlaceWizards)
+            if (StateMachine.Instance.GameState == GameStates.PlaceWizards)
                 _wizardTeams.PlaceTeams();
             else
             {

@@ -88,7 +88,7 @@ namespace WizardGrenade2
 
         private void ChargeWeapon(GameTime gameTime, Vector2 activePlayerPosition, int activeDirection)
         {
-            if (InputManager.IsKeyDown(Keys.Space) && StateMachine.Instance.GameState == StateMachine.GameStates.PlayerTurn)
+            if (InputManager.IsKeyDown(Keys.Space) && StateMachine.Instance.GameState == GameStates.PlayerTurn)
             {
                 SoundManager.Instance.PlaySoundInstance(Weapons[ActiveWeapon].ChargingSoundFile);
                 IsCharging = true;
@@ -141,7 +141,7 @@ namespace WizardGrenade2
 
         private void ResetCharge()
         {
-            if (!Weapons[ActiveWeapon].IsMoving && StateMachine.Instance.GameState == StateMachine.GameStates.PlayerTurn)
+            if (!Weapons[ActiveWeapon].IsMoving && StateMachine.Instance.GameState == GameStates.PlayerTurn)
                 _isLoaded = true;
         }
 
@@ -155,7 +155,7 @@ namespace WizardGrenade2
         {
             Weapons[ActiveWeapon].Draw(spriteBatch);
 
-            if (StateMachine.Instance.GameState == StateMachine.GameStates.PlayerTurn)
+            if (StateMachine.Instance.GameState == GameStates.PlayerTurn)
             _crosshair.Draw(spriteBatch, IsCharging);
 
             _hugeFireball.Draw(spriteBatch);

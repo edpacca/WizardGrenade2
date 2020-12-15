@@ -88,7 +88,7 @@ namespace WizardGrenade2
             _cameraManager.Update(gameTime);
             StateMachine.Instance.UpdateStateMachine(gameTime);
 
-            if (StateMachine.Instance.GameState == StateMachine.GameStates.Reset)
+            if (StateMachine.Instance.GameState == GameStates.Reset)
                 ResetGame(gameTime);
         }
 
@@ -118,7 +118,7 @@ namespace WizardGrenade2
 
         private void ExitGame()
         {
-            if (InputManager.WasKeyPressed(Keys.Delete) || StateMachine.Instance.GameState == StateMachine.GameStates.ExitGame)
+            if (InputManager.WasKeyPressed(Keys.Delete) || StateMachine.Instance.GameState == GameStates.ExitGame)
             {
                 Content.Unload();
                 Exit();

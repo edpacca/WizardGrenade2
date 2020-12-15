@@ -6,7 +6,7 @@ using System;
 
 namespace WizardGrenade2
 {
-    public sealed class StateMachine
+    public sealed partial class StateMachine
     {
         private StateMachine()
         {
@@ -14,20 +14,6 @@ namespace WizardGrenade2
         }
         private static readonly Lazy<StateMachine> lazyStateMachine = new Lazy<StateMachine>(() => new StateMachine());
         public static StateMachine Instance { get => lazyStateMachine.Value; }
-
-        public enum GameStates
-        {
-            GameSetup,
-            PlaceWizards,
-            GameStarted,
-            PlayerTurn,
-            ShotTaken,
-            BetweenTurns,
-            PlayerOut,
-            GameOver,
-            Reset,
-            ExitGame,
-        }
 
         public GameStates GameState { get; private set; }
         private GameStates _previousGameState;

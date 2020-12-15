@@ -79,8 +79,8 @@ namespace WizardGrenade2
                 SoundManager.Instance.PlaySound("wizardOh1");
             }
 
-            if (StateMachine.Instance.GameState == StateMachine.GameStates.PlayerTurn ||
-                StateMachine.Instance.GameState == StateMachine.GameStates.ShotTaken)
+            if (StateMachine.Instance.GameState == GameStates.PlayerTurn ||
+                StateMachine.Instance.GameState == GameStates.ShotTaken)
                 _teams[_activeTeam].Wizards[_activeWizard].UpdateControl(gameTime);
 
             _marker.Update(gameTime, ActiveWizardPosition);
@@ -154,8 +154,8 @@ namespace WizardGrenade2
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            if ((StateMachine.Instance.GameState == StateMachine.GameStates.PlayerTurn ||
-                StateMachine.Instance.GameState == StateMachine.GameStates.ShotTaken) && !IsGameOver)
+            if ((StateMachine.Instance.GameState == GameStates.PlayerTurn ||
+                StateMachine.Instance.GameState == GameStates.ShotTaken) && !IsGameOver)
                 _marker.Draw(spriteBatch);
 
             foreach (var team in _teams)
