@@ -91,6 +91,7 @@
     <Compile Include="Framework\CameraManager.cs" />
     <Compile Include="Framework\CollisionManager.cs" />
     <Compile Include="Framework\GameScreen.cs" />
+    <Compile Include="Generics\GameStates.cs" />
     <Compile Include="Framework\InputManager.cs" />
     <Compile Include="Framework\Map.cs" />
     <Compile Include="Framework\SoundManager.cs" />
