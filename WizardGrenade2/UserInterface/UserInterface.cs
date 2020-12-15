@@ -57,7 +57,7 @@ namespace WizardGrenade2
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            if (StateMachine.Instance.GameState != StateMachine.GameStates.GameOver && StateMachine.Instance.GameState != StateMachine.GameStates.PlaceWizards)
+            if (StateMachine.Instance.GameState != GameStates.GameOver && StateMachine.Instance.GameState != GameStates.PlaceWizards)
             {
                 foreach (var healthBar in _healthBars)
                     healthBar.Draw(spriteBatch);

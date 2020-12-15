@@ -46,12 +46,12 @@ namespace WizardGrenade2
 
         public override void Update(GameTime gameTime)
         {
-            if (StateMachine.Instance.GameState == StateMachine.GameStates.PlayerTurn)
+            if (StateMachine.Instance.GameState == GameStates.PlayerTurn)
             {
                 base.Update(gameTime);
                 RunSandTimerForward();
             }
-            else if (StateMachine.Instance.GameState == StateMachine.GameStates.BetweenTurns)
+            else if (StateMachine.Instance.GameState == GameStates.BetweenTurns)
                 ReverseSandTimer(gameTime);
 
             if (!IsRunning)
@@ -116,7 +116,7 @@ namespace WizardGrenade2
             _timerColour = Time > 3.5f ? Colours.Gold : Color.Red;
             Vector2 fontSize = _timerFont.MeasureString(Time.ToString("0")) / 2;
 
-            if (StateMachine.Instance.GameState == StateMachine.GameStates.PlayerTurn && Time > 0.5f)
+            if (StateMachine.Instance.GameState == GameStates.PlayerTurn && Time > 0.5f)
             {
                 spriteBatch.DrawString(_timerFont, Time.ToString("0"), _timerPosition - fontSize - Colours.ShadowOffset, Colours.Ink);
                 spriteBatch.DrawString(_timerFont, Time.ToString("0"), _timerPosition - fontSize, _timerColour);
