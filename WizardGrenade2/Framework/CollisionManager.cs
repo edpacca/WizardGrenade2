@@ -2,6 +2,9 @@
 using System;
 using System.Collections.Generic;
 
+// Credit to javidx9 for collision resolution inspiration, summing a response vector from incident velocity and positions of colliding points.
+// https://github.com/OneLoneCoder/videos/tree/master/worms
+
 namespace WizardGrenade2
 {
     public sealed class CollisionManager

@@ -3,6 +3,9 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 
+// Credit to this article for inspiration for deformable map mechanics
+// http://web.archive.org/web/20090101215451/http://blog.xna3.com/2007/12/2d-deformable-level.html
+
 namespace WizardGrenade2
 {
     public sealed class Map
