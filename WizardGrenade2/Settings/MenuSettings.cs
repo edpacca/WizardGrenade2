@@ -24,6 +24,7 @@ namespace WizardGrenade2
         public static float TeamSizeSpriteSpan = ScreenSettings.CentreScreenWidth - 40;
         public const float MENU_MAPS_SCALE = 0.55f;
         public const float WIZARD_SPRITE_SCALE = 2f;
+        public const int ROUND_TIMER_INTERVAL = 5;
 
         // Instructions layout and settings
         public static Vector2 InstructionsTextPosition = new Vector2(ScreenSettings.CentreScreenWidth, 300);
@@ -49,7 +50,8 @@ namespace WizardGrenade2
         { 
             "Players",
             "Wizards",
-            "Health" 
+            "Health",
+            "Round",
         };
 
         //GameSetup - Maps options

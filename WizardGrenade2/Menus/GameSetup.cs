@@ -21,9 +21,11 @@ namespace WizardGrenade2
         private Setting _players;
         private Setting _teamSize;
         private Setting _health;
+        private Setting _roundTime;
         private Vector2 _wizardPosition;
         private Vector2 _teamSizePosition;
         private Vector2 _healthTextPosition;
+        private Vector2 _roundTimerTextPosition;
         private Vector2 _mapPosition;
         private bool _AreBattleOptionsSet;
         private bool _isMapSet;
@@ -39,11 +41,13 @@ namespace WizardGrenade2
             _players = new Setting(2, 2, 4);
             _teamSize = new Setting(3, 1, 8);
             _health = new Setting(4, 1, 10);
+            _roundTime = new Setting(9, 3, 18);
 
             _battleSettings = new List<Setting>();
             _battleSettings.Add(_players);
             _battleSettings.Add(_teamSize);
             _battleSettings.Add(_health);
+            _battleSettings.Add(_roundTime);
 
             SetMenuPositions();
         }
@@ -55,6 +59,7 @@ namespace WizardGrenade2
             _wizardPosition = new Vector2(MenuSettings.GameSetupSettingsPosition, _battleOptions.OptionsLayout[0].Y);
             _teamSizePosition = new Vector2(_wizardPosition.X, _battleOptions.OptionsLayout[1].Y);
             _healthTextPosition = new Vector2(MenuSettings.GameSetupSettingsPosition, _battleOptions.OptionsLayout[2].Y);
+            _roundTimerTextPosition = new Vector2(MenuSettings.GameSetupSettingsPosition, _battleOptions.OptionsLayout[3].Y);
             _mapPosition = MenuSettings.MapPosition;
         }
 
@@ -119,6 +124,9 @@ namespace WizardGrenade2
                 else if (_battleOptions.SelectedOption == 2)
                     soundEffect = "potion";
 
+                else if (_battleOptions.SelectedOption == 3)
+                    soundEffect = "clink";
+
                 SoundManager.Instance.PlaySound(soundEffect);
             }
 
@@ -149,6 +157,7 @@ namespace WizardGrenade2
             GameOptions.NumberOfTeams = _players.IntValue;
             GameOptions.TeamSize = _teamSize.IntValue;
             GameOptions.WizardHealth = _health.IntValue * WizardSettings.HEALTH_INTERVAL;
+            GameOptions.RoundTime = _roundTime.IntValue * MenuSettings.ROUND_TIMER_INTERVAL;
         }
 
         public void ResetGame()
@@ -179,6 +188,7 @@ namespace WizardGrenade2
 
             _teamSize.DrawSetting(spriteBatch, _teamSizePosition);
             spriteBatch.DrawString(_optionsFont, (_health.IntValue * WizardSettings.HEALTH_INTERVAL).ToString(), _healthTextPosition, Color.White);
+            spriteBatch.DrawString(_optionsFont, (_roundTime.IntValue * MenuSettings.ROUND_TIMER_INTERVAL).ToString() + " seconds", _roundTimerTextPosition, Color.White);
         }
 
         private void DrawMapOptions(SpriteBatch spriteBatch)
