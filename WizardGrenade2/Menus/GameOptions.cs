@@ -6,5 +6,6 @@
         public int NumberOfTeams { get; set; }
         public int TeamSize { get; set; }
         public string MapFile { get; set; }
+        public int RoundTime { get; set; }
     }
 }
