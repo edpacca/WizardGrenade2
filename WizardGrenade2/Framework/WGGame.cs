@@ -11,7 +11,6 @@ namespace WizardGrenade2
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private CameraManager _cameraManager;
-        private UserInterface _userInterface;
         private BrightnessManager _brightnessManager;
         private MenuManager _menuManager;
         private PauseMenu _pauseMenu;
@@ -53,7 +52,6 @@ namespace WizardGrenade2
         {
             _pauseMenu = new PauseMenu(GraphicsDevice, Content);
             _gameScreen = new GameScreen(_menuManager.GameOptions, Content);
-            _userInterface = new UserInterface(_menuManager.GameOptions, Content);
             _scenery = new Scenery(Content);
             StateMachine.Instance.LoadContent(Content);
         }
@@ -83,7 +81,6 @@ namespace WizardGrenade2
 
         private void UpdateGamePlay(GameTime gameTime)
         {
-            _userInterface.Update(gameTime, _gameScreen.TeamHealths);
             _gameScreen.Update(gameTime);
             _cameraManager.Update(gameTime);
             StateMachine.Instance.UpdateStateMachine(gameTime);
@@ -152,7 +149,7 @@ namespace WizardGrenade2
             _spriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.PointClamp, null, null, null, _cameraManager.TransformMatrix);
 
             _scenery.DrawBackground(_spriteBatch);
-            _gameScreen.Draw(_spriteBatch);
+            _gameScreen.DrawGameLayer(_spriteBatch);
             _scenery.DrawForeground(_spriteBatch);
 
             _spriteBatch.End();
@@ -166,7 +163,7 @@ namespace WizardGrenade2
 
             StateMachine.Instance.Draw(_spriteBatch);
             _pauseMenu.Draw(_spriteBatch);
-            _userInterface.Draw(_spriteBatch);
+            _gameScreen.DrawUILayer(_spriteBatch);
 
             _spriteBatch.End();
         }
