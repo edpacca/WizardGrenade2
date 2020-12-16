@@ -14,7 +14,7 @@ namespace WizardGrenade2
         private RoundTimer _timer;
         private Sprite _cursor;
         private Vector2 _weaponSymbolPosition = new Vector2(40, 40);
-        private const float ROUND_TIME = 45f;
+        private float _roundTime = 45f;
         private int _numberOfTeams;
         private int _teamStartHealth;
 
@@ -22,6 +22,7 @@ namespace WizardGrenade2
         {
             _numberOfTeams = gameOptions.NumberOfTeams;
             _teamStartHealth = gameOptions.TeamSize * gameOptions.WizardHealth;
+            _roundTime = gameOptions.RoundTime;
 
             for (int i = 0; i < gameOptions.NumberOfTeams; i++)
                 _teamNames.Add("Team " + (i + 1));
@@ -32,7 +33,7 @@ namespace WizardGrenade2
         private void LoadContent(ContentManager contentManager)
         {
             _cursor = new Sprite(contentManager, @"UserInterface/cursor");
-            _timer = new RoundTimer(ROUND_TIME);
+            _timer = new RoundTimer(_roundTime);
             _detonationTimer = new DetonationTimer(contentManager);
             _timer.LoadContent(contentManager);
             _healthBars = new List<HealthBar>();
