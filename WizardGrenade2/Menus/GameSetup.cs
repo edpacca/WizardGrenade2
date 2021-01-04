@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using System;
 
 namespace WizardGrenade2
 {
@@ -73,8 +74,14 @@ namespace WizardGrenade2
 
             for (int i = 0; i < MenuSettings.MapTitles.Count; i++)
             {
-                _maps.Add(new Sprite(contentManager, @"Maps/Map" + i));
-                _maps[i].SpriteScale = MenuSettings.MENU_MAPS_SCALE;
+                try
+                {
+                    _maps.Add(new Sprite(contentManager, @"Maps/Map" + i));
+                    _maps[i].SpriteScale = MenuSettings.MENU_MAPS_SCALE;
+                }
+                catch (System.Exception)
+                {
+                }
             }
 
             _mapPosition -= _maps[0].Origin;
@@ -194,7 +201,12 @@ namespace WizardGrenade2
         private void DrawMapOptions(SpriteBatch spriteBatch)
         {
             _mapOptions.DrawOptions(spriteBatch);
-            _maps[_mapOptions.SelectedOption].DrawSprite(spriteBatch, _mapPosition);
+
+            try
+            {
+                _maps[_mapOptions.SelectedOption].DrawSprite(spriteBatch, _mapPosition);
+            }
+            catch (Exception){}
         }
     }
 }
